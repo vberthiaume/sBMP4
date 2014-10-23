@@ -18,13 +18,13 @@
 //==============================================================================
 /** This is the editor component that our filter will display.
 */
-class NewProjectAudioProcessorEditor  : public AudioProcessorEditor,
+class sBMP4AudioProcessorEditor  : public AudioProcessorEditor,
                                             public SliderListener,
                                             public Timer
 {
 public:
-    NewProjectAudioProcessorEditor (NewProjectAudioProcessor&);
-    ~NewProjectAudioProcessorEditor();
+    sBMP4AudioProcessorEditor (sBMP4AudioProcessor&);
+    ~sBMP4AudioProcessorEditor();
 
     //==============================================================================
     void timerCallback() override;
@@ -41,9 +41,9 @@ private:
 
     AudioPlayHead::CurrentPositionInfo lastDisplayedPosition;
 
-    NewProjectAudioProcessor& getProcessor() const
+    sBMP4AudioProcessor& getProcessor() const
     {
-        return static_cast<NewProjectAudioProcessor&> (processor);
+        return static_cast<sBMP4AudioProcessor&> (processor);
     }
 
     void displayPositionInfo (const AudioPlayHead::CurrentPositionInfo& pos);

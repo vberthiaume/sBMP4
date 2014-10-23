@@ -12,7 +12,7 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-NewProjectAudioProcessorEditor::NewProjectAudioProcessorEditor (NewProjectAudioProcessor& owner)
+sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor (sBMP4AudioProcessor& owner)
     : AudioProcessorEditor (owner),
       midiKeyboard (owner.keyboardState, MidiKeyboardComponent::horizontalKeyboard),
       infoLabel (String::empty),
@@ -57,19 +57,19 @@ NewProjectAudioProcessorEditor::NewProjectAudioProcessorEditor (NewProjectAudioP
     startTimer (50);
 }
 
-NewProjectAudioProcessorEditor::~NewProjectAudioProcessorEditor()
+sBMP4AudioProcessorEditor::~sBMP4AudioProcessorEditor()
 {
 }
 
 //==============================================================================
-void NewProjectAudioProcessorEditor::paint (Graphics& g)
+void sBMP4AudioProcessorEditor::paint (Graphics& g)
 {
     g.setGradientFill (ColourGradient (Colours::white, 0, 0,
                                        Colours::grey, 0, (float) getHeight(), false));
     g.fillAll();
 }
 
-void NewProjectAudioProcessorEditor::resized()
+void sBMP4AudioProcessorEditor::resized()
 {
     infoLabel.setBounds (10, 4, 400, 25);
     gainSlider.setBounds (20, 60, 150, 40);
@@ -86,9 +86,9 @@ void NewProjectAudioProcessorEditor::resized()
 
 //==============================================================================
 // This timer periodically checks whether any of the filter's parameters have changed...
-void NewProjectAudioProcessorEditor::timerCallback()
+void sBMP4AudioProcessorEditor::timerCallback()
 {
-    NewProjectAudioProcessor& ourProcessor = getProcessor();
+    sBMP4AudioProcessor& ourProcessor = getProcessor();
 
     AudioPlayHead::CurrentPositionInfo newPos (ourProcessor.lastPosInfo);
 
@@ -100,19 +100,19 @@ void NewProjectAudioProcessorEditor::timerCallback()
 }
 
 // This is our Slider::Listener callback, when the user drags a slider.
-void NewProjectAudioProcessorEditor::sliderValueChanged (Slider* slider)
+void sBMP4AudioProcessorEditor::sliderValueChanged (Slider* slider)
 {
     if (slider == &gainSlider)
     {
         // It's vital to use setParameterNotifyingHost to change any parameters that are automatable
         // by the host, rather than just modifying them directly, otherwise the host won't know
         // that they've changed.
-        getProcessor().setParameterNotifyingHost (NewProjectAudioProcessor::gainParam,
+        getProcessor().setParameterNotifyingHost (sBMP4AudioProcessor::gainParam,
                                                   (float) gainSlider.getValue());
     }
     else if (slider == &delaySlider)
     {
-        getProcessor().setParameterNotifyingHost (NewProjectAudioProcessor::delayParam,
+        getProcessor().setParameterNotifyingHost (sBMP4AudioProcessor::delayParam,
                                                   (float) delaySlider.getValue());
     }
 }
@@ -156,7 +156,7 @@ static const String ppqToBarsBeatsString (double ppq, double /*lastBarPPQ*/, int
 }
 
 // Updates the text in our position label.
-void NewProjectAudioProcessorEditor::displayPositionInfo (const AudioPlayHead::CurrentPositionInfo& pos)
+void sBMP4AudioProcessorEditor::displayPositionInfo (const AudioPlayHead::CurrentPositionInfo& pos)
 {
     lastDisplayedPosition = pos;
     String displayText;

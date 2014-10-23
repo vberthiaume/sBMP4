@@ -18,12 +18,12 @@
 /**
     As the name suggest, this class does the actual audio processing.
 */
-class NewProjectAudioProcessor  : public AudioProcessor
+class sBMP4AudioProcessor  : public AudioProcessor
 {
 public:
     //==============================================================================
-    NewProjectAudioProcessor();
-    ~NewProjectAudioProcessor();
+    sBMP4AudioProcessor();
+    ~sBMP4AudioProcessor();
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -103,7 +103,7 @@ private:
     // the synth!
     Synthesiser synth;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NewProjectAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (sBMP4AudioProcessor)
 };
 
 #endif  // __PLUGINPROCESSOR_H_526ED7A9__

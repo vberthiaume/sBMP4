@@ -135,7 +135,7 @@ const float defaultGain = 1.0f;
 const float defaultDelay = 0.5f;
 
 //==============================================================================
-NewProjectAudioProcessor::NewProjectAudioProcessor()
+sBMP4AudioProcessor::sBMP4AudioProcessor()
     : delayBuffer (2, 12000)
 {
     // Set up some default values..
@@ -155,17 +155,17 @@ NewProjectAudioProcessor::NewProjectAudioProcessor()
     synth.addSound (new SineWaveSound());
 }
 
-NewProjectAudioProcessor::~NewProjectAudioProcessor()
+sBMP4AudioProcessor::~sBMP4AudioProcessor()
 {
 }
 
 //==============================================================================
-int NewProjectAudioProcessor::getNumParameters()
+int sBMP4AudioProcessor::getNumParameters()
 {
     return totalNumParams;
 }
 
-float NewProjectAudioProcessor::getParameter (int index)
+float sBMP4AudioProcessor::getParameter (int index)
 {
     // This method will be called by the host, probably on the audio thread, so
     // it's absolutely time-critical. Don't use critical sections or anything
@@ -178,7 +178,7 @@ float NewProjectAudioProcessor::getParameter (int index)
     }
 }
 
-void NewProjectAudioProcessor::setParameter (int index, float newValue)
+void sBMP4AudioProcessor::setParameter (int index, float newValue)
 {
     // This method will be called by the host, probably on the audio thread, so
     // it's absolutely time-critical. Don't use critical sections or anything
@@ -191,7 +191,7 @@ void NewProjectAudioProcessor::setParameter (int index, float newValue)
     }
 }
 
-float NewProjectAudioProcessor::getParameterDefaultValue (int index)
+float sBMP4AudioProcessor::getParameterDefaultValue (int index)
 {
     switch (index)
     {
@@ -203,7 +203,7 @@ float NewProjectAudioProcessor::getParameterDefaultValue (int index)
     return 0.0f;
 }
 
-const String NewProjectAudioProcessor::getParameterName (int index)
+const String sBMP4AudioProcessor::getParameterName (int index)
 {
     switch (index)
     {
@@ -215,13 +215,13 @@ const String NewProjectAudioProcessor::getParameterName (int index)
     return String::empty;
 }
 
-const String NewProjectAudioProcessor::getParameterText (int index)
+const String sBMP4AudioProcessor::getParameterText (int index)
 {
     return String (getParameter (index), 2);
 }
 
 //==============================================================================
-void NewProjectAudioProcessor::prepareToPlay (double sampleRate, int /*samplesPerBlock*/)
+void sBMP4AudioProcessor::prepareToPlay (double sampleRate, int /*samplesPerBlock*/)
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
@@ -230,21 +230,21 @@ void NewProjectAudioProcessor::prepareToPlay (double sampleRate, int /*samplesPe
     delayBuffer.clear();
 }
 
-void NewProjectAudioProcessor::releaseResources()
+void sBMP4AudioProcessor::releaseResources()
 {
     // When playback stops, you can use this as an opportunity to free up any
     // spare memory, etc.
     keyboardState.reset();
 }
 
-void NewProjectAudioProcessor::reset()
+void sBMP4AudioProcessor::reset()
 {
     // Use this method as the place to clear any delay lines, buffers, etc, as it
     // means there's been a break in the audio's continuity.
     delayBuffer.clear();
 }
 
-void NewProjectAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
+void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
     const int numSamples = buffer.getNumSamples();
     int channel, dp = 0;
@@ -301,13 +301,13 @@ void NewProjectAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuff
 }
 
 //==============================================================================
-AudioProcessorEditor* NewProjectAudioProcessor::createEditor()
+AudioProcessorEditor* sBMP4AudioProcessor::createEditor()
 {
-    return new NewProjectAudioProcessorEditor (*this);
+    return new sBMP4AudioProcessorEditor (*this);
 }
 
 //==============================================================================
-void NewProjectAudioProcessor::getStateInformation (MemoryBlock& destData)
+void sBMP4AudioProcessor::getStateInformation (MemoryBlock& destData)
 {
     // You should use this method to store your parameters in the memory block.
     // Here's an example of how you can use XML to make it easy and more robust:
@@ -325,7 +325,7 @@ void NewProjectAudioProcessor::getStateInformation (MemoryBlock& destData)
     copyXmlToBinary (xml, destData);
 }
 
-void NewProjectAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
+void sBMP4AudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
@@ -348,27 +348,27 @@ void NewProjectAudioProcessor::setStateInformation (const void* data, int sizeIn
     }
 }
 
-const String NewProjectAudioProcessor::getInputChannelName (const int channelIndex) const
+const String sBMP4AudioProcessor::getInputChannelName (const int channelIndex) const
 {
     return String (channelIndex + 1);
 }
 
-const String NewProjectAudioProcessor::getOutputChannelName (const int channelIndex) const
+const String sBMP4AudioProcessor::getOutputChannelName (const int channelIndex) const
 {
     return String (channelIndex + 1);
 }
 
-bool NewProjectAudioProcessor::isInputChannelStereoPair (int /*index*/) const
+bool sBMP4AudioProcessor::isInputChannelStereoPair (int /*index*/) const
 {
     return true;
 }
 
-bool NewProjectAudioProcessor::isOutputChannelStereoPair (int /*index*/) const
+bool sBMP4AudioProcessor::isOutputChannelStereoPair (int /*index*/) const
 {
     return true;
 }
 
-bool NewProjectAudioProcessor::acceptsMidi() const
+bool sBMP4AudioProcessor::acceptsMidi() const
 {
    #if JucePlugin_WantsMidiInput
     return true;
@@ -377,7 +377,7 @@ bool NewProjectAudioProcessor::acceptsMidi() const
    #endif
 }
 
-bool NewProjectAudioProcessor::producesMidi() const
+bool sBMP4AudioProcessor::producesMidi() const
 {
    #if JucePlugin_ProducesMidiOutput
     return true;
@@ -386,12 +386,12 @@ bool NewProjectAudioProcessor::producesMidi() const
    #endif
 }
 
-bool NewProjectAudioProcessor::silenceInProducesSilenceOut() const
+bool sBMP4AudioProcessor::silenceInProducesSilenceOut() const
 {
     return false;
 }
 
-double NewProjectAudioProcessor::getTailLengthSeconds() const
+double sBMP4AudioProcessor::getTailLengthSeconds() const
 {
     return 0.0;
 }
@@ -400,5 +400,5 @@ double NewProjectAudioProcessor::getTailLengthSeconds() const
 // This creates new instances of the plugin..
 AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
-    return new NewProjectAudioProcessor();
+    return new sBMP4AudioProcessor();
 }
