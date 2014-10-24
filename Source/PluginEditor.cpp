@@ -23,11 +23,12 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "constants.h"
 
 //==============================================================================
 sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor (sBMP4AudioProcessor& owner)
     : AudioProcessorEditor (owner),
-      midiKeyboard (owner.keyboardState, MidiKeyboardComponent::horizontalKeyboard),
+      midiKeyboard (owner.m_oKeyboardState, MidiKeyboardComponent::horizontalKeyboard),
       infoLabel (String::empty),
       gainLabel ("", "Throughput level:"),
       delayLabel ("", "Delay:"),
@@ -64,8 +65,7 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor (sBMP4AudioProcessor& owner
     resizeLimits.setSizeLimits (150, 150, 800, 300);
 
     // set our component's initial size to be the last one that was stored in the filter's settings
-    setSize (owner.m_iLastUIWidth,
-             owner.m_iLastUIHeight);
+    setSize (owner.getDimensions().first, owner.getDimensions().second);
 
     startTimer (50);
 }
@@ -92,8 +92,9 @@ void sBMP4AudioProcessorEditor::resized() {
 
     resizer->setBounds (getWidth() - 16, getHeight() - 16, 16, 16);
 
-    getProcessor().m_iLastUIWidth = getWidth();
-    getProcessor().m_iLastUIHeight = getHeight();
+    getProcessor().setDimensions(std::make_pair(getWidth(), getHeight()));
+//    getProcessor().m_iLastUIWidth = getWidth();
+//    getProcessor().m_iLastUIHeight = getHeight();
 }
 
 //==============================================================================
@@ -101,24 +102,21 @@ void sBMP4AudioProcessorEditor::resized() {
 void sBMP4AudioProcessorEditor::timerCallback() {
     sBMP4AudioProcessor& ourProcessor = getProcessor();
 
-    AudioPlayHead::CurrentPositionInfo newPos (ourProcessor.lastPosInfo);
+    AudioPlayHead::CurrentPositionInfo newPos (ourProcessor.getLastPosInfo());
 
     if (lastDisplayedPosition != newPos)
         displayPositionInfo (newPos);
 
-    gainSlider.setValue (ourProcessor.m_fGain, dontSendNotification);
-    delaySlider.setValue (ourProcessor.m_fDelay, dontSendNotification);
+    gainSlider.setValue (ourProcessor.getParameter(paramGain), dontSendNotification);
+    delaySlider.setValue (ourProcessor.getParameter(paramDelay), dontSendNotification);
 }
 
 // This is our Slider::Listener callback, when the user drags a slider.
 void sBMP4AudioProcessorEditor::sliderValueChanged (Slider* slider) {
     if (slider == &gainSlider)    {
-        // It's vital to use setParameterNotifyingHost to change any parameters that are automatable
-        // by the host, rather than just modifying them directly, otherwise the host won't know
-        // that they've changed.
-        getProcessor().setParameterNotifyingHost (sBMP4AudioProcessor::gainParam, (float) gainSlider.getValue());
+        getProcessor().setParameterNotifyingHost (paramGain, (float) gainSlider.getValue());
     } else if (slider == &delaySlider) {
-        getProcessor().setParameterNotifyingHost (sBMP4AudioProcessor::delayParam, (float) delaySlider.getValue());
+        getProcessor().setParameterNotifyingHost (paramDelay, (float) delaySlider.getValue());
     }
 }
 

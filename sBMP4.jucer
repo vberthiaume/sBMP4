@@ -5,13 +5,14 @@
               buildVST="1" buildVST3="1" buildAU="1" buildRTAS="0" buildAAX="0"
               pluginName="sBMP4" pluginDesc="killer subtractive synth" pluginManufacturer="BMP4"
               pluginManufacturerCode="BMP4" pluginCode="sBMP" pluginChannelConfigs="{1, 1}, {2, 2}"
-              pluginIsSynth="1" pluginWantsMidiIn="1" pluginProducesMidiOut="0"
+              pluginIsSynth="1" pluginWantsMidiIn="1" pluginProducesMidiOut="1"
               pluginSilenceInIsSilenceOut="0" pluginEditorRequiresKeys="0"
               pluginAUExportPrefix="sbmp4" pluginRTASCategory="" aaxIdentifier="com.yourcompany.NewProject"
               pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="3.1.0"
               companyName="BMP4">
   <MAINGROUP id="L2BB6f" name="sBMP4">
     <GROUP id="{39E19610-035A-894F-49C7-807C24EA4071}" name="Source">
+      <FILE id="smKi9v" name="constants.h" compile="0" resource="0" file="Source/constants.h"/>
       <FILE id="faJx9M" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="XOah5p" name="PluginProcessor.h" compile="0" resource="0"

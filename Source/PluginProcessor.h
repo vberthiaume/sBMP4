@@ -74,46 +74,35 @@ public:
     void setCurrentProgram (int /*index*/) override                             {}
     const String getProgramName (int /*index*/) override                        { return "Default"; }
     void changeProgramName (int /*index*/, const String& /*newName*/) override  {}
+    std::pair<int, int> getDimensions()                                         {return m_oLastDimensions;}
+    void setDimensions(std::pair<int, int> p_oNewDimensions)                    {m_oLastDimensions = p_oNewDimensions;}
+    AudioPlayHead::CurrentPositionInfo getLastPosInfo()                         {return lastPosInfo;}
 
     //==============================================================================
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
-    //==============================================================================
-    // These properties are public so that our editor component can access them
-    // A bit of a hacky way to do it, but it's only a demo! Obviously in your own
-    // code you'll do this much more neatly..
 
+    #warning m_oKeyboardState should be private but the commented part doesn't work
     // this is kept up to date with the midi messages that arrive, and the UI component
     // registers with it so it can represent the incoming messages
-    MidiKeyboardState keyboardState;
+    MidiKeyboardState m_oKeyboardState;
+    //MidiKeyboardState getMidiKeyboardState(){return m_oKeyboardState;}
 
+private:
+    
+    float m_fGain, m_fDelay;
+    
     // this keeps a copy of the last set of time info that was acquired during an audio
     // callback - the UI component will read this and display it.
     AudioPlayHead::CurrentPositionInfo lastPosInfo;
 
-    // these are used to persist the UI's size - the values are stored along with the
-    // filter's other parameters, and the UI component will update them when it gets
-    // resized.
-    int m_iLastUIWidth, m_iLastUIHeight;
-
-    //==============================================================================
-    enum Parameters
-    {
-        gainParam = 0,
-        delayParam,
-
-        totalNumParams
-    };
-
-    float m_fGain, m_fDelay;
-
-private:
+    std::pair<int, int> m_oLastDimensions;
+    
     //==============================================================================
     AudioSampleBuffer m_oDelayBuffer;
     int m_iDelayPosition;
 
-    // the synth!
     Synthesiser m_oSynth;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (sBMP4AudioProcessor)
