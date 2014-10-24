@@ -28,41 +28,56 @@
 //==============================================================================
 sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor (sBMP4AudioProcessor& owner)
     : AudioProcessorEditor (owner),
-      midiKeyboard (owner.m_oKeyboardState, MidiKeyboardComponent::horizontalKeyboard),
-      infoLabel (String::empty),
-      gainLabel ("", "Throughput level:"),
-      delayLabel ("", "Delay:"),
-      gainSlider ("gain"),
-      delaySlider ("delay")
+        m_oMidiKeyboard (owner.m_oKeyboardState, MidiKeyboardComponent::horizontalKeyboard),
+        m_oWaveLabel ("", "Wave:"),
+        m_oInfoLabel (String::empty),
+        m_oGainLabel ("", "Throughput level:"),
+        m_oDelayLabel ("", "Delay:"),
+        m_oWaveSlider("wave"),
+        m_oGainSlider ("gain"),
+        m_oDelaySlider ("delay")
 {
+    
     // add some sliders..
-    addAndMakeVisible (gainSlider);
-    gainSlider.setSliderStyle (Slider::Rotary);
-    gainSlider.addListener (this);
-    gainSlider.setRange (0.0, 1.0, 0.01);
+    // add some sliders..
+    addAndMakeVisible (m_oWaveSlider);
+    m_oWaveSlider.setSliderStyle (Slider::RotaryHorizontalVerticalDrag);
+    m_oWaveSlider.setTextBoxStyle(Slider::NoTextBox, true, 0, 0);
+    m_oWaveSlider.addListener (this);
+    m_oWaveSlider.setRange (0.0, 1.0, 1.f/3);
+    
+    addAndMakeVisible (m_oGainSlider);
+    m_oGainSlider.setSliderStyle (Slider::RotaryHorizontalVerticalDrag);
+    m_oGainSlider.setTextBoxStyle(Slider::NoTextBox, true, 0, 0);
+    m_oGainSlider.addListener (this);
+    m_oGainSlider.setRange (0.0, 1.0, 0.01);
 
-    addAndMakeVisible (delaySlider);
-    delaySlider.setSliderStyle (Slider::Rotary);
-    delaySlider.addListener (this);
-    delaySlider.setRange (0.0, 1.0, 0.01);
+    addAndMakeVisible (m_oDelaySlider);
+    m_oDelaySlider.setSliderStyle (Slider::RotaryHorizontalVerticalDrag);
+    m_oDelaySlider.setTextBoxStyle(Slider::NoTextBox, true, 0, 0);
+    m_oDelaySlider.addListener (this);
+    m_oDelaySlider.setRange (0.0, 1.0, 0.01);
 
     // add some labels for the sliders..
-    gainLabel.attachToComponent (&gainSlider, false);
-    gainLabel.setFont (Font (11.0f));
+    m_oWaveLabel.attachToComponent (&m_oWaveSlider, false);
+    m_oWaveLabel.setFont (Font (11.0f));
+    
+    m_oGainLabel.attachToComponent (&m_oGainSlider, false);
+    m_oGainLabel.setFont (Font (11.0f));
 
-    delayLabel.attachToComponent (&delaySlider, false);
-    delayLabel.setFont (Font (11.0f));
+    m_oDelayLabel.attachToComponent (&m_oDelaySlider, false);
+    m_oDelayLabel.setFont (Font (11.0f));
 
     // add the midi keyboard component..
-    addAndMakeVisible (midiKeyboard);
+    addAndMakeVisible (m_oMidiKeyboard);
 
     // add a label that will display the current timecode and status..
-    addAndMakeVisible (infoLabel);
-    infoLabel.setColour (Label::textColourId, Colours::blue);
+//    addAndMakeVisible (m_oInfoLabel);
+//    m_oInfoLabel.setColour (Label::textColourId, Colours::blue);
 
-    // add the triangular resizer component for the bottom-right of the UI
-    addAndMakeVisible (resizer = new ResizableCornerComponent (this, &resizeLimits));
-    resizeLimits.setSizeLimits (150, 150, 800, 300);
+    // add the triangular m_pResizer component for the bottom-right of the UI
+    addAndMakeVisible (m_pResizer = new ResizableCornerComponent (this, &m_oResizeLimits));
+    m_oResizeLimits.setSizeLimits (150, 150, 800, 300);
 
     // set our component's initial size to be the last one that was stored in the filter's settings
     setSize (owner.getDimensions().first, owner.getDimensions().second);
@@ -83,14 +98,16 @@ void sBMP4AudioProcessorEditor::paint (Graphics& g)
 }
 
 void sBMP4AudioProcessorEditor::resized() {
-    infoLabel.setBounds (10, 4, 400, 25);
-    gainSlider.setBounds (20, 60, 150, 40);
-    delaySlider.setBounds (200, 60, 150, 40);
+    //m_oInfoLabel.setBounds (10, 4, 400, 25);
+    int x = 20, y = 50, w = 100, h = 40;
+    m_oWaveSlider.setBounds  (x,        y, w, h);
+    m_oGainSlider.setBounds  (x + w,    y, w, h);
+    m_oDelaySlider.setBounds (x + 2*w,  y, w, h);
 
     const int keyboardHeight = 70;
-    midiKeyboard.setBounds (4, getHeight() - keyboardHeight - 4, getWidth() - 8, keyboardHeight);
+    m_oMidiKeyboard.setBounds (4, getHeight() - keyboardHeight - 4, getWidth() - 8, keyboardHeight);
 
-    resizer->setBounds (getWidth() - 16, getHeight() - 16, 16, 16);
+    m_pResizer->setBounds (getWidth() - 16, getHeight() - 16, 16, 16);
 
     getProcessor().setDimensions(std::make_pair(getWidth(), getHeight()));
 //    getProcessor().m_iLastUIWidth = getWidth();
@@ -104,19 +121,21 @@ void sBMP4AudioProcessorEditor::timerCallback() {
 
     AudioPlayHead::CurrentPositionInfo newPos (ourProcessor.getLastPosInfo());
 
-    if (lastDisplayedPosition != newPos)
+    if (m_oLastDisplayedPosition != newPos)
         displayPositionInfo (newPos);
 
-    gainSlider.setValue (ourProcessor.getParameter(paramGain), dontSendNotification);
-    delaySlider.setValue (ourProcessor.getParameter(paramDelay), dontSendNotification);
+    m_oGainSlider.setValue (ourProcessor.getParameter(paramGain), dontSendNotification);
+    m_oDelaySlider.setValue (ourProcessor.getParameter(paramDelay), dontSendNotification);
 }
 
 // This is our Slider::Listener callback, when the user drags a slider.
 void sBMP4AudioProcessorEditor::sliderValueChanged (Slider* slider) {
-    if (slider == &gainSlider)    {
-        getProcessor().setParameterNotifyingHost (paramGain, (float) gainSlider.getValue());
-    } else if (slider == &delaySlider) {
-        getProcessor().setParameterNotifyingHost (paramDelay, (float) delaySlider.getValue());
+    if (slider == &m_oGainSlider)    {
+        getProcessor().setParameterNotifyingHost (paramGain, (float) m_oGainSlider.getValue());
+    } else if (slider == &m_oDelaySlider) {
+        getProcessor().setParameterNotifyingHost (paramDelay, (float) m_oDelaySlider.getValue());
+    } else if (slider == &m_oWaveSlider) {
+        getProcessor().setParameterNotifyingHost (paramWave, (float) m_oWaveSlider.getValue());
     }
 }
 
@@ -161,7 +180,7 @@ static const String ppqToBarsBeatsString (double ppq, double /*lastBarPPQ*/, int
 // Updates the text in our position label.
 void sBMP4AudioProcessorEditor::displayPositionInfo (const AudioPlayHead::CurrentPositionInfo& pos)
 {
-    lastDisplayedPosition = pos;
+    m_oLastDisplayedPosition = pos;
     String displayText;
     displayText.preallocateBytes (128);
 
@@ -176,5 +195,5 @@ void sBMP4AudioProcessorEditor::displayPositionInfo (const AudioPlayHead::Curren
     else if (pos.isPlaying)
         displayText << "  (playing)";
 
-    infoLabel.setText ("[" + SystemStats::getJUCEVersion() + "]   " + displayText, dontSendNotification);
+    m_oInfoLabel.setText ("[" + SystemStats::getJUCEVersion() + "]   " + displayText, dontSendNotification);
 }

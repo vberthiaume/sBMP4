@@ -46,13 +46,13 @@ public:
     void sliderValueChanged (Slider*) override;
 
 private:
-    MidiKeyboardComponent midiKeyboard;
-    Label infoLabel, gainLabel, delayLabel;
-    Slider gainSlider, delaySlider;
-    ScopedPointer<ResizableCornerComponent> resizer;
-    ComponentBoundsConstrainer resizeLimits;
+    MidiKeyboardComponent m_oMidiKeyboard;
+    Label m_oWaveLabel, m_oInfoLabel, m_oGainLabel, m_oDelayLabel;
+    Slider m_oWaveSlider, m_oGainSlider, m_oDelaySlider;
+    ScopedPointer<ResizableCornerComponent> m_pResizer;
+    ComponentBoundsConstrainer m_oResizeLimits;
 
-    AudioPlayHead::CurrentPositionInfo lastDisplayedPosition;
+    AudioPlayHead::CurrentPositionInfo m_oLastDisplayedPosition;
 
     sBMP4AudioProcessor& getProcessor() const
     {

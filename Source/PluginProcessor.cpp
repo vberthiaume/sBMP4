@@ -90,6 +90,7 @@ public:
             float fCurrentSample = 0.0;
             
             //SINE WAVE
+            //if (dynamic_cast <SineWaveSound*> (m_oCurrentSound)){
             if (dynamic_cast <SineWaveSound*> (m_oCurrentSound)){
                 fCurrentSample = (float) (sin (m_dCurrentAngle) * m_dLevel * dTailOffCopy);
             }
@@ -176,6 +177,7 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
     // Set up some default values..
     m_fGain = defaultGain;
     m_fDelay = defaultDelay;
+    setWaveType(defaultWave);
 
     m_oLastDimensions = std::make_pair(400,200);
 
@@ -187,8 +189,7 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
         m_oSynth.addVoice (new SineWaveVoice());   // These voices will play our custom sine-wave sounds..
     }
     
-    //m_oSynth.addSound (new SineWaveSound());
-    m_oSynth.addSound (new SquareWaveSound());
+
 }
 
 sBMP4AudioProcessor::~sBMP4AudioProcessor()
@@ -210,6 +211,7 @@ float sBMP4AudioProcessor::getParameter (int index)
     {
         case paramGain:     return m_fGain;
         case paramDelay:    return m_fDelay;
+        case paramWave:     return m_fWave;
         default:            return 0.0f;
     }
 }
@@ -223,7 +225,19 @@ void sBMP4AudioProcessor::setParameter (int index, float newValue)
     {
         case paramGain:     m_fGain = newValue;  break;
         case paramDelay:    m_fDelay = newValue;  break;
+        case paramWave:     setWaveType(newValue);  break;
         default:            break;
+    }
+}
+
+void sBMP4AudioProcessor::setWaveType(float p_fWave){
+    m_fWave = p_fWave;
+    m_oSynth.clearSounds();
+    if (m_fWave == 0){
+        m_oSynth.addSound (new SineWaveSound());
+    }
+    else if(areSame(m_fWave, 1.f/3)){
+        m_oSynth.addSound (new SquareWaveSound());
     }
 }
 
@@ -233,6 +247,7 @@ float sBMP4AudioProcessor::getParameterDefaultValue (int index)
     {
         case paramGain:     return defaultGain;
         case paramDelay:    return defaultDelay;
+        case paramWave:     return defaultWave;
         default:            break;
     }
 
@@ -245,6 +260,7 @@ const String sBMP4AudioProcessor::getParameterName (int index)
     {
         case paramGain:     return "gain";
         case paramDelay:    return "delay";
+        case paramWave:     return "wave";
         default:            break;
     }
 
@@ -345,13 +361,14 @@ void sBMP4AudioProcessor::getStateInformation (MemoryBlock& destData)
     // Here's an example of how you can use XML to make it easy and more robust:
 
     // Create an outer XML element..
-    XmlElement xml ("MYPLUGINSETTINGS");
+    XmlElement xml ("SBMP4SETTINGS");
 
     // add some attributes to it..
     xml.setAttribute ("uiWidth", m_oLastDimensions.first);
     xml.setAttribute ("uiHeight", m_oLastDimensions.second);
     xml.setAttribute ("gain", m_fGain);
     xml.setAttribute ("delay", m_fDelay);
+    xml.setAttribute ("wave", m_fWave);
 
     // then use this helper function to stuff it into the binary blob and return it..
     copyXmlToBinary (xml, destData);
@@ -376,6 +393,8 @@ void sBMP4AudioProcessor::setStateInformation (const void* data, int sizeInBytes
 
             m_fGain  = (float) xmlState->getDoubleAttribute ("gain", m_fGain);
             m_fDelay = (float) xmlState->getDoubleAttribute ("delay", m_fDelay);
+            m_fWave  = (float) xmlState->getDoubleAttribute ("wave", m_fWave);
+
         }
     }
 }

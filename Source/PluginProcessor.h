@@ -91,7 +91,9 @@ public:
 
 private:
     
-    float m_fGain, m_fDelay;
+    float m_fGain, m_fDelay, m_fWave;
+    
+    void setWaveType(float p_fWave);
     
     // this keeps a copy of the last set of time info that was acquired during an audio
     // callback - the UI component will read this and display it.
