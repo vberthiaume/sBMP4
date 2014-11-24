@@ -10,29 +10,29 @@
 	<string>sBMP4</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>58E224C4-20A2-4FA7-9A74-9ED040E1A2D5</key>
+		<key>3943D51CCEBE399930A7C8D68220548F741075EE</key>
 		<string>https://github.com/vberthiaume/sBMP4.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>Builds/MacOSX/sBMP4.xcodeproj/project.xcworkspace</string>
+	<string>Builds/MacOSX/sBMP4.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>58E224C4-20A2-4FA7-9A74-9ED040E1A2D5</key>
+		<key>3943D51CCEBE399930A7C8D68220548F741075EE</key>
 		<string>../../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://github.com/vberthiaume/sBMP4.git</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>58E224C4-20A2-4FA7-9A74-9ED040E1A2D5</string>
+	<string>3943D51CCEBE399930A7C8D68220548F741075EE</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>58E224C4-20A2-4FA7-9A74-9ED040E1A2D5</string>
+			<string>3943D51CCEBE399930A7C8D68220548F741075EE</string>
 			<key>IDESourceControlWCCName</key>
 			<string>sBMP4</string>
 		</dict>
