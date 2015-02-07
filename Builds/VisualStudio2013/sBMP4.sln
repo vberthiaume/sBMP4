@@ -1,6 +1,10 @@
-Microsoft Visual Studio Solution File, Format Version 11.00
+Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-Project("{CCB49B3B-9BD8-99E6-A88C-9F259E36CD88}") = "sBMP4", "sBMP4.vcxproj", "{104DF58D-3C23-FE69-F5B5-604180890FF5}"
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sBMP4", "sBMP4.vcxproj", "{104DF58D-3C23-FE69-F5B5-604180890FF5}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JuceDemoPlugin", "..\..\..\JUCE\examples\audio plugin demo\Builds\VisualStudio2010\JuceDemoPlugin.vcxproj", "{64F92774-5695-B20A-C63E-7690CA0ECE34}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,6 +16,10 @@ Global
 		{104DF58D-3C23-FE69-F5B5-604180890FF5}.Debug|Win32.Build.0 = Debug|Win32
 		{104DF58D-3C23-FE69-F5B5-604180890FF5}.Release|Win32.ActiveCfg = Release|Win32
 		{104DF58D-3C23-FE69-F5B5-604180890FF5}.Release|Win32.Build.0 = Release|Win32
+		{64F92774-5695-B20A-C63E-7690CA0ECE34}.Debug|Win32.ActiveCfg = Debug|Win32
+		{64F92774-5695-B20A-C63E-7690CA0ECE34}.Debug|Win32.Build.0 = Debug|Win32
+		{64F92774-5695-B20A-C63E-7690CA0ECE34}.Release|Win32.ActiveCfg = Release|Win32
+		{64F92774-5695-B20A-C63E-7690CA0ECE34}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

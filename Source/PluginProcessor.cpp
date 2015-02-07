@@ -1,6 +1,6 @@
 /*
  ==============================================================================
- sBMP4: kilker subtractive synth!
+ sBMP4: killer subtractive synth!
  
  Copyright (C) 2014  BMP4
  
@@ -29,14 +29,15 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter();
 
 
 //==============================================================================
-/** A demo synth sound that's just a basic sine wave.. */
+//Synth classes
+
 class SineWaveSound : public SynthesiserSound
 {
 public:
     SineWaveSound() {}
 
-    bool appliesToNote (const int /*midiNoteNumber*/) override  { return true; }
-    bool appliesToChannel (const int /*midiChannel*/) override  { return true; }
+    bool appliesToNote (int /*midiNoteNumber*/) override  { return true; }
+    bool appliesToChannel (int /*midiChannel*/) override  { return true; }
 };
 
 class SquareWaveSound : public SynthesiserSound
@@ -44,16 +45,16 @@ class SquareWaveSound : public SynthesiserSound
 public:
     SquareWaveSound() {}
     
-    bool appliesToNote (const int /*midiNoteNumber*/) override  { return true; }
-    bool appliesToChannel (const int /*midiChannel*/) override  { return true; }
+    bool appliesToNote (int /*midiNoteNumber*/) override  { return true; }
+    bool appliesToChannel (int /*midiChannel*/) override  { return true; }
 };
 
 //==============================================================================
 
-class SineWaveVoice  : public SynthesiserVoice
+class Bmp4WaveVoice  : public SynthesiserVoice
 {
 public:
-    SineWaveVoice()
+	Bmp4WaveVoice()
         : m_dOmega (0.0),
           m_dTailOff (0.0)
     {
@@ -69,63 +70,10 @@ public:
         double dNormalizedFreq = dFrequency / getSampleRate();
         m_dOmega = dNormalizedFreq * 2.0 * double_Pi;
         
-        m_oCurrentSynthSound = sound;
+		m_oCurrentSynthSound = dynamic_cast<SynthesiserSound*>(sound);
     }
     
-    void renderNextBlock (AudioSampleBuffer& p_oOutputBuffer, int p_iStartSample, int p_iTotalSamples) override {
-        //VB not sure why this is?
-        if (m_dOmega == 0.0) {
-            return;
-        }
-        
-        double dTailOffCopy = m_dTailOff > 0 ? m_dTailOff : 1;
-        
-		JUCE_COMPILER_WARNING(new std::string("this should only be set in case of square waves, probably in startNote or something"))
-        int iK = 50;
-        
-        
-        //while (--numSamples >= 0) {
-        for (int iCurSample = 0; iCurSample < p_iTotalSamples; ++iCurSample) {
-
-            float fCurrentSample = 0.0;
-            
-            //SINE WAVE
-            //if (dynamic_cast <SineWaveSound*> (m_oCurrentSound)){
-            if (dynamic_cast <SineWaveSound*> (m_oCurrentSynthSound)){
-                fCurrentSample = (float) (sin (m_dCurrentAngle) * m_dLevel * dTailOffCopy);
-            }
-            
-            //SQUARE WAVE
-            else if (dynamic_cast <SquareWaveSound*> (m_oCurrentSynthSound)){
-
-                for (int iCurK = 0; iCurK < iK; ++iCurK){
-                    fCurrentSample += sin(m_dCurrentAngle * (2*iCurK + 1)) / (2*iCurK + 1);
-                }
-                
-                fCurrentSample = fCurrentSample * m_dLevel * dTailOffCopy;
-                //std::cout << fCurrentSample << "\n";
-                
-            }
-            
-            for (int i = p_oOutputBuffer.getNumChannels(); --i >= 0;){
-                p_oOutputBuffer.addSample (i, p_iStartSample, fCurrentSample);
-            }
-            
-            m_dCurrentAngle += m_dOmega;
-            ++p_iStartSample;
-            
-            if (m_dTailOff > 0) {
-                m_dTailOff *= 0.99;
-                
-                if (m_dTailOff <= 0.005) {
-                    clearCurrentNote();
-                    
-                    m_dOmega = 0.0;
-                    break;
-                }
-            }
-        }
-    }
+	void renderNextBlock(AudioSampleBuffer& p_oOutputBuffer, int p_iStartSample, int p_iTotalSamples) = 0;
 
     void stopNote (float /*velocity*/, bool allowTailOff) override {
         if (allowTailOff) {
@@ -143,15 +91,7 @@ public:
         }
     }
     
-    bool canPlaySound (SynthesiserSound* sound) override {
-        
-        if (dynamic_cast <SineWaveSound*> (sound) ||
-            dynamic_cast <SquareWaveSound*> (sound)){
-            return true;
-        } else {
-            return false;
-        }
-    }
+	bool canPlaySound(SynthesiserSound* sound) = 0;
 
     void pitchWheelMoved (int /*newValue*/) override {
         // can't be bothered implementing this for the demo!
@@ -161,13 +101,110 @@ public:
         // not interested in controllers in this case.
     }
 
-private:
+protected:
     double m_dCurrentAngle, m_dOmega, m_dLevel, m_dTailOff;
-    SynthesiserSound* m_oCurrentSynthSound;
+	SynthesiserSound* m_oCurrentSynthSound;
 };
 
+class SineWaveVoice : public Bmp4WaveVoice
+{
+	bool canPlaySound(SynthesiserSound* sound) override {
 
+		if (dynamic_cast <SineWaveSound*> (sound)){
+			return true;
+		} else {
+			return false;
+		}
+	}
 
+	void renderNextBlock(AudioSampleBuffer& p_oOutputBuffer, int p_iStartSample, int p_iTotalSamples) override {
+		//VB not sure why this is?
+		if (m_dOmega == 0.0) {
+			return;
+		}
+
+		double dTailOffCopy = m_dTailOff > 0 ? m_dTailOff : 1;
+
+		//while (--numSamples >= 0) {
+		for (int iCurSample = 0; iCurSample < p_iTotalSamples; ++iCurSample) {
+
+			float fCurrentSample = 0.0;
+
+			fCurrentSample = (float)(sin(m_dCurrentAngle) * m_dLevel * dTailOffCopy);
+
+			for (int i = p_oOutputBuffer.getNumChannels(); --i >= 0;){
+				p_oOutputBuffer.addSample(i, p_iStartSample, fCurrentSample);
+			}
+
+			m_dCurrentAngle += m_dOmega;
+			++p_iStartSample;
+
+			if (m_dTailOff > 0) {
+				m_dTailOff *= 0.99;
+
+				if (m_dTailOff <= 0.005) {
+					clearCurrentNote();
+
+					m_dOmega = 0.0;
+					break;
+				}
+			}
+		}
+	}
+};
+
+class SquareWaveVoice : public Bmp4WaveVoice
+{
+	bool canPlaySound(SynthesiserSound* sound) override {
+
+		if (dynamic_cast <SquareWaveSound*> (sound)){
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	void renderNextBlock(AudioSampleBuffer& p_oOutputBuffer, int p_iStartSample, int p_iTotalSamples) override {
+		//VB not sure why this is?
+		if (m_dOmega == 0.0) {
+			return;
+		}
+
+		double dTailOffCopy = m_dTailOff > 0 ? m_dTailOff : 1;
+
+		int iK = 50;
+
+		//while (--numSamples >= 0) {
+		for (int iCurSample = 0; iCurSample < p_iTotalSamples; ++iCurSample) {
+
+			float fCurrentSample = 0.0;
+			for (int iCurK = 0; iCurK < iK; ++iCurK){
+				fCurrentSample += static_cast<float> (sin(m_dCurrentAngle * (2 * iCurK + 1)) / (2 * iCurK + 1));
+			}
+
+			fCurrentSample = fCurrentSample * static_cast<float>(m_dLevel * dTailOffCopy);
+			//std::cout << fCurrentSample << "\n";
+
+			for (int i = p_oOutputBuffer.getNumChannels(); --i >= 0;){
+				p_oOutputBuffer.addSample(i, p_iStartSample, fCurrentSample);
+			}
+
+			m_dCurrentAngle += m_dOmega;
+			++p_iStartSample;
+
+			if (m_dTailOff > 0) {
+				m_dTailOff *= 0.99;
+
+				if (m_dTailOff <= 0.005) {
+					clearCurrentNote();
+
+					m_dOmega = 0.0;
+					break;
+				}
+			}
+		}
+	}
+};
 
 //==============================================================================
 sBMP4AudioProcessor::sBMP4AudioProcessor()
@@ -185,6 +222,7 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
     m_iDelayPosition = 0;
 
     // Initialise the synth...
+	JUCE_COMPILER_WARNING(new string("should use wave param to load the right voice..."))
     for (int i = 4; --i >= 0;){
         m_oSynth.addVoice (new SineWaveVoice());   // These voices will play our custom sine-wave sounds..
     }
@@ -232,12 +270,16 @@ void sBMP4AudioProcessor::setParameter (int index, float newValue)
 
 void sBMP4AudioProcessor::setWaveType(float p_fWave){
     m_fWave = p_fWave;
-    m_oSynth.clearSounds();
+	JUCE_COMPILER_WARNING(new string("probably the sounds should be loaded by the voices..."))
+	m_oSynth.clearSounds();
+    m_oSynth.clearVoices();
     if (m_fWave == 0){
         m_oSynth.addSound (new SineWaveSound());
+		m_oSynth.addVoice(new SineWaveVoice());
     }
     else if(areSame(m_fWave, 1.f/3)){
         m_oSynth.addSound (new SquareWaveSound());
+		m_oSynth.addVoice(new SquareWaveVoice());
     }
 }
 
