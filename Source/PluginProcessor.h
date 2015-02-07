@@ -82,8 +82,8 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+	JUCE_COMPILER_WARNING(new std::string("m_oKeyboardState should be private but the commented part doesn't work"))
 
-    #warning m_oKeyboardState should be private but the commented part doesn't work
     // this is kept up to date with the midi messages that arrive, and the UI component
     // registers with it so it can represent the incoming messages
     MidiKeyboardState m_oKeyboardState;

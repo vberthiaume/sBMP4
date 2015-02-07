@@ -69,7 +69,7 @@ public:
         double dNormalizedFreq = dFrequency / getSampleRate();
         m_dOmega = dNormalizedFreq * 2.0 * double_Pi;
         
-        m_oCurrentSound = sound;
+        m_oCurrentSynthSound = sound;
     }
     
     void renderNextBlock (AudioSampleBuffer& p_oOutputBuffer, int p_iStartSample, int p_iTotalSamples) override {
@@ -80,7 +80,7 @@ public:
         
         double dTailOffCopy = m_dTailOff > 0 ? m_dTailOff : 1;
         
-#warning this should only be set in case of square waves, probably in startNote or something
+		JUCE_COMPILER_WARNING(new std::string("this should only be set in case of square waves, probably in startNote or something"))
         int iK = 50;
         
         
@@ -91,12 +91,12 @@ public:
             
             //SINE WAVE
             //if (dynamic_cast <SineWaveSound*> (m_oCurrentSound)){
-            if (dynamic_cast <SineWaveSound*> (m_oCurrentSound)){
+            if (dynamic_cast <SineWaveSound*> (m_oCurrentSynthSound)){
                 fCurrentSample = (float) (sin (m_dCurrentAngle) * m_dLevel * dTailOffCopy);
             }
             
             //SQUARE WAVE
-            else if (dynamic_cast <SquareWaveSound*> (m_oCurrentSound)){
+            else if (dynamic_cast <SquareWaveSound*> (m_oCurrentSynthSound)){
 
                 for (int iCurK = 0; iCurK < iK; ++iCurK){
                     fCurrentSample += sin(m_dCurrentAngle * (2*iCurK + 1)) / (2*iCurK + 1);
@@ -127,7 +127,7 @@ public:
         }
     }
 
-    void stopNote (bool allowTailOff) override {
+    void stopNote (float /*velocity*/, bool allowTailOff) override {
         if (allowTailOff) {
             // start a tail-off by setting this flag. The render callback will pick up on
             // this and do a fade out, calling clearCurrentNote() when it's finished.
@@ -163,7 +163,7 @@ public:
 
 private:
     double m_dCurrentAngle, m_dOmega, m_dLevel, m_dTailOff;
-    SynthesiserSound* m_oCurrentSound;
+    SynthesiserSound* m_oCurrentSynthSound;
 };
 
 
