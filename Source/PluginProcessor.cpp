@@ -29,7 +29,7 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter();
 
 
 //==============================================================================
-//Synth classes
+//Synth sounds
 
 class SineWaveSound : public SynthesiserSound
 {
@@ -50,16 +50,22 @@ public:
 };
 
 //==============================================================================
+//Synth voices
 
-class Bmp4WaveVoice  : public SynthesiserVoice
+class Bmp4SynthVoice : public SynthesiserVoice
 {
 public:
-	Bmp4WaveVoice()
+	Bmp4SynthVoice()
         : m_dOmega (0.0),
           m_dTailOff (0.0)
     {
     }
-    
+
+	// this is where we determine which unique sound this voice can play
+	bool canPlaySound(SynthesiserSound* sound) = 0;
+
+	void renderNextBlock(AudioSampleBuffer& p_oOutputBuffer, int p_iStartSample, int p_iTotalSamples) = 0;
+
     void startNote (int midiNoteNumber, float velocity, SynthesiserSound* sound, int /*currentPitchWheelPosition*/) override {
         
         m_dCurrentAngle = 0.0;
@@ -72,8 +78,6 @@ public:
         
 		m_oCurrentSynthSound = dynamic_cast<SynthesiserSound*>(sound);
     }
-    
-	void renderNextBlock(AudioSampleBuffer& p_oOutputBuffer, int p_iStartSample, int p_iTotalSamples) = 0;
 
     void stopNote (float /*velocity*/, bool allowTailOff) override {
         if (allowTailOff) {
@@ -90,8 +94,6 @@ public:
             m_dOmega = 0.0;
         }
     }
-    
-	bool canPlaySound(SynthesiserSound* sound) = 0;
 
     void pitchWheelMoved (int /*newValue*/) override {
         // can't be bothered implementing this for the demo!
@@ -106,7 +108,7 @@ protected:
 	SynthesiserSound* m_oCurrentSynthSound;
 };
 
-class SineWaveVoice : public Bmp4WaveVoice
+class SineWaveVoice : public Bmp4SynthVoice
 {
 	bool canPlaySound(SynthesiserSound* sound) override {
 
@@ -153,7 +155,7 @@ class SineWaveVoice : public Bmp4WaveVoice
 	}
 };
 
-class SquareWaveVoice : public Bmp4WaveVoice
+class SquareWaveVoice : public Bmp4SynthVoice
 {
 	bool canPlaySound(SynthesiserSound* sound) override {
 
@@ -220,13 +222,7 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 
     lastPosInfo.resetToDefault();
     m_iDelayPosition = 0;
-
-    // Initialise the synth...
-	JUCE_COMPILER_WARNING(new string("should use wave param to load the right voice..."))
-    for (int i = 4; --i >= 0;){
-        m_oSynth.addVoice (new SineWaveVoice());   // These voices will play our custom sine-wave sounds..
-    }
-    
+   
 
 }
 
@@ -281,6 +277,11 @@ void sBMP4AudioProcessor::setWaveType(float p_fWave){
         m_oSynth.addSound (new SquareWaveSound());
 		m_oSynth.addVoice(new SquareWaveVoice());
     }
+
+	//to have a polyphonic synth, need to load several voices, like this
+	//for (int i = 4; --i >= 0;){
+	//	m_oSynth.addVoice(new SineWaveVoice());   // These voices will play our custom sine-wave sounds..
+	//}
 }
 
 float sBMP4AudioProcessor::getParameterDefaultValue (int index)
