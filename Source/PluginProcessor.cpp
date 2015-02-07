@@ -64,7 +64,42 @@ public:
 	// this is where we determine which unique sound this voice can play
 	bool canPlaySound(SynthesiserSound* sound) = 0;
 
-	void renderNextBlock(AudioSampleBuffer& p_oOutputBuffer, int p_iStartSample, int p_iTotalSamples) = 0;
+	virtual float getSample(double p_dAngle, double p_dLevel, double dTail) = 0;
+
+	void renderNextBlock(AudioSampleBuffer& p_oOutputBuffer, int p_iStartSample, int p_iTotalSamples) override {
+		//VB not sure why this is?
+		if (m_dOmega == 0.0) {
+			return;
+		}
+
+		double dTailOffCopy = m_dTailOff > 0 ? m_dTailOff : 1;
+
+		//while (--numSamples >= 0) {
+		for (int iCurSample = 0; iCurSample < p_iTotalSamples; ++iCurSample) {
+
+			float fCurrentSample = 0.0;
+
+			fCurrentSample = getSample(m_dCurrentAngle, m_dLevel, dTailOffCopy);
+
+			for (int i = p_oOutputBuffer.getNumChannels(); --i >= 0;){
+				p_oOutputBuffer.addSample(i, p_iStartSample, fCurrentSample);
+			}
+
+			m_dCurrentAngle += m_dOmega;
+			++p_iStartSample;
+
+			if (m_dTailOff > 0) {
+				m_dTailOff *= 0.99;
+
+				if (m_dTailOff <= 0.005) {
+					clearCurrentNote();
+
+					m_dOmega = 0.0;
+					break;
+				}
+			}
+		}
+	}
 
     void startNote (int midiNoteNumber, float velocity, SynthesiserSound* sound, int /*currentPitchWheelPosition*/) override {
         
@@ -110,7 +145,7 @@ protected:
 
 class SineWaveVoice : public Bmp4SynthVoice
 {
-	bool canPlaySound(SynthesiserSound* sound) override {
+	virtual bool canPlaySound(SynthesiserSound* sound) override {
 
 		if (dynamic_cast <SineWaveSound*> (sound)){
 			return true;
@@ -119,40 +154,10 @@ class SineWaveVoice : public Bmp4SynthVoice
 		}
 	}
 
-	void renderNextBlock(AudioSampleBuffer& p_oOutputBuffer, int p_iStartSample, int p_iTotalSamples) override {
-		//VB not sure why this is?
-		if (m_dOmega == 0.0) {
-			return;
-		}
-
-		double dTailOffCopy = m_dTailOff > 0 ? m_dTailOff : 1;
-
-		//while (--numSamples >= 0) {
-		for (int iCurSample = 0; iCurSample < p_iTotalSamples; ++iCurSample) {
-
-			float fCurrentSample = 0.0;
-
-			fCurrentSample = (float)(sin(m_dCurrentAngle) * m_dLevel * dTailOffCopy);
-
-			for (int i = p_oOutputBuffer.getNumChannels(); --i >= 0;){
-				p_oOutputBuffer.addSample(i, p_iStartSample, fCurrentSample);
-			}
-
-			m_dCurrentAngle += m_dOmega;
-			++p_iStartSample;
-
-			if (m_dTailOff > 0) {
-				m_dTailOff *= 0.99;
-
-				if (m_dTailOff <= 0.005) {
-					clearCurrentNote();
-
-					m_dOmega = 0.0;
-					break;
-				}
-			}
-		}
+	virtual float getSample(double p_dAngle, double p_dLevel, double dTail) {
+		return (float)(sin(p_dAngle) * p_dLevel * dTail);
 	}
+
 };
 
 class SquareWaveVoice : public Bmp4SynthVoice
@@ -166,46 +171,60 @@ class SquareWaveVoice : public Bmp4SynthVoice
 		}
 	}
 
-	void renderNextBlock(AudioSampleBuffer& p_oOutputBuffer, int p_iStartSample, int p_iTotalSamples) override {
-		//VB not sure why this is?
-		if (m_dOmega == 0.0) {
-			return;
+	virtual float getSample(double p_dAngle, double p_dLevel, double dTail) {
+		//return (float)(sin(p_dAngle) * p_dLevel * dTail);
+
+		float fCurrentSample = 0.0;
+		for (int iCurK = 0; iCurK < m_iK; ++iCurK){
+			fCurrentSample += static_cast<float> (sin(m_dCurrentAngle * (2 * iCurK + 1)) / (2 * iCurK + 1));
 		}
 
-		double dTailOffCopy = m_dTailOff > 0 ? m_dTailOff : 1;
-
-		int iK = 50;
-
-		//while (--numSamples >= 0) {
-		for (int iCurSample = 0; iCurSample < p_iTotalSamples; ++iCurSample) {
-
-			float fCurrentSample = 0.0;
-			for (int iCurK = 0; iCurK < iK; ++iCurK){
-				fCurrentSample += static_cast<float> (sin(m_dCurrentAngle * (2 * iCurK + 1)) / (2 * iCurK + 1));
-			}
-
-			fCurrentSample = fCurrentSample * static_cast<float>(m_dLevel * dTailOffCopy);
-			//std::cout << fCurrentSample << "\n";
-
-			for (int i = p_oOutputBuffer.getNumChannels(); --i >= 0;){
-				p_oOutputBuffer.addSample(i, p_iStartSample, fCurrentSample);
-			}
-
-			m_dCurrentAngle += m_dOmega;
-			++p_iStartSample;
-
-			if (m_dTailOff > 0) {
-				m_dTailOff *= 0.99;
-
-				if (m_dTailOff <= 0.005) {
-					clearCurrentNote();
-
-					m_dOmega = 0.0;
-					break;
-				}
-			}
-		}
+		return fCurrentSample;
 	}
+
+	//void renderNextBlock(AudioSampleBuffer& p_oOutputBuffer, int p_iStartSample, int p_iTotalSamples) override {
+	//	//VB not sure why this is?
+	//	if (m_dOmega == 0.0) {
+	//		return;
+	//	}
+
+	//	double dTailOffCopy = m_dTailOff > 0 ? m_dTailOff : 1;
+
+	//	int iK = 50;
+
+	//	//while (--numSamples >= 0) {
+	//	for (int iCurSample = 0; iCurSample < p_iTotalSamples; ++iCurSample) {
+
+	//		float fCurrentSample = 0.0;
+	//		for (int iCurK = 0; iCurK < iK; ++iCurK){
+	//			fCurrentSample += static_cast<float> (sin(m_dCurrentAngle * (2 * iCurK + 1)) / (2 * iCurK + 1));
+	//		}
+
+	//		fCurrentSample = fCurrentSample * static_cast<float>(m_dLevel * dTailOffCopy);
+	//		//std::cout << fCurrentSample << "\n";
+
+	//		for (int i = p_oOutputBuffer.getNumChannels(); --i >= 0;){
+	//			p_oOutputBuffer.addSample(i, p_iStartSample, fCurrentSample);
+	//		}
+
+	//		m_dCurrentAngle += m_dOmega;
+	//		++p_iStartSample;
+
+	//		if (m_dTailOff > 0) {
+	//			m_dTailOff *= 0.99;
+
+	//			if (m_dTailOff <= 0.005) {
+	//				clearCurrentNote();
+
+	//				m_dOmega = 0.0;
+	//				break;
+	//			}
+	//		}
+	//	}
+	//}
+
+	int m_iK = 50;
+
 };
 
 //==============================================================================
