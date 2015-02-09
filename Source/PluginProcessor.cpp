@@ -253,7 +253,7 @@ class SawtoothWaveVoice : public SquareWaveVoice
 
 		float fCurrentSample = 0.0;
 
-		for (int iCurK = 0; iCurK < m_iK; ++iCurK){
+		for (int iCurK = 1; iCurK < m_iK; ++iCurK){
 			fCurrentSample += static_cast<float> (sin( (M_PI * iCurK) / 2) * (sin(m_dCurrentAngle * iCurK) / iCurK)) ;
 		}
 
