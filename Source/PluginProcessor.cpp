@@ -24,6 +24,8 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 #include "constants.h"
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 AudioProcessor* JUCE_CALLTYPE createPluginFilter();
 
@@ -47,6 +49,24 @@ public:
     
     bool appliesToNote (int /*midiNoteNumber*/) override  { return true; }
     bool appliesToChannel (int /*midiChannel*/) override  { return true; }
+};
+
+class TriangleWaveSound : public SynthesiserSound
+{
+public:
+	TriangleWaveSound() {}
+
+	bool appliesToNote(int /*midiNoteNumber*/) override  { return true; }
+	bool appliesToChannel(int /*midiChannel*/) override  { return true; }
+};
+
+class SawtoothWaveSound : public SynthesiserSound
+{
+public:
+	SawtoothWaveSound() {}
+
+	bool appliesToNote(int /*midiNoteNumber*/) override  { return true; }
+	bool appliesToChannel(int /*midiChannel*/) override  { return true; }
 };
 
 //==============================================================================
@@ -160,8 +180,18 @@ class SineWaveVoice : public Bmp4SynthVoice
 
 };
 
+JUCE_COMPILER_WARNING(new std::string("Would probably be way more efficient to " + 
+	"use wave tables for all these additive synthesis getSamples in square, triangle and sawtooth"))
+
 class SquareWaveVoice : public Bmp4SynthVoice
 {
+public:
+	SquareWaveVoice()
+		:m_iK(50)
+	{
+	}
+
+protected:
 	bool canPlaySound(SynthesiserSound* sound) override {
 
 		if (dynamic_cast <SquareWaveSound*> (sound)){
@@ -172,58 +202,63 @@ class SquareWaveVoice : public Bmp4SynthVoice
 	}
 
 	virtual float getSample(double p_dAngle, double p_dLevel, double dTail) {
-		//return (float)(sin(p_dAngle) * p_dLevel * dTail);
 
 		float fCurrentSample = 0.0;
 		for (int iCurK = 0; iCurK < m_iK; ++iCurK){
 			fCurrentSample += static_cast<float> (sin(m_dCurrentAngle * (2 * iCurK + 1)) / (2 * iCurK + 1));
 		}
-
-		return fCurrentSample;
+		return fCurrentSample * p_dLevel * dTail;
 	}
 
-	//void renderNextBlock(AudioSampleBuffer& p_oOutputBuffer, int p_iStartSample, int p_iTotalSamples) override {
-	//	//VB not sure why this is?
-	//	if (m_dOmega == 0.0) {
-	//		return;
-	//	}
+	int m_iK;
+};
 
-	//	double dTailOffCopy = m_dTailOff > 0 ? m_dTailOff : 1;
+class TriangleWaveVoice : public SquareWaveVoice
+{
+	virtual bool canPlaySound(SynthesiserSound* sound) override {
 
-	//	int iK = 50;
+		if (dynamic_cast <TriangleWaveSound*> (sound)){
+			return true;
+		} else {
+			return false;
+		}
+	}
 
-	//	//while (--numSamples >= 0) {
-	//	for (int iCurSample = 0; iCurSample < p_iTotalSamples; ++iCurSample) {
+	virtual float getSample(double p_dAngle, double p_dLevel, double dTail) {
 
-	//		float fCurrentSample = 0.0;
-	//		for (int iCurK = 0; iCurK < iK; ++iCurK){
-	//			fCurrentSample += static_cast<float> (sin(m_dCurrentAngle * (2 * iCurK + 1)) / (2 * iCurK + 1));
-	//		}
+		float fCurrentSample = 0.0;
 
-	//		fCurrentSample = fCurrentSample * static_cast<float>(m_dLevel * dTailOffCopy);
-	//		//std::cout << fCurrentSample << "\n";
+		for (int iCurK = 0; iCurK < m_iK; ++iCurK){
+			fCurrentSample += static_cast<float> (  sin(M_PI*(2*iCurK+1)/2) * (sin(m_dCurrentAngle * (2*iCurK+1)) / pow((2 * iCurK + 1),2))   );
+		}
 
-	//		for (int i = p_oOutputBuffer.getNumChannels(); --i >= 0;){
-	//			p_oOutputBuffer.addSample(i, p_iStartSample, fCurrentSample);
-	//		}
+		JUCE_COMPILER_WARNING(new std::string("p_dLevel doesn<t seem to work for any wave"))
+		return (8 / pow(M_PI,2)) * fCurrentSample * p_dLevel * dTail;
+	}
 
-	//		m_dCurrentAngle += m_dOmega;
-	//		++p_iStartSample;
+};
 
-	//		if (m_dTailOff > 0) {
-	//			m_dTailOff *= 0.99;
+class SawtoothWaveVoice : public SquareWaveVoice
+{
+	virtual bool canPlaySound(SynthesiserSound* sound) override {
 
-	//			if (m_dTailOff <= 0.005) {
-	//				clearCurrentNote();
+		if (dynamic_cast <SawtoothWaveSound*> (sound)){
+			return true;
+		} else {
+			return false;
+		}
+	}
 
-	//				m_dOmega = 0.0;
-	//				break;
-	//			}
-	//		}
-	//	}
-	//}
+	virtual float getSample(double p_dAngle, double p_dLevel, double dTail) {
 
-	int m_iK = 50;
+		float fCurrentSample = 0.0;
+
+		for (int iCurK = 0; iCurK < m_iK; ++iCurK){
+			fCurrentSample += static_cast<float> (sin( (M_PI * iCurK) / 2) * (sin(m_dCurrentAngle * iCurK) / iCurK)) ;
+		}
+
+		return (2 / M_PI) * fCurrentSample * p_dLevel * dTail;
+	}
 
 };
 
@@ -288,6 +323,7 @@ void sBMP4AudioProcessor::setWaveType(float p_fWave){
 	JUCE_COMPILER_WARNING(new string("probably the sounds should be loaded by the voices..."))
 	m_oSynth.clearSounds();
     m_oSynth.clearVoices();
+
     if (m_fWave == 0){
         m_oSynth.addSound (new SineWaveSound());
 		m_oSynth.addVoice(new SineWaveVoice());
@@ -296,6 +332,14 @@ void sBMP4AudioProcessor::setWaveType(float p_fWave){
         m_oSynth.addSound (new SquareWaveSound());
 		m_oSynth.addVoice(new SquareWaveVoice());
     }
+	else if (areSame(m_fWave, 2.f / 3)){
+		m_oSynth.addSound(new TriangleWaveSound());
+		m_oSynth.addVoice(new TriangleWaveVoice());
+	}
+	else if (m_fWave == 1){
+		m_oSynth.addSound(new SawtoothWaveSound());
+		m_oSynth.addVoice(new SawtoothWaveVoice());
+	}
 
 	//to have a polyphonic synth, need to load several voices, like this
 	//for (int i = 4; --i >= 0;){
