@@ -254,13 +254,10 @@ void Synthesiser::startVoice (SynthesiserVoice* const voice,
                               const int midiNoteNumber,
                               const float velocity)
 {
-	DBG("start voice with note " << midiNoteNumber);
-
-    if (voice != nullptr && sound != nullptr)
+	if (voice != nullptr && sound != nullptr)
     {
-		
 
-        if (voice->currentlyPlayingSound != nullptr)
+		if (voice->currentlyPlayingSound != nullptr)
             voice->stopNote (0.0f, false);
 
         voice->currentlyPlayingNote = midiNoteNumber;

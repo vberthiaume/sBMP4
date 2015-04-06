@@ -95,18 +95,14 @@ public:
 			return;
 		}
 
-		//double dTailOffCopy = m_dTailOff > 0 ? m_dTailOff : 1;
-		//m_dTailOff = m_dTailOff > 0 ? m_dTailOff : 1;
 		double dTailOffCopy;
 
-		//while (--numSamples >= 0) {
 		for (int iCurSample = 0; iCurSample < p_iTotalSamples; ++iCurSample) {
 
+			//this will be == 1 if we don't have a tail off or = m_dTailOff if we do
 			dTailOffCopy = m_dTailOff > 0 ? m_dTailOff : 1;
 
 			const float fCurrentSample = getSample(m_dCurrentAngle, m_dLevel, dTailOffCopy);
-
-			//DBG(fCurrentSample);
 
 			for (int i = p_oOutputBuffer.getNumChannels(); --i >= 0;){
 				p_oOutputBuffer.addSample(i, p_iStartSample, fCurrentSample);
@@ -129,7 +125,6 @@ public:
 	}
 
     void startNote (int midiNoteNumber, float velocity, SynthesiserSound* sound, int /*currentPitchWheelPosition*/) override {
-		DBG("startnote");
         m_dCurrentAngle = 0.0;
         m_dLevel = velocity * 0.15;
         m_dTailOff = 0.0;
@@ -142,15 +137,6 @@ public:
     }
 
     void stopNote (float /*velocity*/, bool allowTailOff) override {
-		int iallowTailOff;
-
-		if (allowTailOff){
-			iallowTailOff = 1;
-		} else {
-			iallowTailOff = 0;
-		}
-
-		DBG("stopnote with allowTailOff " << iallowTailOff);
 
         if (allowTailOff) {
             // start a tail-off by setting this flag. The render callback will pick up on
@@ -363,6 +349,7 @@ void sBMP4AudioProcessor::setWaveType(float p_fWave){
 			m_oSynth.addVoice(new SawtoothWaveVoice());
 	}
 
+	//HAVING A MONOPHONIC SYNTH MAKES CLICKS BETWEEN NOTES BECAUSE NO TAILING OFF BETWEEN NOTES
 	//to have a polyphonic synth, need to load several voices, like this
 	//for (int i = 4; --i >= 0;){
 	//	m_oSynth.addVoice(new SineWaveVoice());   // These voices will play our custom sine-wave sounds..
