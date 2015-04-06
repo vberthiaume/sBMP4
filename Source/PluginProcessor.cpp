@@ -95,16 +95,18 @@ public:
 			return;
 		}
 
-		double dTailOffCopy = m_dTailOff > 0 ? m_dTailOff : 1;
+		//double dTailOffCopy = m_dTailOff > 0 ? m_dTailOff : 1;
+		//m_dTailOff = m_dTailOff > 0 ? m_dTailOff : 1;
+		double dTailOffCopy;
 
 		//while (--numSamples >= 0) {
 		for (int iCurSample = 0; iCurSample < p_iTotalSamples; ++iCurSample) {
 
-			float fCurrentSample = 0.0;
+			dTailOffCopy = m_dTailOff > 0 ? m_dTailOff : 1;
 
-			DBG(dTailOffCopy);
+			const float fCurrentSample = getSample(m_dCurrentAngle, m_dLevel, dTailOffCopy);
 
-			fCurrentSample = getSample(m_dCurrentAngle, m_dLevel, dTailOffCopy);
+			//DBG(fCurrentSample);
 
 			for (int i = p_oOutputBuffer.getNumChannels(); --i >= 0;){
 				p_oOutputBuffer.addSample(i, p_iStartSample, fCurrentSample);
@@ -127,7 +129,7 @@ public:
 	}
 
     void startNote (int midiNoteNumber, float velocity, SynthesiserSound* sound, int /*currentPitchWheelPosition*/) override {
-        
+		DBG("startnote");
         m_dCurrentAngle = 0.0;
         m_dLevel = velocity * 0.15;
         m_dTailOff = 0.0;
@@ -140,12 +142,22 @@ public:
     }
 
     void stopNote (float /*velocity*/, bool allowTailOff) override {
+		int iallowTailOff;
+
+		if (allowTailOff){
+			iallowTailOff = 1;
+		} else {
+			iallowTailOff = 0;
+		}
+
+		DBG("stopnote with allowTailOff " << iallowTailOff);
+
         if (allowTailOff) {
             // start a tail-off by setting this flag. The render callback will pick up on
             // this and do a fade out, calling clearCurrentNote() when it's finished.
 
-            if (m_dTailOff == 0.0) // we only need to begin a tail-off if it's not already doing so - the
-                                // stopNote method could be called more than once.
+            if (m_dTailOff == 0.0)	// we only need to begin a tail-off if it's not already doing so - the
+									// stopNote method could be called more than once.
                 m_dTailOff = 1.0;
         } else {
             // we're being told to stop playing immediately, so reset everything..
@@ -332,19 +344,23 @@ void sBMP4AudioProcessor::setWaveType(float p_fWave){
 
     if (m_fWave == 0){
         m_oSynth.addSound (new SineWaveSound());
-		m_oSynth.addVoice(new SineWaveVoice());
+		for (int i = 4; --i >= 0;)
+			m_oSynth.addVoice(new SineWaveVoice());
     }
     else if(areSame(m_fWave, 1.f/3)){
         m_oSynth.addSound (new SquareWaveSound());
-		m_oSynth.addVoice(new SquareWaveVoice());
+		for (int i = 4; --i >= 0;)
+			m_oSynth.addVoice(new SquareWaveVoice());
     }
 	else if (areSame(m_fWave, 2.f / 3)){
 		m_oSynth.addSound(new TriangleWaveSound());
-		m_oSynth.addVoice(new TriangleWaveVoice());
+		for (int i = 4; --i >= 0;)
+			m_oSynth.addVoice(new TriangleWaveVoice());
 	}
 	else if (m_fWave == 1){
 		m_oSynth.addSound(new SawtoothWaveSound());
-		m_oSynth.addVoice(new SawtoothWaveVoice());
+		for (int i = 4; --i >= 0;)
+			m_oSynth.addVoice(new SawtoothWaveVoice());
 	}
 
 	//to have a polyphonic synth, need to load several voices, like this
@@ -463,7 +479,6 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
         lastPosInfo.resetToDefault();
     }
 }
-
 
 
 //==============================================================================
