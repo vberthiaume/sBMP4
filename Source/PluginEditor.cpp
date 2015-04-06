@@ -39,7 +39,6 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor (sBMP4AudioProcessor& owner
 {
     
     // add some sliders..
-    // add some sliders..
     addAndMakeVisible (m_oWaveSlider);
     m_oWaveSlider.setSliderStyle (Slider::RotaryHorizontalVerticalDrag);
     m_oWaveSlider.setTextBoxStyle(Slider::NoTextBox, true, 0, 0);

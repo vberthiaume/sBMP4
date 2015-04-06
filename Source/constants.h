@@ -33,7 +33,7 @@ enum Parameters{
 };
 
 const float defaultGain = 1.0f;
-const float defaultDelay = 0.5f;
+const float defaultDelay = 0.0f;
 const float defaultWave = 0.0f;
 
 static bool areSame(double a, double b)

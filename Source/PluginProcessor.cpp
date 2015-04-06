@@ -27,6 +27,10 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+#include <windows.h>
+
+
+
 AudioProcessor* JUCE_CALLTYPE createPluginFilter();
 
 
@@ -87,7 +91,6 @@ public:
 	virtual float getSample(double p_dAngle, double p_dLevel, double dTail) = 0;
 
 	void renderNextBlock(AudioSampleBuffer& p_oOutputBuffer, int p_iStartSample, int p_iTotalSamples) override {
-		//VB not sure why this is?
 		if (m_dOmega == 0.0) {
 			return;
 		}
@@ -98,6 +101,8 @@ public:
 		for (int iCurSample = 0; iCurSample < p_iTotalSamples; ++iCurSample) {
 
 			float fCurrentSample = 0.0;
+
+			DBG(dTailOffCopy);
 
 			fCurrentSample = getSample(m_dCurrentAngle, m_dLevel, dTailOffCopy);
 
@@ -309,10 +314,11 @@ void sBMP4AudioProcessor::setParameter (int index, float newValue)
     // This method will be called by the host, probably on the audio thread, so
     // it's absolutely time-critical. Don't use critical sections or anything
     // UI-related, or anything at all that may block in any way!
+	int i;
     switch (index)
     {
-        case paramGain:     m_fGain = newValue;  break;
-        case paramDelay:    m_fDelay = newValue;  break;
+        case paramGain:		m_fGain = newValue;		break;
+        case paramDelay:    m_fDelay = newValue;	break;
         case paramWave:     setWaveType(newValue);  break;
         default:            break;
     }
@@ -408,9 +414,9 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
     int channel, dp = 0;
 
     // Go through the incoming data, and apply our gain to it...
-    for (channel = 0; channel < getNumInputChannels(); ++channel)
-        buffer.applyGain (channel, 0, buffer.getNumSamples(), m_fGain);
-
+	for (channel = 0; channel < getNumInputChannels(); ++channel){
+		buffer.applyGain(channel, 0, buffer.getNumSamples(), m_fGain);
+	}
     // Now pass any incoming midi messages to our keyboard state object, and let it
     // add messages to the buffer if the user is clicking on the on-screen keys
     m_oKeyboardState.processNextMidiBuffer (midiMessages, 0, numSamples, true);
