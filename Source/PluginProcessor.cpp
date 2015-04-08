@@ -88,7 +88,7 @@ public:
 	// this is where we determine which unique sound this voice can play
 	bool canPlaySound(SynthesiserSound* sound) = 0;
 
-	virtual float getSample(double p_dAngle, double p_dLevel, double dTail) = 0;
+	virtual float getSample(double p_dAngle, double , double dTail) = 0;
 
 	void renderNextBlock(AudioSampleBuffer& p_oOutputBuffer, int p_iStartSample, int p_iTotalSamples) override {
 		if (m_dOmega == 0.0) {
@@ -178,6 +178,7 @@ class SineWaveVoice : public Bmp4SynthVoice
 	}
 
 	virtual float getSample(double p_dAngle, double p_dLevel, double dTail) {
+
 		return (float)(sin(p_dAngle) * p_dLevel * dTail);
 	}
 
@@ -205,6 +206,8 @@ protected:
 	}
 
 	virtual float getSample(double p_dAngle, double p_dLevel, double dTail) {
+
+
 
 		float fCurrentSample = 0.0;
 		for (int iCurK = 0; iCurK < m_iK; ++iCurK){
@@ -277,7 +280,6 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 
     m_oLastDimensions = std::make_pair(400,200);
 
-    lastPosInfo.resetToDefault();
     m_iDelayPosition = 0;
    
 
@@ -416,16 +418,17 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
     const int numSamples = buffer.getNumSamples();
     int channel, dp = 0;
 
-    // Go through the incoming data, and apply our gain to it...
-	for (channel = 0; channel < getNumInputChannels(); ++channel){
-		buffer.applyGain(channel, 0, buffer.getNumSamples(), m_fGain);
-	}
     // Now pass any incoming midi messages to our keyboard state object, and let it
     // add messages to the buffer if the user is clicking on the on-screen keys
     m_oKeyboardState.processNextMidiBuffer (midiMessages, 0, numSamples, true);
 
     // and now get the synth to process these midi events and generate its output.
     m_oSynth.renderNextBlock (buffer, midiMessages, 0, numSamples);
+
+	// apply our gain to it
+	for (channel = 0; channel < getNumInputChannels(); ++channel){
+		buffer.applyGain(channel, 0, buffer.getNumSamples(), m_fGain);
+	}
 
     // Apply our delay effect to the new output..
     for (channel = 0; channel < getNumInputChannels(); ++channel)
@@ -452,21 +455,7 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
     for (int i = getNumInputChannels(); i < getNumOutputChannels(); ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    // ask the host for the current time so we can display it...
-    AudioPlayHead::CurrentPositionInfo newTime;
-
-    if (getPlayHead() != nullptr && getPlayHead()->getCurrentPosition (newTime))
-    {
-        // Successfully got the current time from the host..
-        lastPosInfo = newTime;
-    }
-    else
-    {
-        // If the host fails to fill-in the current time, we'll just clear it to a default..
-        lastPosInfo.resetToDefault();
-    }
 }
-
 
 //==============================================================================
 void sBMP4AudioProcessor::getStateInformation (MemoryBlock& destData)

@@ -31,7 +31,7 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor (sBMP4AudioProcessor& owner
         m_oMidiKeyboard (owner.m_oKeyboardState, MidiKeyboardComponent::horizontalKeyboard),
         m_oWaveLabel ("", "Wave:"),
         m_oInfoLabel (String::empty),
-        m_oGainLabel ("", "Throughput level:"),
+        m_oGainLabel ("", "Gain:"),
         m_oDelayLabel ("", "Delay:"),
         m_oWaveSlider("wave"),
         m_oGainSlider ("gain"),
@@ -117,11 +117,6 @@ void sBMP4AudioProcessorEditor::resized() {
 // This timer periodically checks whether any of the filter's parameters have changed...
 void sBMP4AudioProcessorEditor::timerCallback() {
     sBMP4AudioProcessor& ourProcessor = getProcessor();
-
-    AudioPlayHead::CurrentPositionInfo newPos (ourProcessor.getLastPosInfo());
-
-    if (m_oLastDisplayedPosition != newPos)
-        displayPositionInfo (newPos);
 
     m_oGainSlider.setValue (ourProcessor.getParameter(paramGain), dontSendNotification);
     m_oDelaySlider.setValue (ourProcessor.getParameter(paramDelay), dontSendNotification);
