@@ -18,7 +18,7 @@
 # files that we want to exclude
 #
 #########################
-
+sBMP4Reaper
 #####
 # OS X temporary files that should never be committed
 #

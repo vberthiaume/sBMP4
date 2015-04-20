@@ -1485,6 +1485,9 @@
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_audio_plugin_client\VST3\juce_VST3_Wrapper.cpp">
       <Filter>Juce Library Code</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\sBMP4SoundsAndVoices.cpp">
+      <Filter>sBMP4\Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\constants.h">
@@ -2878,6 +2881,9 @@
     </ClInclude>
     <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h">
       <Filter>Juce Library Code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\sBMP4SoundsAndVoices.h">
+      <Filter>sBMP4\Source</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
