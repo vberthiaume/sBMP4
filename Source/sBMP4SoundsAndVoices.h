@@ -74,7 +74,7 @@ public:
 	// this is where we determine which unique sound this voice can play
 	bool canPlaySound(SynthesiserSound* sound) = 0;
 
-	virtual float getSample(double p_dAngle, double, double dTail) = 0;
+	virtual float getSample(double dTail) = 0;
 
 	void renderNextBlock(AudioSampleBuffer& p_oOutputBuffer, int p_iStartSample, int p_iTotalSamples) override;
 
@@ -99,7 +99,7 @@ class SineWaveVoice : public Bmp4SynthVoice
 {
 	virtual bool canPlaySound(SynthesiserSound* sound) override;
 
-	virtual float getSample(double p_dAngle, double p_dLevel, double dTail) override;
+	virtual float getSample(double dTail) override;
 
 };
 
@@ -111,7 +111,7 @@ public:
 protected:
 	bool canPlaySound(SynthesiserSound* sound) override;
 
-	virtual float getSample(double p_dAngle, double p_dLevel, double dTail);
+	virtual float getSample(double dTail);
 
 	int m_iK;
 };
@@ -120,7 +120,7 @@ class TriangleWaveVoice : public SquareWaveVoice
 {
 	virtual bool canPlaySound(SynthesiserSound* sound) override;
 
-	virtual float getSample(double p_dAngle, double p_dLevel, double dTail);
+	virtual float getSample(double dTail);
 
 };
 
@@ -128,7 +128,7 @@ class SawtoothWaveVoice : public SquareWaveVoice
 {
 	virtual bool canPlaySound(SynthesiserSound* sound) override;
 
-	virtual float getSample(double p_dAngle, double p_dLevel, double dTail);
+	virtual float getSample(double dTail);
 };
 
 #endif //sBMP4_Sounds_h

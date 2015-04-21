@@ -12,6 +12,10 @@
               companyName="BMP4">
   <MAINGROUP id="L2BB6f" name="sBMP4">
     <GROUP id="{39E19610-035A-894F-49C7-807C24EA4071}" name="Source">
+      <FILE id="Kr7Qkc" name="sBMP4SoundsAndVoices.cpp" compile="1" resource="0"
+            file="Source/sBMP4SoundsAndVoices.cpp"/>
+      <FILE id="m9gsqo" name="sBMP4SoundsAndVoices.h" compile="0" resource="0"
+            file="Source/sBMP4SoundsAndVoices.h"/>
       <FILE id="smKi9v" name="constants.h" compile="0" resource="0" file="Source/constants.h"/>
       <FILE id="faJx9M" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>

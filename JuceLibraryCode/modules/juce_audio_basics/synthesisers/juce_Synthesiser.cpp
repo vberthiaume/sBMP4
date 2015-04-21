@@ -255,21 +255,20 @@ void Synthesiser::startVoice (SynthesiserVoice* const voice,
                               const float velocity)
 {
 	if (voice != nullptr && sound != nullptr)
-    {
-
+	{
 		if (voice->currentlyPlayingSound != nullptr)
-            voice->stopNote (0.0f, false);
+			voice->stopNote(0.0f, false);
 
-        voice->currentlyPlayingNote = midiNoteNumber;
-        voice->currentPlayingMidiChannel = midiChannel;
-        voice->noteOnTime = ++lastNoteOnCounter;
-        voice->currentlyPlayingSound = sound;
-        voice->keyIsDown = true;
-        voice->sostenutoPedalDown = false;
+		voice->currentlyPlayingNote = midiNoteNumber;
+		voice->currentPlayingMidiChannel = midiChannel;
+		voice->noteOnTime = ++lastNoteOnCounter;
+		voice->currentlyPlayingSound = sound;
+		voice->keyIsDown = true;
+		voice->sostenutoPedalDown = false;
 
-        voice->startNote (midiNoteNumber, velocity, sound,
-                          lastPitchWheelValues [midiChannel - 1]);
-    }
+		voice->startNote(midiNoteNumber, velocity, sound,
+			lastPitchWheelValues[midiChannel - 1]);
+	}
 }
 
 void Synthesiser::stopVoice (SynthesiserVoice* voice, float velocity, const bool allowTailOff)

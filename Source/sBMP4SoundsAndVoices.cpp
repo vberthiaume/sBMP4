@@ -1,6 +1,6 @@
 /*
 ==============================================================================
-sBMP4: kilker subtractive synth!
+sBMP4: killer subtractive synth!
 
 Copyright (C) 2014  BMP4
 
@@ -43,13 +43,14 @@ void Bmp4SynthVoice::renderNextBlock(AudioSampleBuffer& p_oOutputBuffer, int p_i
 		//this will be == 1 if we don't have a tail off or = m_dTailOff if we do
 		dTailOffCopy = m_dTailOff > 0 ? m_dTailOff : 1;
 
-		const float fCurrentSample = getSample(m_dCurrentAngle, m_dLevel, dTailOffCopy);
+		//this is a virtual call to child functions
+		const float fCurrentSample = getSample(dTailOffCopy);
 
 		for (int i = p_oOutputBuffer.getNumChannels(); --i >= 0;){
 			p_oOutputBuffer.addSample(i, p_iStartSample, fCurrentSample);
 		}
 
-		m_dCurrentAngle += m_dOmega;
+		m_dCurrentAngle += m_dOmega;	//m_dOmega here is in radian...?
 		++p_iStartSample;
 
 		if (m_dTailOff > 0) {
@@ -103,9 +104,9 @@ bool SineWaveVoice::canPlaySound(SynthesiserSound* sound)  {
 	}
 }
 
-float SineWaveVoice::getSample(double p_dAngle, double p_dLevel, double dTail) {
+float SineWaveVoice::getSample(double dTail) {
 
-	return (float)(sin(p_dAngle) * p_dLevel * dTail);
+	return (float)(sin(m_dCurrentAngle) * m_dLevel * dTail);
 }
 
 JUCE_COMPILER_WARNING("Would probably be way more efficient to use wave tables for all these additive synthesis getSamples in square, triangle and sawtooth")
@@ -124,12 +125,12 @@ bool SquareWaveVoice::canPlaySound(SynthesiserSound* sound) {
 	}
 }
 
-float SquareWaveVoice::getSample(double p_dAngle, double p_dLevel, double dTail) {
+float SquareWaveVoice::getSample(double dTail) {
 	float fCurrentSample = 0.0;
 	for (int iCurK = 0; iCurK < m_iK; ++iCurK){
 		fCurrentSample += static_cast<float> (sin(m_dCurrentAngle * (2 * iCurK + 1)) / (2 * iCurK + 1));
 	}
-	return fCurrentSample * p_dLevel * dTail;
+	return fCurrentSample * m_dLevel * dTail;
 }
 
 
@@ -142,7 +143,7 @@ bool TriangleWaveVoice::canPlaySound(SynthesiserSound* sound) {
 	}
 }
 
-float TriangleWaveVoice::getSample(double p_dAngle, double p_dLevel, double dTail) {
+float TriangleWaveVoice::getSample(double dTail) {
 
 	float fCurrentSample = 0.0;
 
@@ -151,7 +152,7 @@ float TriangleWaveVoice::getSample(double p_dAngle, double p_dLevel, double dTai
 	}
 
 	JUCE_COMPILER_WARNING(new std::string("p_dLevel doesn<t seem to work for any wave"))
-		return (8 / pow(M_PI, 2)) * fCurrentSample * p_dLevel * dTail;
+		return (8 / pow(M_PI, 2)) * fCurrentSample * m_dLevel * dTail;
 }
 
 
@@ -164,14 +165,22 @@ bool SawtoothWaveVoice::canPlaySound(SynthesiserSound* sound)  {
 	}
 }
 
-float SawtoothWaveVoice::getSample(double p_dAngle, double p_dLevel, double dTail) {
+float SawtoothWaveVoice::getSample(double dTail) {
+
+	//float fCurrentSample = 0.0;
+
+	//for (int iCurK = 1; iCurK < m_iK; ++iCurK){
+	//	fCurrentSample += static_cast<float> (sin((M_PI * iCurK) / 2) * (sin(m_dCurrentAngle * iCurK) / iCurK));
+	//}
+
+	//return (2 / M_PI) * fCurrentSample * m_dLevel * dTail;
 
 	float fCurrentSample = 0.0;
 
 	for (int iCurK = 1; iCurK < m_iK; ++iCurK){
-		fCurrentSample += static_cast<float> (sin((M_PI * iCurK) / 2) * (sin(m_dCurrentAngle * iCurK) / iCurK));
+		fCurrentSample += static_cast<float> (sin(m_dCurrentAngle * iCurK) / iCurK);
 	}
 
-	return (2 / M_PI) * fCurrentSample * p_dLevel * dTail;
+	return 1/2 - (1 / M_PI) * fCurrentSample * m_dLevel * dTail;
 }
 
