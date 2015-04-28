@@ -46,7 +46,8 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
     m_fDelay = defaultDelay;
     setWaveType(defaultWave);
 
-    m_oLastDimensions = std::make_pair(400,200);
+	//width of 265 is 20 (x buffer on left) + 3*75 (3 sliders) + 20 (buffer on right)
+    m_oLastDimensions = std::make_pair(20+4*65+20,150);
 
     m_iDelayPosition = 0;
    

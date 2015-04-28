@@ -19,18 +19,18 @@
             isInstrument="0" fileTime="0" numInputs="2" numOutputs="0" isShell="0"/>
     <STATE>0.</STATE>
   </FILTER>
-  <FILTER uid="4" x="0.42625" y="0.418605" uiLastX="175" uiLastY="108">
+  <FILTER uid="4" x="0.42625" y="0.418605" uiLastX="291" uiLastY="215">
     <PLUGIN name="sBMP4" format="VST" category="Synth" manufacturer="BMP4"
             version="V1.0.0" file="C:\Users\Vincent\Documents\git\sBMP4\Builds\VisualStudio2013\Debug\sBMP4.dll"
-            uid="73424d50" isInstrument="1" fileTime="14b609b56d2" numInputs="2"
+            uid="73424d50" isInstrument="1" fileTime="14d0137b3de" numInputs="2"
             numOutputs="2" isShell="0"/>
-    <STATE>295.CMlaKA....fQBMDZ....ALmPMAE....Y....A...............................................................................................................................................................................GZ0PxDhe....7LkPMAEMSUDUTkjSGMEH0k1UoQFcn0iHz.CLh.RcogTYocFZz0iHx.CLh.xYgkla8HBLtPSL4jSN4jCN1fCN1jyM3DSMh.BYkwVX40iHv3xLw.CLv.CLvHyL3PSL3TyM4HBH2Elck0iHv3xLyLyLyLyLzLiL1bCMz.CNh7hO..</STATE>
+    <STATE>242.CMlaKA....fQBMDZ....ALmPMAE....Y....A...............................................................................................................................................................................RY0PxDRR....7LkPMAEMSUDUTkjSGMEH0k1UoQFcn0iHxPiMh.RcogTYocFZz0iHwTCLh.xYgkla8HRLh.BYkwVX40iHvHBH2Elck0iHvHxK9..</STATE>
   </FILTER>
   <FILTER uid="5" x="0.62" y="0.426357" uiLastX="116" uiLastY="231">
     <PLUGIN name="JuceDemoPlugin" descriptiveName="Juce Demo Plugin" format="VST"
             category="Effect" manufacturer="Raw Material Software" version="V1.0.0"
             file="C:\Users\Vincent\Documents\git\JUCE\examples\audio plugin demo\Builds\VisualStudio2010\Debug\JuceDemoPlugin.dll"
-            uid="4a63646d" isInstrument="0" fileTime="14b6154fad2" numInputs="2"
+            uid="4a63646d" isInstrument="0" fileTime="14c9016a969" numInputs="2"
             numOutputs="2" isShell="0"/>
     <STATE>238.CMlaKA....fQBMDZ....AnzXj0F....Y....A...............................................................................................................................................................................NY0PxDRQ....7zTVPwTUGkjSSUDUTkjSGMEH0k1UoQFcn0iHz.CLh.RcogTYocFZz0iHx.CLh.xYgkla8HRLh.BYkwVX40iHv3RMh7hO..</STATE>
   </FILTER>
