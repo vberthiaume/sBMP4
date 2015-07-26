@@ -72,7 +72,7 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor (sBMP4AudioProcessor& proce
 	m_oSineImage.setImage(ImageFileFormat::loadFrom(File::createFileWithoutCheckingPath("C:\\Users\\Vincent\\Documents\\git\\sBMP4\\icons\\sine.png")));
 	m_oSawImage.setImage(ImageFileFormat::loadFrom(File::createFileWithoutCheckingPath("C:\\Users\\Vincent\\Documents\\git\\sBMP4\\icons\\saw.png")));
 	m_oSquareImage.setImage(ImageFileFormat::loadFrom(File::createFileWithoutCheckingPath("C:\\Users\\Vincent\\Documents\\git\\sBMP4\\icons\\square.png")));
-	m_oTriangleImage.setImage(ImageFileFormat::loadFrom(File::createFileWithoutCheckingPath("C:\\Users\\Vincent\\Documents\\git\\sBMP4\\icons\\noise.png")));
+	m_oTriangleImage.setImage(ImageFileFormat::loadFrom(File::createFileWithoutCheckingPath("C:\\Users\\Vincent\\Documents\\git\\sBMP4\\icons\\triangle.png")));
 	m_oLogoImage.setImage(ImageFileFormat::loadFrom(File::createFileWithoutCheckingPath("C:\\Users\\Vincent\\Documents\\git\\sBMP4\\icons\\main.png")));
 
 	addAndMakeVisible(m_oSineImage);
