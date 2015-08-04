@@ -26,48 +26,76 @@
 #include "constants.h"
 
 //==============================================================================
-sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor (sBMP4AudioProcessor& owner)
-    : AudioProcessorEditor (owner),
-        m_oMidiKeyboard (owner.m_oKeyboardState, MidiKeyboardComponent::horizontalKeyboard),
-        m_oWaveLabel ("", "Wave:"),
+sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor (sBMP4AudioProcessor& processor)
+    : AudioProcessorEditor (processor),
+        m_oMidiKeyboard (processor.m_oKeyboardState, MidiKeyboardComponent::horizontalKeyboard),
+		m_oWaveLabel("", "wave"),//"Wave:"),
         m_oInfoLabel (String::empty),
-        m_oGainLabel ("", "Throughput level:"),
-        m_oDelayLabel ("", "Delay:"),
+        m_oGainLabel ("", "gain"),
+        m_oDelayLabel ("", "delay"),
         m_oWaveSlider("wave"),
         m_oGainSlider ("gain"),
-        m_oDelaySlider ("delay")
+        m_oDelaySlider ("delay"),
+		m_oSineImage("sine"), 
+		m_oSawImage("saw"),
+		m_oTriangleImage("triangle"), 
+		m_oLogoImage("sBMP4")
 {
     
-    // add some sliders..
     // add some sliders..
     addAndMakeVisible (m_oWaveSlider);
     m_oWaveSlider.setSliderStyle (Slider::RotaryHorizontalVerticalDrag);
     m_oWaveSlider.setTextBoxStyle(Slider::NoTextBox, true, 0, 0);
+	m_oWaveSlider.setColour(Slider::ColourIds::rotarySliderFillColourId, Colours::white);
+	m_oWaveSlider.setColour(Slider::ColourIds::rotarySliderOutlineColourId, Colours::yellow);
     m_oWaveSlider.addListener (this);
     m_oWaveSlider.setRange (0.0, 1.0, 1.f/3);
     
     addAndMakeVisible (m_oGainSlider);
     m_oGainSlider.setSliderStyle (Slider::RotaryHorizontalVerticalDrag);
     m_oGainSlider.setTextBoxStyle(Slider::NoTextBox, true, 0, 0);
+	m_oGainSlider.setColour(Slider::ColourIds::rotarySliderFillColourId, Colours::white);
+	m_oGainSlider.setColour(Slider::ColourIds::rotarySliderOutlineColourId, Colours::yellow);
     m_oGainSlider.addListener (this);
     m_oGainSlider.setRange (0.0, 1.0, 0.01);
 
     addAndMakeVisible (m_oDelaySlider);
     m_oDelaySlider.setSliderStyle (Slider::RotaryHorizontalVerticalDrag);
     m_oDelaySlider.setTextBoxStyle(Slider::NoTextBox, true, 0, 0);
+	m_oDelaySlider.setColour(Slider::ColourIds::rotarySliderFillColourId, Colours::white);
+	m_oDelaySlider.setColour(Slider::ColourIds::rotarySliderOutlineColourId, Colours::yellow);
     m_oDelaySlider.addListener (this);
     m_oDelaySlider.setRange (0.0, 1.0, 0.01);
 
-    // add some labels for the sliders..
-    m_oWaveLabel.attachToComponent (&m_oWaveSlider, false);
+
+	JUCE_COMPILER_WARNING("path needs to make sense on mac")
+	m_oSineImage.setImage(ImageFileFormat::loadFrom(File::createFileWithoutCheckingPath("C:\\Users\\Vincent\\Documents\\git\\sBMP4\\icons\\sine.png")));
+	m_oSawImage.setImage(ImageFileFormat::loadFrom(File::createFileWithoutCheckingPath("C:\\Users\\Vincent\\Documents\\git\\sBMP4\\icons\\saw.png")));
+	m_oSquareImage.setImage(ImageFileFormat::loadFrom(File::createFileWithoutCheckingPath("C:\\Users\\Vincent\\Documents\\git\\sBMP4\\icons\\square.png")));
+	m_oTriangleImage.setImage(ImageFileFormat::loadFrom(File::createFileWithoutCheckingPath("C:\\Users\\Vincent\\Documents\\git\\sBMP4\\icons\\triangle.png")));
+	m_oLogoImage.setImage(ImageFileFormat::loadFrom(File::createFileWithoutCheckingPath("C:\\Users\\Vincent\\Documents\\git\\sBMP4\\icons\\main.png")));
+
+	addAndMakeVisible(m_oSineImage);
+	addAndMakeVisible(m_oSawImage);
+	addAndMakeVisible(m_oSquareImage);
+	addAndMakeVisible(m_oTriangleImage);
+	addAndMakeVisible(m_oLogoImage);
+
+    // add some labels for the sliders
     m_oWaveLabel.setFont (Font (11.0f));
-    
-    m_oGainLabel.attachToComponent (&m_oGainSlider, false);
+	m_oWaveLabel.setColour(Label::textColourId, Colours::white);
+	m_oWaveLabel.setJustificationType(Justification::centred);
+	addAndMakeVisible(m_oWaveLabel);
+
     m_oGainLabel.setFont (Font (11.0f));
+	m_oGainLabel.setColour(Label::textColourId, Colours::white);
+	m_oGainLabel.setJustificationType(Justification::centred);
+	addAndMakeVisible(m_oGainLabel);
 
-    m_oDelayLabel.attachToComponent (&m_oDelaySlider, false);
     m_oDelayLabel.setFont (Font (11.0f));
-
+	m_oDelayLabel.setColour(Label::textColourId, Colours::white);
+	m_oDelayLabel.setJustificationType(Justification::centred);
+	addAndMakeVisible(m_oDelayLabel);
     // add the midi keyboard component..
     addAndMakeVisible (m_oMidiKeyboard);
 
@@ -77,10 +105,10 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor (sBMP4AudioProcessor& owner
 
     // add the triangular m_pResizer component for the bottom-right of the UI
     addAndMakeVisible (m_pResizer = new ResizableCornerComponent (this, &m_oResizeLimits));
-    m_oResizeLimits.setSizeLimits (150, 150, 800, 300);
+    m_oResizeLimits.setSizeLimits (20+4*65+20, 150, 800, 300);
 
     // set our component's initial size to be the last one that was stored in the filter's settings
-    setSize (owner.getDimensions().first, owner.getDimensions().second);
+    setSize (processor.getDimensions().first, processor.getDimensions().second);
 
     startTimer (50);
 }
@@ -92,19 +120,33 @@ sBMP4AudioProcessorEditor::~sBMP4AudioProcessorEditor()
 //==============================================================================
 void sBMP4AudioProcessorEditor::paint (Graphics& g)
 {
-    g.setGradientFill (ColourGradient (Colours::white, 0, 0,
-                                       Colours::grey, 0, (float) getHeight(), false));
-    g.fillAll();
+    g.fillAll(Colour::greyLevel(0.20f));
 }
 
 void sBMP4AudioProcessorEditor::resized() {
     //m_oInfoLabel.setBounds (10, 4, 400, 25);
-    int x = 20, y = 50, w = 100, h = 40;
-    m_oWaveSlider.setBounds  (x,        y, w, h);
-    m_oGainSlider.setBounds  (x + w,    y, w, h);
-    m_oDelaySlider.setBounds (x + 2*w,  y, w, h);
 
-    const int keyboardHeight = 70;
+    int x = 20, y = 25, w = 75, sh = 40, wh = 20;
+    m_oWaveSlider.setBounds	(x, y,		w, sh);
+	m_oWaveLabel.setBounds(x, y + 1.5*wh, w, wh);
+
+	m_oSineImage.setBounds(x - 5, y + 25, 20, 20);
+	m_oSquareImage.setBounds(x + 0, y - 15, 20, 20);
+	m_oTriangleImage.setBounds(x + 7 * w / 10, y - 15, 20, 20);
+	m_oSawImage.setBounds(x + 8 * w / 10, y + 25, 20, 20);
+
+    m_oGainSlider.setBounds (x + w, y,		w, sh);
+	m_oGainLabel.setBounds	(x + w, y+1.5*wh,	w, wh);
+    
+	m_oDelaySlider.setBounds(x + 2*w, y,	    w, sh);
+	m_oDelayLabel.setBounds (x + 2*w, y+1.5*wh, w, wh);
+
+	const int keyboardHeight = 70;
+
+	//m_oLogoImage.setBounds(x + 3 * w, 5, 48, 48);
+	m_oLogoImage.setBounds(getWidth() - (4+48), 5, 48, 48);
+
+    
     m_oMidiKeyboard.setBounds (4, getHeight() - keyboardHeight - 4, getWidth() - 8, keyboardHeight);
 
     m_pResizer->setBounds (getWidth() - 16, getHeight() - 16, 16, 16);
@@ -118,11 +160,6 @@ void sBMP4AudioProcessorEditor::resized() {
 // This timer periodically checks whether any of the filter's parameters have changed...
 void sBMP4AudioProcessorEditor::timerCallback() {
     sBMP4AudioProcessor& ourProcessor = getProcessor();
-
-    AudioPlayHead::CurrentPositionInfo newPos (ourProcessor.getLastPosInfo());
-
-    if (m_oLastDisplayedPosition != newPos)
-        displayPositionInfo (newPos);
 
     m_oGainSlider.setValue (ourProcessor.getParameter(paramGain), dontSendNotification);
     m_oDelaySlider.setValue (ourProcessor.getParameter(paramDelay), dontSendNotification);

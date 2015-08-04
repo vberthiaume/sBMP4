@@ -49,6 +49,7 @@ private:
     MidiKeyboardComponent m_oMidiKeyboard;
     Label m_oWaveLabel, m_oInfoLabel, m_oGainLabel, m_oDelayLabel;
     Slider m_oWaveSlider, m_oGainSlider, m_oDelaySlider;
+	ImageComponent m_oSineImage, m_oSawImage, m_oSquareImage, m_oTriangleImage, m_oLogoImage;
     ScopedPointer<ResizableCornerComponent> m_pResizer;
     ComponentBoundsConstrainer m_oResizeLimits;
 

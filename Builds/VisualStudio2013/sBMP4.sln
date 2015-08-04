@@ -1,0 +1,19 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2013
+Project("{CCB49B3B-9BD8-99E6-A88C-9F259E36CD88}") = "sBMP4", "sBMP4.vcxproj", "{104DF58D-3C23-FE69-F5B5-604180890FF5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{104DF58D-3C23-FE69-F5B5-604180890FF5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{104DF58D-3C23-FE69-F5B5-604180890FF5}.Debug|Win32.Build.0 = Debug|Win32
+		{104DF58D-3C23-FE69-F5B5-604180890FF5}.Release|Win32.ActiveCfg = Release|Win32
+		{104DF58D-3C23-FE69-F5B5-604180890FF5}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

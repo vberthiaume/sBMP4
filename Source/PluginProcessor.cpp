@@ -1,6 +1,6 @@
 /*
  ==============================================================================
- sBMP4: kilker subtractive synth!
+ sBMP4: killer subtractive synth!
  
  Copyright (C) 2014  BMP4
  
@@ -24,149 +24,16 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 #include "constants.h"
+#include "sBMP4SoundsAndVoices.h"
+
+#define _USE_MATH_DEFINES
+#include <math.h>
+
+#include <windows.h>
+
+
 
 AudioProcessor* JUCE_CALLTYPE createPluginFilter();
-
-
-//==============================================================================
-/** A demo synth sound that's just a basic sine wave.. */
-class SineWaveSound : public SynthesiserSound
-{
-public:
-    SineWaveSound() {}
-
-    bool appliesToNote (const int /*midiNoteNumber*/) override  { return true; }
-    bool appliesToChannel (const int /*midiChannel*/) override  { return true; }
-};
-
-class SquareWaveSound : public SynthesiserSound
-{
-public:
-    SquareWaveSound() {}
-    
-    bool appliesToNote (const int /*midiNoteNumber*/) override  { return true; }
-    bool appliesToChannel (const int /*midiChannel*/) override  { return true; }
-};
-
-//==============================================================================
-
-class SineWaveVoice  : public SynthesiserVoice
-{
-public:
-    SineWaveVoice()
-        : m_dOmega (0.0),
-          m_dTailOff (0.0)
-    {
-    }
-    
-    void startNote (int midiNoteNumber, float velocity, SynthesiserSound* sound, int /*currentPitchWheelPosition*/) override {
-        
-        m_dCurrentAngle = 0.0;
-        m_dLevel = velocity * 0.15;
-        m_dTailOff = 0.0;
-        
-        double dFrequency = MidiMessage::getMidiNoteInHertz (midiNoteNumber);
-        double dNormalizedFreq = dFrequency / getSampleRate();
-        m_dOmega = dNormalizedFreq * 2.0 * double_Pi;
-        
-        m_oCurrentSound = sound;
-    }
-    
-    void renderNextBlock (AudioSampleBuffer& p_oOutputBuffer, int p_iStartSample, int p_iTotalSamples) override {
-        //VB not sure why this is?
-        if (m_dOmega == 0.0) {
-            return;
-        }
-        
-        double dTailOffCopy = m_dTailOff > 0 ? m_dTailOff : 1;
-        
-#warning this should only be set in case of square waves, probably in startNote or something
-        int iK = 50;
-        
-        
-        //while (--numSamples >= 0) {
-        for (int iCurSample = 0; iCurSample < p_iTotalSamples; ++iCurSample) {
-
-            float fCurrentSample = 0.0;
-            
-            //SINE WAVE
-            //if (dynamic_cast <SineWaveSound*> (m_oCurrentSound)){
-            if (dynamic_cast <SineWaveSound*> (m_oCurrentSound)){
-                fCurrentSample = (float) (sin (m_dCurrentAngle) * m_dLevel * dTailOffCopy);
-            }
-            
-            //SQUARE WAVE
-            else if (dynamic_cast <SquareWaveSound*> (m_oCurrentSound)){
-
-                for (int iCurK = 0; iCurK < iK; ++iCurK){
-                    fCurrentSample += sin(m_dCurrentAngle * (2*iCurK + 1)) / (2*iCurK + 1);
-                }
-                
-                fCurrentSample = fCurrentSample * m_dLevel * dTailOffCopy;
-                //std::cout << fCurrentSample << "\n";
-                
-            }
-            
-            for (int i = p_oOutputBuffer.getNumChannels(); --i >= 0;){
-                p_oOutputBuffer.addSample (i, p_iStartSample, fCurrentSample);
-            }
-            
-            m_dCurrentAngle += m_dOmega;
-            ++p_iStartSample;
-            
-            if (m_dTailOff > 0) {
-                m_dTailOff *= 0.99;
-                
-                if (m_dTailOff <= 0.005) {
-                    clearCurrentNote();
-                    
-                    m_dOmega = 0.0;
-                    break;
-                }
-            }
-        }
-    }
-
-    void stopNote (bool allowTailOff) override {
-        if (allowTailOff) {
-            // start a tail-off by setting this flag. The render callback will pick up on
-            // this and do a fade out, calling clearCurrentNote() when it's finished.
-
-            if (m_dTailOff == 0.0) // we only need to begin a tail-off if it's not already doing so - the
-                                // stopNote method could be called more than once.
-                m_dTailOff = 1.0;
-        } else {
-            // we're being told to stop playing immediately, so reset everything..
-
-            clearCurrentNote();
-            m_dOmega = 0.0;
-        }
-    }
-    
-    bool canPlaySound (SynthesiserSound* sound) override {
-        
-        if (dynamic_cast <SineWaveSound*> (sound) ||
-            dynamic_cast <SquareWaveSound*> (sound)){
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    void pitchWheelMoved (int /*newValue*/) override {
-        // can't be bothered implementing this for the demo!
-    }
-
-    void controllerMoved (int /*controllerNumber*/, int /*newValue*/) override {
-        // not interested in controllers in this case.
-    }
-
-private:
-    double m_dCurrentAngle, m_dOmega, m_dLevel, m_dTailOff;
-    SynthesiserSound* m_oCurrentSound;
-};
-
-
 
 
 //==============================================================================
@@ -179,16 +46,11 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
     m_fDelay = defaultDelay;
     setWaveType(defaultWave);
 
-    m_oLastDimensions = std::make_pair(400,200);
+	//width of 265 is 20 (x buffer on left) + 3*75 (3 sliders) + 20 (buffer on right)
+    m_oLastDimensions = std::make_pair(20+4*65+20, 150);
 
-    lastPosInfo.resetToDefault();
     m_iDelayPosition = 0;
-
-    // Initialise the synth...
-    for (int i = 4; --i >= 0;){
-        m_oSynth.addVoice (new SineWaveVoice());   // These voices will play our custom sine-wave sounds..
-    }
-    
+   
 
 }
 
@@ -223,8 +85,8 @@ void sBMP4AudioProcessor::setParameter (int index, float newValue)
     // UI-related, or anything at all that may block in any way!
     switch (index)
     {
-        case paramGain:     m_fGain = newValue;  break;
-        case paramDelay:    m_fDelay = newValue;  break;
+        case paramGain:		m_fGain = newValue;		break;
+        case paramDelay:    m_fDelay = newValue;	break;
         case paramWave:     setWaveType(newValue);  break;
         default:            break;
     }
@@ -232,13 +94,36 @@ void sBMP4AudioProcessor::setParameter (int index, float newValue)
 
 void sBMP4AudioProcessor::setWaveType(float p_fWave){
     m_fWave = p_fWave;
-    m_oSynth.clearSounds();
+	JUCE_COMPILER_WARNING(new string("probably the sounds should be loaded by the voices..."))
+	m_oSynth.clearSounds();
+    m_oSynth.clearVoices();
+
     if (m_fWave == 0){
         m_oSynth.addSound (new SineWaveSound());
+		for (int i = 4; --i >= 0;)
+			m_oSynth.addVoice(new SineWaveVoice());
     }
     else if(areSame(m_fWave, 1.f/3)){
         m_oSynth.addSound (new SquareWaveSound());
+		for (int i = 4; --i >= 0;)
+			m_oSynth.addVoice(new SquareWaveVoice());
     }
+	else if (areSame(m_fWave, 2.f / 3)){
+		m_oSynth.addSound(new TriangleWaveSound());
+		for (int i = 4; --i >= 0;)
+			m_oSynth.addVoice(new TriangleWaveVoice());
+	}
+	else if (m_fWave == 1){
+		m_oSynth.addSound(new SawtoothWaveSound());
+		for (int i = 4; --i >= 0;)
+			m_oSynth.addVoice(new SawtoothWaveVoice());
+	}
+
+	//HAVING A MONOPHONIC SYNTH MAKES CLICKS BETWEEN NOTES BECAUSE NO TAILING OFF BETWEEN NOTES
+	//to have a polyphonic synth, need to load several voices, like this
+	//for (int i = 4; --i >= 0;){
+	//	m_oSynth.addVoice(new SineWaveVoice());   // These voices will play our custom sine-wave sounds..
+	//}
 }
 
 float sBMP4AudioProcessor::getParameterDefaultValue (int index)
@@ -301,16 +186,17 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
     const int numSamples = buffer.getNumSamples();
     int channel, dp = 0;
 
-    // Go through the incoming data, and apply our gain to it...
-    for (channel = 0; channel < getNumInputChannels(); ++channel)
-        buffer.applyGain (channel, 0, buffer.getNumSamples(), m_fGain);
-
     // Now pass any incoming midi messages to our keyboard state object, and let it
     // add messages to the buffer if the user is clicking on the on-screen keys
     m_oKeyboardState.processNextMidiBuffer (midiMessages, 0, numSamples, true);
 
     // and now get the synth to process these midi events and generate its output.
     m_oSynth.renderNextBlock (buffer, midiMessages, 0, numSamples);
+
+	// apply our gain to it
+	for (channel = 0; channel < getNumInputChannels(); ++channel){
+		buffer.applyGain(channel, 0, buffer.getNumSamples(), m_fGain);
+	}
 
     // Apply our delay effect to the new output..
     for (channel = 0; channel < getNumInputChannels(); ++channel)
@@ -337,22 +223,7 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
     for (int i = getNumInputChannels(); i < getNumOutputChannels(); ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    // ask the host for the current time so we can display it...
-    AudioPlayHead::CurrentPositionInfo newTime;
-
-    if (getPlayHead() != nullptr && getPlayHead()->getCurrentPosition (newTime))
-    {
-        // Successfully got the current time from the host..
-        lastPosInfo = newTime;
-    }
-    else
-    {
-        // If the host fails to fill-in the current time, we'll just clear it to a default..
-        lastPosInfo.resetToDefault();
-    }
 }
-
-
 
 //==============================================================================
 void sBMP4AudioProcessor::getStateInformation (MemoryBlock& destData)

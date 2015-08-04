@@ -308,7 +308,7 @@ struct AAXClasses
             }
         }
 
-        virtual AAX_Result GetViewSize (AAX_Point* viewSize) const override
+        AAX_Result GetViewSize (AAX_Point* viewSize) const override
         {
             if (component != nullptr)
             {
@@ -495,6 +495,18 @@ struct AAXClasses
                 return AAX_CEffectParameters::SetChunk (chunkID, chunk);
 
             pluginInstance->setStateInformation ((void*) chunk->fData, chunk->fSize);
+
+            // Notify Pro Tools that the parameters were updated.
+            // Without it a bug happens in these circumstances:
+            // * A preset is saved with the RTAS version of the plugin (".tfx" preset format).
+            // * The preset is loaded in PT 10 using the AAX version.
+            // * The session is then saved, and closed.
+            // * The saved session is loaded, but acting as if the preset was never loaded.
+            const int numParameters = pluginInstance->getNumParameters();
+
+            for (int i = 0; i < numParameters; ++i)
+                SetParameterNormalizedValue (IndexAsParamID (i), (double) pluginInstance->getParameter(i));
+
             return AAX_SUCCESS;
         }
 
@@ -624,7 +636,11 @@ struct AAXClasses
         AAX_Result GetParameterDefaultNormalizedValue (AAX_CParamID paramID, double* result) const override
         {
             if (! isBypassParam (paramID))
+            {
                 *result = (double) pluginInstance->getParameterDefaultValue (getParamIndexFromID (paramID));
+
+                jassert (*result >= 0 && *result <= 1.0f);
+            }
 
             return AAX_SUCCESS;
         }
@@ -777,10 +793,8 @@ struct AAXClasses
 
                 for (uint32_t i = 0; i < numMidiEvents; ++i)
                 {
-                    // (This 8-byte alignment is a workaround to a bug in the AAX SDK. Hopefully can be
-                    // removed in future when the packet structure size is fixed)
-                    const AAX_CMidiPacket& m = *addBytesToPointer (midiStream->mBuffer,
-                                                                   i * ((sizeof (AAX_CMidiPacket) + 7) & ~(size_t) 7));
+                    const AAX_CMidiPacket& m = midiStream->mBuffer[i];
+
                     jassert ((int) m.mTimestamp < bufferSize);
                     midiBuffer.addEvent (m.mData, (int) m.mLength,
                                          jlimit (0, (int) bufferSize - 1, (int) m.mTimestamp));
@@ -792,6 +806,9 @@ struct AAXClasses
                 if (lastBufferSize != bufferSize)
                 {
                     lastBufferSize = bufferSize;
+                    pluginInstance->setPlayConfigDetails (pluginInstance->getNumInputChannels(),
+                                                          pluginInstance->getNumOutputChannels(),
+                                                          sampleRate, bufferSize);
                     pluginInstance->prepareToPlay (sampleRate, bufferSize);
                 }
 
@@ -998,7 +1015,10 @@ struct AAXClasses
         // This value needs to match the RTAS wrapper's Type ID, so that
         // the host knows that the RTAS/AAX plugins are equivalent.
         properties->AddProperty (AAX_eProperty_PlugInID_Native,     'jcaa' + channelConfigIndex);
+
+       #if ! JucePlugin_AAXDisableAudioSuite
         properties->AddProperty (AAX_eProperty_PlugInID_AudioSuite, 'jyaa' + channelConfigIndex);
+       #endif
 
        #if JucePlugin_AAXDisableMultiMono
         properties->AddProperty (AAX_eProperty_Constraint_MultiMonoSupport, false);
