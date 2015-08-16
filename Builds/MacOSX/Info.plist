@@ -23,5 +23,24 @@
     <string>BMP4</string>
     <key>NSHighResolutionCapable</key>
     <true/>
+    <key>AudioComponents</key>
+    <array>
+      <dict>
+        <key>name</key>
+        <string>BMP4: sBMP4</string>
+        <key>description</key>
+        <string>killer subtractive synth</string>
+        <key>factoryFunction</key>
+        <string>sbmp4Factory</string>
+        <key>manufacturer</key>
+        <string>BMP4</string>
+        <key>type</key>
+        <string>aumu</string>
+        <key>subtype</key>
+        <string>sBMP</string>
+        <key>version</key>
+        <integer>65536</integer>
+      </dict>
+    </array>
   </dict>
 </plist>
