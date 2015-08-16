@@ -78,8 +78,7 @@
         <MODULEPATH id="juce_audio_basics" path="../../juce"/>
       </MODULEPATHS>
     </VS2013>
-    <LINUX_MAKE targetFolder="Builds/LinuxMakefile" vstFolder="~/SDKs/vstsdk2.4"
-                vst3Folder="~/SDKs/VST3 SDK">
+    <LINUX_MAKE targetFolder="Builds/LinuxMakefile" vstFolder="" vst3Folder="~/Documents/sdks/VST3 SDK">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/" isDebug="1" optimisation="1"
                        targetName="sBMP4"/>
