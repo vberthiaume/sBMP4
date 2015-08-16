@@ -29,7 +29,9 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-#include <windows.h>
+#ifdef __WIN32 
+    #include <windows.h>
+#endif
 
 
 
@@ -53,9 +55,7 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
    
 
 }
-
-sBMP4AudioProcessor::~sBMP4AudioProcessor()
-{
+sBMP4AudioProcessor::~sBMP4AudioProcessor() {
 }
 
 //==============================================================================

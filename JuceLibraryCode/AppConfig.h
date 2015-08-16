@@ -62,7 +62,7 @@
 #endif
 
 #ifndef    JUCE_ALSA
- //#define JUCE_ALSA
+ #define   JUCE_ALSA 0
 #endif
 
 #ifndef    JUCE_JACK
