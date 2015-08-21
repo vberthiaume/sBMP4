@@ -355,3 +355,9 @@ FakesAssemblies/
 
 # Visual Studio 6 workspace options file
 *.opt
+
+#-----------------------------
+#linux stuff
+
+#vim swap files
+*.swo
