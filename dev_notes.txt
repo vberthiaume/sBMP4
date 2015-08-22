@@ -10,3 +10,13 @@ juce plugin host
 ardour
     don't know where to put the plugins
     is there sound? yes there is sound. so maybe ardour is the way to go about this?
+    reading ardour manual
+        what i produce are vsts, with .so extension which is linux for dll
+        only vst 2.4 is supported
+            ok, so maybe that is why everything crashed when I used the juce demo stuff
+           from manual: Linux VST (LXVST) plugins are distributed as shared library files. They are
+           typically installed in /usr/lib/lxvst, /usr/local/lib/lxvst or a directory mentioned in
+           your LXVST_PATH environment variable.
+
+ok. so ardour is a pain. I got bitwig to work with jack audio device. start from there? Like try to
+compile juce demo plugin to make it work in bitwig?

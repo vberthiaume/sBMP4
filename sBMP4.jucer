@@ -2,7 +2,7 @@
 
 <JUCERPROJECT id="BjKeQY" name="sBMP4" projectType="audioplug" version="1.0.0"
               bundleIdentifier="com.BMP4.synth" includeBinaryInAppConfig="1"
-              buildVST="1" buildVST3="1" buildAU="1" buildRTAS="0" buildAAX="0"
+              buildVST="1" buildVST3="0" buildAU="0" buildRTAS="0" buildAAX="0"
               pluginName="sBMP4" pluginDesc="killer subtractive synth" pluginManufacturer="BMP4"
               pluginManufacturerCode="BMP4" pluginCode="sBMP" pluginChannelConfigs="{1, 1}, {2, 2}"
               pluginIsSynth="1" pluginWantsMidiIn="1" pluginProducesMidiOut="1"
@@ -78,7 +78,8 @@
         <MODULEPATH id="juce_audio_basics" path="../../juce"/>
       </MODULEPATHS>
     </VS2013>
-    <LINUX_MAKE targetFolder="Builds/LinuxMakefile" vstFolder="" vst3Folder="~/Documents/sdks/VST3 SDK">
+    <LINUX_MAKE targetFolder="Builds/LinuxMakefile" vstFolder="~/Documents/sdks/vstsdk2.4"
+                vst3Folder="~/Documents/sdks/VST3 SDK">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/" isDebug="1" optimisation="1"
                        targetName="sBMP4"/>
