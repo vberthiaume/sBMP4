@@ -225,6 +225,12 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 
 }
 
+
+JUCE_COMPILER_WARNING("need to put this in my audio library")
+//from here: https://ccrma.stanford.edu/~jos/filters/Definition_Simplest_Low_Pass.html
+double sBMP4AudioProcessor::simplestLP(double *x, double *y, int M, double xm1){	y[0] = x[0] + xm1;	for (int n = 1; n < M; n++) {		y[n] = x[n] + x[n - 1];	}	return x[M - 1];}
+
+
 //==============================================================================
 void sBMP4AudioProcessor::getStateInformation (MemoryBlock& destData)
 {

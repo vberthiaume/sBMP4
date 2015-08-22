@@ -86,6 +86,8 @@ public:
     MidiKeyboardState m_oKeyboardState;
 
 private:
+
+	double simplestLP(double *x, double *y, int M, double xm1);
     
     float m_fGain, m_fDelay, m_fWave;
     
