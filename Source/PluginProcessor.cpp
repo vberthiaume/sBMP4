@@ -39,7 +39,7 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter();
 sBMP4AudioProcessor::sBMP4AudioProcessor()
     : m_oLastDimensions()
     , m_oDelayBuffer (2, 12000)
-	, m_bUseSimplestLP(true)
+	, m_bUseSimplestLP(false)
 {
     // Set up some default values..
     m_fGain = defaultGain;
@@ -190,12 +190,12 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
     // and now get the synth to process these midi events and generate its output.
     m_oSynth.renderNextBlock (buffer, midiMessages, 0, numSamples);
 
-	// apply our gain to it
+	//-----GAIN
 	for (channel = 0; channel < getNumInputChannels(); ++channel){
 		buffer.applyGain(channel, 0, buffer.getNumSamples(), m_fGain);
 	}
 
-    // Apply our delay (and simplestLP) effect to the new output
+	//-----DELAY
     for (channel = 0; channel < getNumInputChannels(); ++channel) {
         float* channelData = buffer.getWritePointer (channel);
         float* delayData = m_oDelayBuffer.getWritePointer (jmin (channel, m_oDelayBuffer.getNumChannels() - 1));
@@ -203,22 +203,25 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 
         for (int i = 0; i < numSamples; ++i) {
             const float in = channelData[i];
-
-			if (m_bUseSimplestLP && i > 0 && i < numSamples - 1){
-				channelData[i] += channelData[i + 1];
-			}
-
             channelData[i] += delayData[dp];
             delayData[dp] = (delayData[dp] + in) * m_fDelay;
 			if (++dp >= m_oDelayBuffer.getNumSamples()){
 				dp = 0;
 			}
 
-
+			//if (m_bUseSimplestLP && i > 0 && i < numSamples - 1){
+			//	channelData[i] += channelData[i + 1];
+			//}
         }
     }
-
     m_iDelayPosition = dp;
+
+
+	//-----SIMPLESTLP
+	for (channel = 0; channel < getNumInputChannels(); ++channel) {
+		float* channelData = buffer.getWritePointer(channel);
+		simplestLP(channelData, channelData, numSamples, 0);
+	}
 
     // In case we have more outputs than inputs, we'll clear any output
     // channels that didn't contain input data, (because these aren't
@@ -231,7 +234,7 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 
 JUCE_COMPILER_WARNING("need to put this in my audio library")
 //from here: https://ccrma.stanford.edu/~jos/filters/Definition_Simplest_Low_Pass.html
-double sBMP4AudioProcessor::simplestLP(double *x, double *y, int M, double xm1){	y[0] = x[0] + xm1;	for (int n = 1; n < M; n++) {		y[n] = x[n] + x[n - 1];	}	return x[M - 1];}
+double sBMP4AudioProcessor::simplestLP(float *x, float *y, int M, double xm1){	y[0] = x[0] + xm1;	for (int n = 1; n < M; n++) {		y[n] = x[n] + x[n - 1];	}	return x[M - 1];}
 
 
 //==============================================================================

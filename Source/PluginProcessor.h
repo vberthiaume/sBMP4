@@ -87,7 +87,7 @@ public:
 
 private:
 
-	double simplestLP(double *x, double *y, int M, double xm1);
+	double simplestLP(float *x, float *y, int M, double xm1);
     
     float m_fGain, m_fDelay, m_fWave;
     
