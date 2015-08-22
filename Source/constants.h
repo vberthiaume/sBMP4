@@ -25,16 +25,17 @@
 #define sBMP4_Header_h
 
 enum Parameters{
-    paramGain = 0,
-    paramDelay,
-    paramWave,
-    
-    paramTotalNum
+     paramGain = 0
+    ,paramDelay
+    ,paramWave
+	,paramFilterFr
+    ,paramTotalNum
 };
 
-const float defaultGain = 1.0f;
-const float defaultDelay = 0.0f;
-const float defaultWave = 0.0f;
+const float defaultGain		= 1.0f;
+const float defaultDelay	= 0.0f;
+const float defaultWave		= 0.0f;
+const float defaultFilterFr = 0.0f;
 
 static bool areSame(double a, double b)
 {

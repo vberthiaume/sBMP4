@@ -29,11 +29,13 @@
 sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor (sBMP4AudioProcessor& processor)
     : AudioProcessorEditor (processor),
         m_oMidiKeyboard (processor.m_oKeyboardState, MidiKeyboardComponent::horizontalKeyboard),
-		m_oWaveLabel("", "wave"),//"Wave:"),
+		m_oWaveLabel("", "wave"),
+		m_oFilterLabel("", "filter"),
         m_oInfoLabel (String::empty),
         m_oGainLabel ("", "gain"),
         m_oDelayLabel ("", "delay"),
         m_oWaveSlider("wave"),
+		m_oFilterSlider("Filter"),
         m_oGainSlider ("gain"),
         m_oDelaySlider ("delay"),
 		m_oSineImage("sine"), 
@@ -50,6 +52,14 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor (sBMP4AudioProcessor& proce
 	m_oWaveSlider.setColour(Slider::ColourIds::rotarySliderOutlineColourId, Colours::yellow);
     m_oWaveSlider.addListener (this);
     m_oWaveSlider.setRange (0.0, 1.0, 1.f/3);
+
+	addAndMakeVisible(m_oFilterSlider);
+	m_oFilterSlider.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
+	m_oFilterSlider.setTextBoxStyle(Slider::NoTextBox, true, 0, 0);
+	m_oFilterSlider.setColour(Slider::ColourIds::rotarySliderFillColourId, Colours::white);
+	m_oFilterSlider.setColour(Slider::ColourIds::rotarySliderOutlineColourId, Colours::yellow);
+	m_oFilterSlider.addListener(this);
+	m_oFilterSlider.setRange(0.0, 1.0, 1.f / 3);
     
     addAndMakeVisible (m_oGainSlider);
     m_oGainSlider.setSliderStyle (Slider::RotaryHorizontalVerticalDrag);
@@ -86,6 +96,11 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor (sBMP4AudioProcessor& proce
 	m_oWaveLabel.setColour(Label::textColourId, Colours::white);
 	m_oWaveLabel.setJustificationType(Justification::centred);
 	addAndMakeVisible(m_oWaveLabel);
+
+	m_oFilterLabel.setFont(Font(11.0f));
+	m_oFilterLabel.setColour(Label::textColourId, Colours::white);
+	m_oFilterLabel.setJustificationType(Justification::centred);
+	addAndMakeVisible(m_oFilterLabel);
 
     m_oGainLabel.setFont (Font (11.0f));
 	m_oGainLabel.setColour(Label::textColourId, Colours::white);
@@ -135,11 +150,14 @@ void sBMP4AudioProcessorEditor::resized() {
 	m_oTriangleImage.setBounds(x + 7 * w / 10, y - 15, 20, 20);
 	m_oSawImage.setBounds(x + 8 * w / 10, y + 25, 20, 20);
 
-    m_oGainSlider.setBounds (x + w, y,		w, sh);
-	m_oGainLabel.setBounds	(x + w, y+1.5*wh,	w, wh);
+    m_oFilterSlider.setBounds (x + w, y,		w, sh);
+	m_oFilterLabel.setBounds	(x + w, y+1.5*wh,	w, wh);
     
-	m_oDelaySlider.setBounds(x + 2*w, y,	    w, sh);
-	m_oDelayLabel.setBounds (x + 2*w, y+1.5*wh, w, wh);
+	m_oGainSlider.setBounds(x + 2 * w, y, w, sh);
+	m_oGainLabel.setBounds(x + 2 * w, y + 1.5*wh, w, wh);
+
+	m_oDelaySlider.setBounds(x + 3 * w, y, w, sh);
+	m_oDelayLabel.setBounds(x + 3 * w, y + 1.5*wh, w, wh);
 
 	const int keyboardHeight = 70;
 
@@ -173,7 +191,9 @@ void sBMP4AudioProcessorEditor::sliderValueChanged (Slider* slider) {
         getProcessor().setParameterNotifyingHost (paramDelay, (float) m_oDelaySlider.getValue());
     } else if (slider == &m_oWaveSlider) {
         getProcessor().setParameterNotifyingHost (paramWave, (float) m_oWaveSlider.getValue());
-    }
+	} else if(slider == &m_oFilterSlider) {
+		getProcessor().setParameterNotifyingHost(paramFilterFr, (float)m_oFilterSlider.getValue());
+	}
 }
 
 //==============================================================================

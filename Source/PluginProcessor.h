@@ -89,9 +89,13 @@ private:
 
 	void simplestLP(float *x, int M);
     
-    float m_fGain, m_fDelay, m_fWave;
+    float m_fGain, m_fDelay, m_fWave, m_fFilterFr;
+
+	int m_iFilterState;
     
     void setWaveType(float p_fWave);
+
+	void setFilterFr(float p_fFilterFr);
     
     std::pair<int, int> m_oLastDimensions;
     

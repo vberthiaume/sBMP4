@@ -37,14 +37,14 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter();
 
 //==============================================================================
 sBMP4AudioProcessor::sBMP4AudioProcessor()
-    : m_oLastDimensions()
-    , m_oDelayBuffer (2, 12000)
-	, m_bUseSimplestLP(false)
+    :m_oLastDimensions()
+    ,m_oDelayBuffer (2, 12000)
+	,m_bUseSimplestLP(false)
+	,m_fGain(defaultGain)
+	,m_fDelay(defaultDelay)
 {
-    // Set up some default values..
-    m_fGain = defaultGain;
-    m_fDelay = defaultDelay;
     setWaveType(defaultWave);
+	setFilterFr(defaultFilterFr);
 
 	//width of 265 is 20 (x buffer on left) + 3*75 (3 sliders) + 20 (buffer on right)
     m_oLastDimensions = std::make_pair(20+4*65+20, 150);
@@ -66,11 +66,11 @@ float sBMP4AudioProcessor::getParameter (int index)
     // This method will be called by the host, probably on the audio thread, so
     // it's absolutely time-critical. Don't use critical sections or anything
     // UI-related, or anything at all that may block in any way!
-    switch (index)
-    {
+    switch (index) {
         case paramGain:     return m_fGain;
         case paramDelay:    return m_fDelay;
         case paramWave:     return m_fWave;
+		case paramFilterFr: return m_fFilterFr;
         default:            return 0.0f;
     }
 }
@@ -85,13 +85,14 @@ void sBMP4AudioProcessor::setParameter (int index, float newValue)
         case paramGain:		m_fGain = newValue;		break;
         case paramDelay:    m_fDelay = newValue;	break;
         case paramWave:     setWaveType(newValue);  break;
+		case paramFilterFr: setFilterFr(newValue); break;
         default:            break;
     }
 }
 
 void sBMP4AudioProcessor::setWaveType(float p_fWave){
     m_fWave = p_fWave;
-	JUCE_COMPILER_WARNING(new string("probably the sounds should be loaded by the voices..."))
+	JUCE_COMPILER_WARNING("probably the sounds should be loaded by the voices...")
 	m_oSynth.clearSounds();
     m_oSynth.clearVoices();
 
@@ -121,6 +122,20 @@ void sBMP4AudioProcessor::setWaveType(float p_fWave){
 	//for (int i = 4; --i >= 0;){
 	//	m_oSynth.addVoice(new SineWaveVoice());   // These voices will play our custom sine-wave sounds..
 	//}
+}
+
+void sBMP4AudioProcessor::setFilterFr(float p_fFilterFr){
+	m_fFilterFr = p_fFilterFr;
+
+	if(m_fFilterFr == 0){
+		m_iFilterState = 0;
+	} else if(areSame(m_fFilterFr, 1.f / 3)){
+		m_iFilterState = 1;
+	} else if(areSame(m_fFilterFr, 2.f / 3)){
+		m_iFilterState = 2;
+	} else if(m_fFilterFr == 1){
+		m_iFilterState = 3;
+	}
 }
 
 float sBMP4AudioProcessor::getParameterDefaultValue (int index)
@@ -217,14 +232,12 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
     m_iDelayPosition = dp;
 
 	//-----SIMPLESTLP
-	//for (channel = 0; channel < getNumInputChannels(); ++channel) {
-	//	float* channelData = buffer.getWritePointer(channel);
-	//	simplestLP(channelData, numSamples);
-	//}
+	for (channel = 0; channel < getNumInputChannels(); ++channel) {
+		float* channelData = buffer.getWritePointer(channel);
+		simplestLP(channelData, numSamples);
+	}
 
-    // In case we have more outputs than inputs, we'll clear any output
-    // channels that didn't contain input data, (because these aren't
-    // guaranteed to be empty - they may contain garbage).
+    // clear unused output channels
 	for (int i = getNumInputChannels(); i < getNumOutputChannels(); ++i){
 		buffer.clear(i, 0, buffer.getNumSamples());
 	}
@@ -233,8 +246,21 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 JUCE_COMPILER_WARNING("need to put this in my audio library")
 //from here: https://ccrma.stanford.edu/~jos/filters/Definition_Simplest_Low_Pass.html
 void sBMP4AudioProcessor::simplestLP(float *p_fAllSamples, int p_iTotalSamples){
-	for (int iCurSpl = 1; iCurSpl < p_iTotalSamples; ++iCurSpl) {
-		p_fAllSamples[iCurSpl] = p_fAllSamples[iCurSpl]/2 + p_fAllSamples[iCurSpl-1]/2;
+	if(m_iFilterState == 1){
+		for (int iCurSpl = 1; iCurSpl < p_iTotalSamples; ++iCurSpl) {
+			p_fAllSamples[iCurSpl] = p_fAllSamples[iCurSpl]/2 + p_fAllSamples[iCurSpl-1]/2;
+		}
+	} else if(m_iFilterState == 2){
+		p_fAllSamples[1] = p_fAllSamples[0] / 2 + p_fAllSamples[1] / 2;
+		for(int iCurSpl = 2; iCurSpl < p_iTotalSamples-1; ++iCurSpl) {
+			p_fAllSamples[iCurSpl] = p_fAllSamples[iCurSpl-1]/3 + p_fAllSamples[iCurSpl]/3 + p_fAllSamples[iCurSpl+1]/3;
+		}
+	} else if(m_iFilterState == 3){
+		p_fAllSamples[1] = p_fAllSamples[0] / 2 + p_fAllSamples[1] / 2;
+		p_fAllSamples[2] = p_fAllSamples[0] / 3 + p_fAllSamples[1] / 3 + p_fAllSamples[2] / 3;
+		for(int iCurSpl = 3; iCurSpl < p_iTotalSamples - 1; ++iCurSpl) {
+			p_fAllSamples[iCurSpl] = p_fAllSamples[iCurSpl - 2] / 4 + p_fAllSamples[iCurSpl - 1] / 4 + p_fAllSamples[iCurSpl] / 4 + p_fAllSamples[iCurSpl + 1] / 4;
+		}
 	}
 }
 
@@ -267,11 +293,9 @@ void sBMP4AudioProcessor::setStateInformation (const void* data, int sizeInBytes
     // This getXmlFromBinary() helper function retrieves our XML from the binary blob..
     ScopedPointer<XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
 
-    if (xmlState != nullptr)
-    {
+    if (xmlState != nullptr) {
         // make sure that it's actually our type of XML object..
-        if (xmlState->hasTagName ("SBMP4SETTINGS"))
-        {
+        if (xmlState->hasTagName ("SBMP4SETTINGS")) {
             // ok, now pull out our parameters..
             m_oLastDimensions.first  = xmlState->getIntAttribute ("uiWidth", m_oLastDimensions.first);
             m_oLastDimensions.second = xmlState->getIntAttribute ("uiHeight", m_oLastDimensions.second);
