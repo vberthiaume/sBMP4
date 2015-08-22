@@ -33,15 +33,13 @@
     #include <windows.h>
 #endif
 
-
-
 AudioProcessor* JUCE_CALLTYPE createPluginFilter();
-
 
 //==============================================================================
 sBMP4AudioProcessor::sBMP4AudioProcessor()
-    : m_oLastDimensions(),
-    m_oDelayBuffer (2, 12000)
+    : m_oLastDimensions()
+    , m_oDelayBuffer (2, 12000)
+	, m_bUseSimplestLP(true)
 {
     // Set up some default values..
     m_fGain = defaultGain;
@@ -52,9 +50,8 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
     m_oLastDimensions = std::make_pair(20+4*65+20, 150);
 
     m_iDelayPosition = 0;
-   
-
 }
+
 sBMP4AudioProcessor::~sBMP4AudioProcessor() {
 }
 
@@ -198,20 +195,26 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 		buffer.applyGain(channel, 0, buffer.getNumSamples(), m_fGain);
 	}
 
-    // Apply our delay effect to the new output..
-    for (channel = 0; channel < getNumInputChannels(); ++channel)
-    {
+    // Apply our delay (and simplestLP) effect to the new output
+    for (channel = 0; channel < getNumInputChannels(); ++channel) {
         float* channelData = buffer.getWritePointer (channel);
         float* delayData = m_oDelayBuffer.getWritePointer (jmin (channel, m_oDelayBuffer.getNumChannels() - 1));
         dp = m_iDelayPosition;
 
-        for (int i = 0; i < numSamples; ++i)
-        {
+        for (int i = 0; i < numSamples; ++i) {
             const float in = channelData[i];
+
+			if (m_bUseSimplestLP && i > 0 && i < numSamples - 1){
+				channelData[i] += channelData[i + 1];
+			}
+
             channelData[i] += delayData[dp];
             delayData[dp] = (delayData[dp] + in) * m_fDelay;
-            if (++dp >= m_oDelayBuffer.getNumSamples())
-                dp = 0;
+			if (++dp >= m_oDelayBuffer.getNumSamples()){
+				dp = 0;
+			}
+
+
         }
     }
 

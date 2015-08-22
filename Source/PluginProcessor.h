@@ -101,6 +101,8 @@ private:
 
     Synthesiser m_oSynth;
 
+	bool m_bUseSimplestLP;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (sBMP4AudioProcessor)
 };
 
