@@ -233,12 +233,6 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 JUCE_COMPILER_WARNING("need to put this in my audio library")
 //from here: https://ccrma.stanford.edu/~jos/filters/Definition_Simplest_Low_Pass.html
 void sBMP4AudioProcessor::simplestLP(float *p_fAllSamples, int p_iTotalSamples){
-
-	//for (int iCurSpl = 4; iCurSpl < p_iTotalSamples; ++iCurSpl) {
-	//	p_fAllSamples[iCurSpl] = p_fAllSamples[iCurSpl]/5 + p_fAllSamples[iCurSpl-1]/5 + p_fAllSamples[iCurSpl-2]/5 + p_fAllSamples[iCurSpl-3]/5 + p_fAllSamples[iCurSpl-4]/5;
-	//}
-
-
 	for (int iCurSpl = 1; iCurSpl < p_iTotalSamples; ++iCurSpl) {
 		p_fAllSamples[iCurSpl] = p_fAllSamples[iCurSpl]/2 + p_fAllSamples[iCurSpl-1]/2;
 	}
@@ -276,7 +270,7 @@ void sBMP4AudioProcessor::setStateInformation (const void* data, int sizeInBytes
     if (xmlState != nullptr)
     {
         // make sure that it's actually our type of XML object..
-        if (xmlState->hasTagName ("MYPLUGINSETTINGS"))
+        if (xmlState->hasTagName ("SBMP4SETTINGS"))
         {
             // ok, now pull out our parameters..
             m_oLastDimensions.first  = xmlState->getIntAttribute ("uiWidth", m_oLastDimensions.first);
