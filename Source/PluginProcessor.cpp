@@ -223,18 +223,16 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 			if (++dp >= m_oDelayBuffer.getNumSamples()){
 				dp = 0;
 			}
-
-			//if (m_bUseSimplestLP && i > 0 && i < numSamples - 1){
-			//	channelData[i] += channelData[i + 1];
-			//}
         }
     }
     m_iDelayPosition = dp;
 
 	//-----SIMPLESTLP
-	for (channel = 0; channel < getNumInputChannels(); ++channel) {
-		float* channelData = buffer.getWritePointer(channel);
-		simplestLP(channelData, numSamples);
+	if(m_iFilterState != 0){
+		for(channel = 0; channel < getNumInputChannels(); ++channel) {
+			float* channelData = buffer.getWritePointer(channel);
+			simplestLP(channelData, numSamples);
+		}
 	}
 
     // clear unused output channels
