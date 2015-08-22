@@ -216,25 +216,33 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
     }
     m_iDelayPosition = dp;
 
-
-	////-----SIMPLESTLP
+	//-----SIMPLESTLP
 	//for (channel = 0; channel < getNumInputChannels(); ++channel) {
 	//	float* channelData = buffer.getWritePointer(channel);
-	//	simplestLP(channelData, channelData, numSamples, 0);
+	//	simplestLP(channelData, numSamples);
 	//}
 
     // In case we have more outputs than inputs, we'll clear any output
     // channels that didn't contain input data, (because these aren't
     // guaranteed to be empty - they may contain garbage).
-    for (int i = getNumInputChannels(); i < getNumOutputChannels(); ++i)
-        buffer.clear (i, 0, buffer.getNumSamples());
-
+	for (int i = getNumInputChannels(); i < getNumOutputChannels(); ++i){
+		buffer.clear(i, 0, buffer.getNumSamples());
+	}
 }
-
 
 JUCE_COMPILER_WARNING("need to put this in my audio library")
 //from here: https://ccrma.stanford.edu/~jos/filters/Definition_Simplest_Low_Pass.html
-double sBMP4AudioProcessor::simplestLP(float *x, float *y, int M, double xm1){	y[0] = x[0] + xm1;	for (int n = 1; n < M; n++) {		y[n] = x[n]/2 + x[n - 1]/2;	}	return x[M - 1];}
+void sBMP4AudioProcessor::simplestLP(float *p_fAllSamples, int p_iTotalSamples){
+
+	//for (int iCurSpl = 4; iCurSpl < p_iTotalSamples; ++iCurSpl) {
+	//	p_fAllSamples[iCurSpl] = p_fAllSamples[iCurSpl]/5 + p_fAllSamples[iCurSpl-1]/5 + p_fAllSamples[iCurSpl-2]/5 + p_fAllSamples[iCurSpl-3]/5 + p_fAllSamples[iCurSpl-4]/5;
+	//}
+
+
+	for (int iCurSpl = 1; iCurSpl < p_iTotalSamples; ++iCurSpl) {
+		p_fAllSamples[iCurSpl] = p_fAllSamples[iCurSpl]/2 + p_fAllSamples[iCurSpl-1]/2;
+	}
+}
 
 
 //==============================================================================
