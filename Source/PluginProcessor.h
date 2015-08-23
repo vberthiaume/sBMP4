@@ -87,27 +87,27 @@ public:
 
 private:
 
-	void simplestLP(float *x, int M);
+void simplestLP(float *x, int M, std::vector<int> *p_oLookBack);
     
-    float m_fGain, m_fDelay, m_fWave, m_fFilterFr;
+float m_fGain, m_fDelay, m_fWave, m_fFilterFr;
 
-	int m_iFilterState;
-    
-    void setWaveType(float p_fWave);
+int m_iFilterState;
 
-	void setFilterFr(float p_fFilterFr);
-    
-    std::pair<int, int> m_oLastDimensions;
-    
-    //==============================================================================
-    AudioSampleBuffer m_oDelayBuffer;
-    int m_iDelayPosition;
+void setWaveType(float p_fWave);
 
-    Synthesiser m_oSynth;
+void setFilterFr(float p_fFilterFr);
 
-	bool m_bUseSimplestLP;
+std::pair<int, int> m_oLastDimensions;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (sBMP4AudioProcessor)
+//==============================================================================
+AudioSampleBuffer m_oDelayBuffer;
+int m_iDelayPosition;
+
+Synthesiser m_oSynth;
+
+bool m_bUseSimplestLP;
+
+JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(sBMP4AudioProcessor)
 };
 
 #endif  // __PLUGINPROCESSOR_H_526ED7A9__

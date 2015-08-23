@@ -289,18 +289,35 @@ JUCE_COMPILER_WARNING("need to put this in my audio library")
 //		}
 //	}
 //}
-float* sBMP4AudioProcessor::simplestLP(float *p_fAllSamples, int p_iTotalSamples, int p_iLookback){
+void sBMP4AudioProcessor::simplestLP(float *p_fAllSamples, int p_iTotalSamples, std::vector<int> &p_pLookBackVec){
 
-	p_fAllSamples[1] = p_fAllSamples[0] / 2 + p_fAllSamples[1] / 2;
-	if(p_fAllSamples[1] != 0)
-		DBG(p_fAllSamples[1]);
-	p_fAllSamples[2] = p_fAllSamples[0] / 3 + p_fAllSamples[1] / 3 + p_fAllSamples[2] / 3;
-	if(p_fAllSamples[2] != 0)
-		DBG(p_fAllSamples[2]);
-	for(int iCurSpl = 3; iCurSpl < p_iTotalSamples - 1; ++iCurSpl) {
-		p_fAllSamples[iCurSpl] = p_fAllSamples[iCurSpl - 3] / 4 + p_fAllSamples[iCurSpl - 2] / 4 + p_fAllSamples[iCurSpl - 1] / 4 + p_fAllSamples[iCurSpl] / 4;
-		if(p_fAllSamples[iCurSpl] != 0)
-			DBG(p_fAllSamples[iCurSpl]);
+	//int iCurSpl;
+	//for(iCurSpl = 0; iCurSpl < p_oLookBack.size(); ++iCurSpl){
+	//	p_fAllSamples[iCurSpl] += p_oLookBack[iCurSpl] / p_oLookBack.size();
+	//}
+
+
+	//p_fAllSamples[1] = p_fAllSamples[0] / 2 + p_fAllSamples[1] / 2;
+	//p_fAllSamples[2] = p_fAllSamples[0] / 3 + p_fAllSamples[1] / 3 + p_fAllSamples[2] / 3;
+
+	//for(; iCurSpl < p_iTotalSamples - 1; ++iCurSpl) {
+	//	p_fAllSamples[iCurSpl] = p_fAllSamples[iCurSpl - 3] / 4 + p_fAllSamples[iCurSpl - 2] / 4 + p_fAllSamples[iCurSpl - 1] / 4 + p_fAllSamples[iCurSpl] / 4;
+	//}
+	int iTotalLookBack = p_pLookBackVec.size();
+	int iCurSpl;
+	for(iCurSpl = 0; iCurSpl < iTotalLookBack; ++iCurSpl){
+		for(int iCurLookBack = (iTotalLookBack - iCurSpl); iCurLookBack < iTotalLookBack; ++iCurLookBack){
+			p_fAllSamples[iCurSpl] += p_pLookBackVec[iCurLookBack] / iTotalLookBack;
+		}
+		for(int iCurSubSpl = 0; iCurSubSpl < iCurSpl; ++iCurSubSpl){
+			p_fAllSamples[iCurSpl] += p_fAllSamples[iCurSubSpl] / iTotalLookBack;
+		}
+	}
+
+	for(; iCurSpl < p_iTotalSamples; ++iCurSpl){
+		//
+		p_fAllSamples[iCurSpl] = 
+
 	}
 
 }
