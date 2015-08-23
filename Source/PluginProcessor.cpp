@@ -33,6 +33,8 @@
     #include <windows.h>
 #endif
 
+using std::cout;
+
 AudioProcessor* JUCE_CALLTYPE createPluginFilter();
 
 //==============================================================================
