@@ -50,6 +50,13 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
     m_oLastDimensions = std::make_pair(20+4*65+20, 150);
 
     m_iDelayPosition = 0;
+
+	std::vector<float> x = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+	std::vector<float> vec(2, 0.f);
+	for(size_t i = 0; i < 2; i++)
+	{
+		simplestLP(x, vec);
+	}
 }
 
 sBMP4AudioProcessor::~sBMP4AudioProcessor() {
@@ -228,12 +235,12 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
     m_iDelayPosition = dp;
 
 	//-----SIMPLESTLP
-	if(m_iFilterState != 0){
-		for(channel = 0; channel < 1/*getNumInputChannels()*/; ++channel) {
-			float* channelData = buffer.getWritePointer(channel);
-			simplestLP(channelData, numSamples);
-		}
-	}
+	//if(m_iFilterState != 0){
+	//	for(channel = 0; channel < 1/*getNumInputChannels()*/; ++channel) {
+	//		float* channelData = buffer.getWritePointer(channel);
+	//		simplestLP(channelData, numSamples);
+	//	}
+	//}
 
     // clear unused output channels
 	for (int i = getNumInputChannels(); i < getNumOutputChannels(); ++i){
@@ -289,35 +296,27 @@ JUCE_COMPILER_WARNING("need to put this in my audio library")
 //		}
 //	}
 //}
-void sBMP4AudioProcessor::simplestLP(float *p_fAllSamples, int p_iTotalSamples, std::vector<int> &p_pLookBackVec){
-
-	//int iCurSpl;
-	//for(iCurSpl = 0; iCurSpl < p_oLookBack.size(); ++iCurSpl){
-	//	p_fAllSamples[iCurSpl] += p_oLookBack[iCurSpl] / p_oLookBack.size();
-	//}
-
-
-	//p_fAllSamples[1] = p_fAllSamples[0] / 2 + p_fAllSamples[1] / 2;
-	//p_fAllSamples[2] = p_fAllSamples[0] / 3 + p_fAllSamples[1] / 3 + p_fAllSamples[2] / 3;
-
-	//for(; iCurSpl < p_iTotalSamples - 1; ++iCurSpl) {
-	//	p_fAllSamples[iCurSpl] = p_fAllSamples[iCurSpl - 3] / 4 + p_fAllSamples[iCurSpl - 2] / 4 + p_fAllSamples[iCurSpl - 1] / 4 + p_fAllSamples[iCurSpl] / 4;
-	//}
-	int iTotalLookBack = p_pLookBackVec.size();
+void sBMP4AudioProcessor::simplestLP(std::vector<float> &p_fAllSamples, std::vector<float> &p_fLookBackVec){
+	int iTotalLookBack = p_fLookBackVec.size();
+	int p_iTotalSamples = p_fAllSamples.size();
 	int iCurSpl;
 	for(iCurSpl = 0; iCurSpl < iTotalLookBack; ++iCurSpl){
-		for(int iCurLookBack = (iTotalLookBack - iCurSpl); iCurLookBack < iTotalLookBack; ++iCurLookBack){
-			p_fAllSamples[iCurSpl] += p_pLookBackVec[iCurLookBack] / iTotalLookBack;
+		for(int iCurLookBack = (iTotalLookBack -1 -iCurSpl); iCurLookBack >= 0; --iCurLookBack){
+			p_fAllSamples[iCurSpl] += p_fLookBackVec[iCurLookBack] / iTotalLookBack;
 		}
-		for(int iCurSubSpl = 0; iCurSubSpl < iCurSpl; ++iCurSubSpl){
+		for(int iCurSubSpl = 0; iCurSubSpl <= iCurSpl; ++iCurSubSpl){
 			p_fAllSamples[iCurSpl] += p_fAllSamples[iCurSubSpl] / iTotalLookBack;
 		}
 	}
 
 	for(; iCurSpl < p_iTotalSamples; ++iCurSpl){
-		//
-		p_fAllSamples[iCurSpl] = 
+		for(int iCurLookBack = 0; iCurLookBack < iTotalLookBack; ++iCurLookBack){
+			p_fAllSamples[iCurSpl] += p_fAllSamples[iCurSpl - iCurLookBack] / iTotalLookBack;
+		}
+	}
 
+	for(int iCurLookback = 0; iCurLookback < iTotalLookBack; ++iCurLookback){
+		p_fLookBackVec[iCurLookback] = p_fAllSamples[p_iTotalSamples - iCurLookback];
 	}
 
 }

@@ -87,7 +87,7 @@ public:
 
 private:
 
-void simplestLP(float *x, int M, std::vector<int> *p_oLookBack);
+void simplestLP(std::vector<float> &p_fAllSamples, std::vector<float> &p_fLookBackVec);
     
 float m_fGain, m_fDelay, m_fWave, m_fFilterFr;
 
