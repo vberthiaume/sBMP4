@@ -33,8 +33,6 @@
     #include <windows.h>
 #endif
 
-using std::cout;
-
 AudioProcessor* JUCE_CALLTYPE createPluginFilter();
 
 //==============================================================================
@@ -249,29 +247,29 @@ void sBMP4AudioProcessor::simplestLP(float *p_fAllSamples, int p_iTotalSamples){
 	if(m_iFilterState == 1){
 		for (int iCurSpl = 1; iCurSpl < p_iTotalSamples; ++iCurSpl) {
 			p_fAllSamples[iCurSpl] = p_fAllSamples[iCurSpl]/2 + p_fAllSamples[iCurSpl-1]/2;
-			cout << p_fAllSamples[iCurSpl] << newLine;
+			DBG(p_fAllSamples[iCurSpl] << newLine);
 		}
 	} else if(m_iFilterState == 2){
 		p_fAllSamples[1] = p_fAllSamples[0] / 2 + p_fAllSamples[1] / 2;
-		cout << p_fAllSamples[1] << newLine;
+		DBG(p_fAllSamples[1] << newLine);
 		p_fAllSamples[2] = p_fAllSamples[0] / 3 + p_fAllSamples[1] / 3 + p_fAllSamples[2] / 3;
-		cout << p_fAllSamples[2] << newLine;
+		DBG(p_fAllSamples[2] << newLine);
 		for(int iCurSpl = 3; iCurSpl < p_iTotalSamples-1; ++iCurSpl) {
 			p_fAllSamples[iCurSpl] = p_fAllSamples[iCurSpl-3]/4 + p_fAllSamples[iCurSpl-2]/4 + p_fAllSamples[iCurSpl-1]/4 + p_fAllSamples[iCurSpl]/4;
-			cout << p_fAllSamples[iCurSpl] << newLine;
+			DBG(p_fAllSamples[iCurSpl] << newLine);
 		}
 	} else if(m_iFilterState == 3){
 		p_fAllSamples[1] = p_fAllSamples[0] / 2 + p_fAllSamples[1] / 2;
-		cout << p_fAllSamples[1] << newLine;
+		DBG(p_fAllSamples[1] << newLine);
 		p_fAllSamples[2] = p_fAllSamples[0] / 3 + p_fAllSamples[1] / 3 + p_fAllSamples[2] / 3;
-		cout << p_fAllSamples[2] << newLine;
+		DBG(p_fAllSamples[2] << newLine);
 		p_fAllSamples[3] = p_fAllSamples[0]/4 + p_fAllSamples[1]/4 + p_fAllSamples[2]/4 + p_fAllSamples[3]/4;
-		cout << p_fAllSamples[3] << newLine;
+		DBG(p_fAllSamples[3] << newLine);
 		p_fAllSamples[4] = p_fAllSamples[0] / 5 + p_fAllSamples[1] / 5 + p_fAllSamples[2] / 5 + p_fAllSamples[3] / 5 + p_fAllSamples[4] / 5;
-		cout << p_fAllSamples[4] << newLine;
+		DBG(p_fAllSamples[4] << newLine);
 		for(int iCurSpl = 5; iCurSpl < p_iTotalSamples-1; ++iCurSpl) {
 			p_fAllSamples[iCurSpl] = p_fAllSamples[iCurSpl-5]/6 + p_fAllSamples[iCurSpl-4]/6 + p_fAllSamples[iCurSpl-3]/6 + p_fAllSamples[iCurSpl-2]/6 + p_fAllSamples[iCurSpl-1]/6 + p_fAllSamples[iCurSpl]/6;
-			cout << p_fAllSamples[iCurSpl] << newLine;
+			DBG(p_fAllSamples[iCurSpl] << newLine);
 		}
 	}
 }
