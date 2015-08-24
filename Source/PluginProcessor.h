@@ -97,7 +97,10 @@ void simplestLP(float* p_pfSamples, int p_iTotalSamples, std::vector<float> &p_f
 	int iCurSpl;
 	for(iCurSpl = 0; iCurSpl < iTotalLookBack; ++iCurSpl){
 		output[iCurSpl] = p_pfSamples[iCurSpl]/iTotalAverage;
-		for(int iCurLookBack = (iTotalLookBack -1 -iCurSpl); iCurLookBack >= 0; --iCurLookBack){
+		//for(int iCurLookBack = (iTotalLookBack -1 -iCurSpl); iCurLookBack >= 0; --iCurLookBack){
+		//	output[iCurSpl] += p_fLookBackVec[iCurLookBack]/iTotalAverage;
+		//}
+		for(int iCurLookBack = (iTotalLookBack -1); iCurLookBack >= iCurSpl; --iCurLookBack){
 			output[iCurSpl] += p_fLookBackVec[iCurLookBack]/iTotalAverage;
 		}
 		for(int iCurSubSpl = 0; iCurSubSpl < iCurSpl; ++iCurSubSpl){
@@ -112,8 +115,13 @@ void simplestLP(float* p_pfSamples, int p_iTotalSamples, std::vector<float> &p_f
 		}
 	}
 
-	for(int iCurLookback = 0; iCurLookback < iTotalLookBack; ++iCurLookback){
-		p_fLookBackVec[iCurLookback] = p_pfSamples[p_iTotalSamples-iCurLookback];
+	//for(int iCurLookback = 0; iCurLookback < iTotalLookBack; ++iCurLookback){
+	//	p_fLookBackVec[iCurLookback] = p_pfSamples[p_iTotalSamples-iCurLookback-1];
+	//}
+	int iCurLookback = 0;
+	iCurSpl = p_iTotalSamples-iTotalLookBack;
+	while( iCurLookback < iTotalLookBack){
+		p_fLookBackVec[iCurLookback++] = p_pfSamples[iCurSpl++];
 	}
 
 	JUCE_COMPILER_WARNING("should probably do a memcopy or a vector move or something more intelligent")

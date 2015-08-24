@@ -51,11 +51,13 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 
     m_iDelayPosition = 0;
 
-	float x[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+	
 	std::vector<float> vec(2, 0.f);
-	for(size_t i = 0; i < 2; i++){
-		simplestLP(x, 10, vec);
-	}
+	float x[] = {1, 2, 3, 4, 5};
+	simplestLP(x, 5, vec);
+	
+	float x2[] = {6, 7, 8, 9, 10};
+	simplestLP(x2, 5, vec);
 }
 
 sBMP4AudioProcessor::~sBMP4AudioProcessor() {
