@@ -26,6 +26,8 @@
 #include "constants.h"
 #include "sBMP4SoundsAndVoices.h"
 
+#include <algorithm>
+
 #define _USE_MATH_DEFINES
 #include <math.h>
 
@@ -42,6 +44,7 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 	,m_bUseSimplestLP(false)
 	,m_fGain(defaultGain)
 	,m_fDelay(defaultDelay)
+	,m_oLookBackVec(25, 0.f)
 {
     setWaveType(defaultWave);
 	setFilterFr(defaultFilterFr);
@@ -52,12 +55,12 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
     m_iDelayPosition = 0;
 
 	
-	std::vector<float> vec(2, 0.f);
-	float x[] = {1, 2, 3, 4, 5};
-	simplestLP(x, 5, vec);
-	
-	float x2[] = {6, 7, 8, 9, 10};
-	simplestLP(x2, 5, vec);
+	//std::vector<float> vec(2, 0.f);
+	//float x[] = {1, 2, 3, 4, 5};
+	//simplestLP(x, 5, vec);
+	//
+	//float x2[] = {6, 7, 8, 9, 10};
+	//simplestLP(x2, 5, vec);
 }
 
 sBMP4AudioProcessor::~sBMP4AudioProcessor() {
@@ -99,12 +102,12 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
     m_iDelayPosition = dp;
 
 	//-----SIMPLESTLP
-	//if(m_iFilterState != 0){
-	//	for(channel = 0; channel < 1/*getNumInputChannels()*/; ++channel) {
-	//		float* channelData = buffer.getWritePointer(channel);
-	//		simplestLP(channelData, numSamples);
-	//	}
-	//}
+	if(m_iFilterState != 0){
+		for(channel = 0; channel < 1/*getNumInputChannels()*/; ++channel) {
+			float* channelData = buffer.getWritePointer(channel);
+			simplestLP(channelData, numSamples, m_oLookBackVec);
+		}
+	}
 
     // clear unused output channels
 	for (int i = getNumInputChannels(); i < getNumOutputChannels(); ++i){
@@ -114,6 +117,45 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 
 JUCE_COMPILER_WARNING("need to put this in my audio library")
 //from here: https://ccrma.stanford.edu/~jos/filters/Definition_Simplest_Low_Pass.html
+void sBMP4AudioProcessor::simplestLP(float* p_pfSamples, int p_iTotalSamples, std::vector<float> &p_fLookBackVec){
+	int iTotalLookBack = p_fLookBackVec.size();
+	int iTotalAverage = iTotalLookBack+1;
+
+	JUCE_COMPILER_WARNING("need to delete this somewhere)")
+		float* output = new float[p_iTotalSamples]{};
+
+	int iCurSpl;
+	for(iCurSpl = 0; iCurSpl < iTotalLookBack; ++iCurSpl){
+		output[iCurSpl] = p_pfSamples[iCurSpl]/iTotalAverage;
+		for(int iCurLookBack = (iTotalLookBack -1); iCurLookBack >= iCurSpl; --iCurLookBack){
+			output[iCurSpl] += p_fLookBackVec[iCurLookBack]/iTotalAverage;
+		}
+		for(int iCurSubSpl = 0; iCurSubSpl < iCurSpl; ++iCurSubSpl){
+			output[iCurSpl] += p_pfSamples[iCurSubSpl]/iTotalAverage;
+		}
+		if(output[iCurSpl] != 0){
+			DBG(output[iCurSpl]);
+		}
+	}
+
+	for(; iCurSpl < p_iTotalSamples; ++iCurSpl){
+		output[iCurSpl] = p_pfSamples[iCurSpl]/iTotalAverage;
+		for(int iCurLookBack = 0; iCurLookBack < iTotalLookBack; ++iCurLookBack){
+			output[iCurSpl] += p_pfSamples[iCurSpl-iCurLookBack-1]/iTotalAverage;
+		}
+		if(output[iCurSpl] != 0){
+			DBG(output[iCurSpl]);
+		}
+	}
+
+	int iCurLookback = 0;
+	iCurSpl = p_iTotalSamples-iTotalLookBack;
+	while(iCurLookback < iTotalLookBack){
+		p_fLookBackVec[iCurLookback++] = p_pfSamples[iCurSpl++];
+	}
+
+	std::copy(output, output + p_iTotalSamples, p_pfSamples);
+}
 //void sBMP4AudioProcessor::simplestLP(float *p_fAllSamples, int p_iTotalSamples){
 //	
 //	//if(m_iFilterState == 1){

@@ -87,46 +87,7 @@ public:
 
 private:
 
-void simplestLP(float* p_pfSamples, int p_iTotalSamples, std::vector<float> &p_fLookBackVec){
-	int iTotalLookBack = p_fLookBackVec.size();
-	int iTotalAverage = iTotalLookBack+1;
-	
-	JUCE_COMPILER_WARNING("need to delete this somewhere)")
-	float* output = new float[p_iTotalSamples]{};
-
-	int iCurSpl;
-	for(iCurSpl = 0; iCurSpl < iTotalLookBack; ++iCurSpl){
-		output[iCurSpl] = p_pfSamples[iCurSpl]/iTotalAverage;
-		//for(int iCurLookBack = (iTotalLookBack -1 -iCurSpl); iCurLookBack >= 0; --iCurLookBack){
-		//	output[iCurSpl] += p_fLookBackVec[iCurLookBack]/iTotalAverage;
-		//}
-		for(int iCurLookBack = (iTotalLookBack -1); iCurLookBack >= iCurSpl; --iCurLookBack){
-			output[iCurSpl] += p_fLookBackVec[iCurLookBack]/iTotalAverage;
-		}
-		for(int iCurSubSpl = 0; iCurSubSpl < iCurSpl; ++iCurSubSpl){
-			output[iCurSpl] += p_pfSamples[iCurSubSpl]/iTotalAverage;
-		}
-	}
-
-	for(; iCurSpl < p_iTotalSamples; ++iCurSpl){
-		output[iCurSpl] = p_pfSamples[iCurSpl]/iTotalAverage;
-		for(int iCurLookBack = 0; iCurLookBack < iTotalLookBack; ++iCurLookBack){
-			output[iCurSpl] += p_pfSamples[iCurSpl-iCurLookBack-1]/iTotalAverage;
-		}
-	}
-
-	//for(int iCurLookback = 0; iCurLookback < iTotalLookBack; ++iCurLookback){
-	//	p_fLookBackVec[iCurLookback] = p_pfSamples[p_iTotalSamples-iCurLookback-1];
-	//}
-	int iCurLookback = 0;
-	iCurSpl = p_iTotalSamples-iTotalLookBack;
-	while( iCurLookback < iTotalLookBack){
-		p_fLookBackVec[iCurLookback++] = p_pfSamples[iCurSpl++];
-	}
-
-	JUCE_COMPILER_WARNING("should probably do a memcopy or a vector move or something more intelligent")
-	p_pfSamples = output;
-}
+void simplestLP(float* p_pfSamples, int p_iTotalSamples, std::vector<float> &p_fLookBackVec);
     
 float m_fGain, m_fDelay, m_fWave, m_fFilterFr;
 
@@ -145,6 +106,8 @@ int m_iDelayPosition;
 Synthesiser m_oSynth;
 
 bool m_bUseSimplestLP;
+
+std::vector<float> m_oLookBackVec;
 
 JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(sBMP4AudioProcessor)
 };
