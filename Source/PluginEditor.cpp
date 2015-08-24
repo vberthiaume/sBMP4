@@ -59,7 +59,7 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor (sBMP4AudioProcessor& proce
 	m_oFilterSlider.setColour(Slider::ColourIds::rotarySliderFillColourId, Colours::white);
 	m_oFilterSlider.setColour(Slider::ColourIds::rotarySliderOutlineColourId, Colours::yellow);
 	m_oFilterSlider.addListener(this);
-	m_oFilterSlider.setRange(0.0, 1.0, 1.f / 3);
+	m_oFilterSlider.setRange(0.0, 1.0, .01);
     
     addAndMakeVisible (m_oGainSlider);
     m_oGainSlider.setSliderStyle (Slider::RotaryHorizontalVerticalDrag);

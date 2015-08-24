@@ -44,7 +44,8 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 	,m_bUseSimplestLP(false)
 	,m_fGain(defaultGain)
 	,m_fDelay(defaultDelay)
-	,m_oLookBackVec(25, 0.f)
+	,m_oLookBackVec(100, 0.f)
+	,m_iBufferSize(100)	//totally arbitrary value
 {
     setWaveType(defaultWave);
 	setFilterFr(defaultFilterFr);
@@ -53,14 +54,6 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
     m_oLastDimensions = std::make_pair(20+4*65+20, 150);
 
     m_iDelayPosition = 0;
-
-	
-	//std::vector<float> vec(2, 0.f);
-	//float x[] = {1, 2, 3, 4, 5};
-	//simplestLP(x, 5, vec);
-	//
-	//float x2[] = {6, 7, 8, 9, 10};
-	//simplestLP(x2, 5, vec);
 }
 
 sBMP4AudioProcessor::~sBMP4AudioProcessor() {
@@ -70,6 +63,10 @@ sBMP4AudioProcessor::~sBMP4AudioProcessor() {
 void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
     const int numSamples = buffer.getNumSamples();
+	if(m_iBufferSize != numSamples){
+		m_iBufferSize = numSamples;
+		setFilterFr(m_fFilterFr);	//just to update the lookback vector
+	}
     int channel, dp = 0;
 
     // Now pass any incoming midi messages to our keyboard state object, and let it
@@ -121,8 +118,7 @@ void sBMP4AudioProcessor::simplestLP(float* p_pfSamples, int p_iTotalSamples, st
 	int iTotalLookBack = p_fLookBackVec.size();
 	int iTotalAverage = iTotalLookBack+1;
 
-	JUCE_COMPILER_WARNING("need to delete this somewhere)")
-		float* output = new float[p_iTotalSamples]{};
+	float* output = new float[p_iTotalSamples]{};
 
 	int iCurSpl;
 	for(iCurSpl = 0; iCurSpl < iTotalLookBack; ++iCurSpl){
@@ -133,18 +129,12 @@ void sBMP4AudioProcessor::simplestLP(float* p_pfSamples, int p_iTotalSamples, st
 		for(int iCurSubSpl = 0; iCurSubSpl < iCurSpl; ++iCurSubSpl){
 			output[iCurSpl] += p_pfSamples[iCurSubSpl]/iTotalAverage;
 		}
-		if(output[iCurSpl] != 0){
-			DBG(output[iCurSpl]);
-		}
 	}
 
 	for(; iCurSpl < p_iTotalSamples; ++iCurSpl){
 		output[iCurSpl] = p_pfSamples[iCurSpl]/iTotalAverage;
 		for(int iCurLookBack = 0; iCurLookBack < iTotalLookBack; ++iCurLookBack){
 			output[iCurSpl] += p_pfSamples[iCurSpl-iCurLookBack-1]/iTotalAverage;
-		}
-		if(output[iCurSpl] != 0){
-			DBG(output[iCurSpl]);
 		}
 	}
 
@@ -155,53 +145,8 @@ void sBMP4AudioProcessor::simplestLP(float* p_pfSamples, int p_iTotalSamples, st
 	}
 
 	std::copy(output, output + p_iTotalSamples, p_pfSamples);
+	delete[] output;
 }
-//void sBMP4AudioProcessor::simplestLP(float *p_fAllSamples, int p_iTotalSamples){
-//	
-//	//if(m_iFilterState == 1){
-//	//	for (int iCurSpl = 1; iCurSpl < p_iTotalSamples; ++iCurSpl) {
-//	//		p_fAllSamples[iCurSpl] = p_fAllSamples[iCurSpl]/2 + p_fAllSamples[iCurSpl-1]/2;
-//	//		DBG(p_fAllSamples[iCurSpl]);
-//	//	}
-//	if(m_iFilterState == 1){
-//		for(int iCurSpl = 0; iCurSpl < p_iTotalSamples; ++iCurSpl) {
-//			if(p_fAllSamples[iCurSpl] != 0){
-//				DBG(p_fAllSamples[iCurSpl]);
-//			}
-//
-//		}
-//	} else if(m_iFilterState == 2){
-//		p_fAllSamples[1] = p_fAllSamples[0] / 2 + p_fAllSamples[1] / 2;
-//		if(p_fAllSamples[1] != 0)
-//			DBG(p_fAllSamples[1]);
-//		p_fAllSamples[2] = p_fAllSamples[0] / 3 + p_fAllSamples[1] / 3 + p_fAllSamples[2] / 3;
-//		if(p_fAllSamples[2] != 0)
-//			DBG(p_fAllSamples[2]);
-//		for(int iCurSpl = 3; iCurSpl < p_iTotalSamples-1; ++iCurSpl) {
-//			p_fAllSamples[iCurSpl] = p_fAllSamples[iCurSpl-3]/4 + p_fAllSamples[iCurSpl-2]/4 + p_fAllSamples[iCurSpl-1]/4 + p_fAllSamples[iCurSpl]/4;
-//			if(p_fAllSamples[iCurSpl] != 0)
-//				DBG(p_fAllSamples[iCurSpl]);
-//		}
-//	} else if(m_iFilterState == 3){
-//		p_fAllSamples[1] = p_fAllSamples[0] / 2 + p_fAllSamples[1] / 2;
-//		if(p_fAllSamples[1] != 0)
-//			DBG(p_fAllSamples[1]);
-//		p_fAllSamples[2] = p_fAllSamples[0] / 3 + p_fAllSamples[1] / 3 + p_fAllSamples[2] / 3;
-//		if(p_fAllSamples[2] != 0)
-//			DBG(p_fAllSamples[2]);
-//		p_fAllSamples[3] = p_fAllSamples[0]/4 + p_fAllSamples[1]/4 + p_fAllSamples[2]/4 + p_fAllSamples[3]/4;
-//		if(p_fAllSamples[3] != 0)
-//			DBG(p_fAllSamples[3]);
-//		p_fAllSamples[4] = p_fAllSamples[0] / 5 + p_fAllSamples[1] / 5 + p_fAllSamples[2] / 5 + p_fAllSamples[3] / 5 + p_fAllSamples[4] / 5;
-//		if(p_fAllSamples[4] != 0)
-//			DBG(p_fAllSamples[4]);
-//		for(int iCurSpl = 5; iCurSpl < p_iTotalSamples-1; ++iCurSpl) {
-//			p_fAllSamples[iCurSpl] = p_fAllSamples[iCurSpl-5]/6 + p_fAllSamples[iCurSpl-4]/6 + p_fAllSamples[iCurSpl-3]/6 + p_fAllSamples[iCurSpl-2]/6 + p_fAllSamples[iCurSpl-1]/6 + p_fAllSamples[iCurSpl]/6;
-//			if(p_fAllSamples[iCurSpl] != 0)
-//				DBG(p_fAllSamples[iCurSpl]);
-//		}
-//	}
-//}
 
 //==============================================================================
 int sBMP4AudioProcessor::getNumParameters()
@@ -233,7 +178,7 @@ void sBMP4AudioProcessor::setParameter(int index, float newValue)
 	case paramGain:		m_fGain = newValue;		break;
 	case paramDelay:    m_fDelay = newValue;	break;
 	case paramWave:     setWaveType(newValue);  break;
-	case paramFilterFr: setFilterFr(newValue); break;
+	case paramFilterFr: setFilterFr(newValue);  break;
 	default:            break;
 	}
 }
@@ -271,16 +216,9 @@ void sBMP4AudioProcessor::setWaveType(float p_fWave){
 
 void sBMP4AudioProcessor::setFilterFr(float p_fFilterFr){
 	m_fFilterFr = p_fFilterFr;
-
-	if(m_fFilterFr == 0){
-		m_iFilterState = 0;
-	} else if(areSame(m_fFilterFr, 1.f / 3)){
-		m_iFilterState = 1;
-	} else if(areSame(m_fFilterFr, 2.f / 3)){
-		m_iFilterState = 2;
-	} else if(m_fFilterFr == 1){
-		m_iFilterState = 3;
-	}
+	suspendProcessing(true);
+	m_oLookBackVec.resize(static_cast<int>(m_fFilterFr*m_iBufferSize));
+	suspendProcessing(false);
 }
 
 float sBMP4AudioProcessor::getParameterDefaultValue(int index)

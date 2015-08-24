@@ -107,6 +107,7 @@ Synthesiser m_oSynth;
 
 bool m_bUseSimplestLP;
 
+int m_iBufferSize;
 std::vector<float> m_oLookBackVec;
 
 JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(sBMP4AudioProcessor)
