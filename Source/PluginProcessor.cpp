@@ -51,153 +51,16 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 
     m_iDelayPosition = 0;
 
-	std::vector<float> x = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+	float x[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 	std::vector<float> vec(2, 0.f);
 	for(size_t i = 0; i < 2; i++){
-		simplestLP(x, vec);
+		simplestLP(x, 10, vec);
 	}
 }
 
 sBMP4AudioProcessor::~sBMP4AudioProcessor() {
 }
 
-//==============================================================================
-int sBMP4AudioProcessor::getNumParameters()
-{
-    return paramTotalNum;
-}
-
-float sBMP4AudioProcessor::getParameter (int index)
-{
-    // This method will be called by the host, probably on the audio thread, so
-    // it's absolutely time-critical. Don't use critical sections or anything
-    // UI-related, or anything at all that may block in any way!
-    switch (index) {
-        case paramGain:     return m_fGain;
-        case paramDelay:    return m_fDelay;
-        case paramWave:     return m_fWave;
-		case paramFilterFr: return m_fFilterFr;
-        default:            return 0.0f;
-    }
-}
-
-void sBMP4AudioProcessor::setParameter (int index, float newValue)
-{
-    // This method will be called by the host, probably on the audio thread, so
-    // it's absolutely time-critical. Don't use critical sections or anything
-    // UI-related, or anything at all that may block in any way!
-    switch (index)
-    {
-        case paramGain:		m_fGain = newValue;		break;
-        case paramDelay:    m_fDelay = newValue;	break;
-        case paramWave:     setWaveType(newValue);  break;
-		case paramFilterFr: setFilterFr(newValue); break;
-        default:            break;
-    }
-}
-
-void sBMP4AudioProcessor::setWaveType(float p_fWave){
-    m_fWave = p_fWave;
-	JUCE_COMPILER_WARNING("probably the sounds should be loaded by the voices...")
-	m_oSynth.clearSounds();
-    m_oSynth.clearVoices();
-
-    if (m_fWave == 0){
-        m_oSynth.addSound (new SineWaveSound());
-		for (int i = 4; --i >= 0;)
-			m_oSynth.addVoice(new SineWaveVoice());
-    }
-    else if(areSame(m_fWave, 1.f/3)){
-        m_oSynth.addSound (new SquareWaveSound());
-		for (int i = 4; --i >= 0;)
-			m_oSynth.addVoice(new SquareWaveVoice());
-    }
-	else if (areSame(m_fWave, 2.f / 3)){
-		m_oSynth.addSound(new TriangleWaveSound());
-		for (int i = 4; --i >= 0;)
-			m_oSynth.addVoice(new TriangleWaveVoice());
-	}
-	else if (m_fWave == 1){
-		m_oSynth.addSound(new SawtoothWaveSound());
-		for (int i = 4; --i >= 0;)
-			m_oSynth.addVoice(new SawtoothWaveVoice());
-	}
-
-	//HAVING A MONOPHONIC SYNTH MAKES CLICKS BETWEEN NOTES BECAUSE NO TAILING OFF BETWEEN NOTES
-	//to have a polyphonic synth, need to load several voices, like this
-	//for (int i = 4; --i >= 0;){
-	//	m_oSynth.addVoice(new SineWaveVoice());   // These voices will play our custom sine-wave sounds..
-	//}
-}
-
-void sBMP4AudioProcessor::setFilterFr(float p_fFilterFr){
-	m_fFilterFr = p_fFilterFr;
-
-	if(m_fFilterFr == 0){
-		m_iFilterState = 0;
-	} else if(areSame(m_fFilterFr, 1.f / 3)){
-		m_iFilterState = 1;
-	} else if(areSame(m_fFilterFr, 2.f / 3)){
-		m_iFilterState = 2;
-	} else if(m_fFilterFr == 1){
-		m_iFilterState = 3;
-	}
-}
-
-float sBMP4AudioProcessor::getParameterDefaultValue (int index)
-{
-    switch (index)
-    {
-        case paramGain:     return defaultGain;
-        case paramDelay:    return defaultDelay;
-        case paramWave:     return defaultWave;
-        default:            break;
-    }
-
-    return 0.0f;
-}
-
-const String sBMP4AudioProcessor::getParameterName (int index)
-{
-    switch (index)
-    {
-        case paramGain:     return "gain";
-        case paramDelay:    return "delay";
-        case paramWave:     return "wave";
-        default:            break;
-    }
-
-    return String::empty;
-}
-
-const String sBMP4AudioProcessor::getParameterText (int index)
-{
-    return String (getParameter (index), 2);
-}
-
-//==============================================================================
-void sBMP4AudioProcessor::prepareToPlay (double sampleRate, int /*samplesPerBlock*/)
-{
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need..
-    m_oSynth.setCurrentPlaybackSampleRate (sampleRate);
-    m_oKeyboardState.reset();
-    m_oDelayBuffer.clear();
-}
-
-void sBMP4AudioProcessor::releaseResources()
-{
-    // When playback stops, you can use this as an opportunity to free up any
-    // spare memory, etc.
-    m_oKeyboardState.reset();
-}
-
-void sBMP4AudioProcessor::reset()
-{
-    // Use this method as the place to clear any delay lines, buffers, etc, as it
-    // means there's been a break in the audio's continuity.
-    m_oDelayBuffer.clear();
-}
 
 void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
@@ -295,32 +158,140 @@ JUCE_COMPILER_WARNING("need to put this in my audio library")
 //		}
 //	}
 //}
-void sBMP4AudioProcessor::simplestLP(std::vector<float> &p_fAllSamples, std::vector<float> &p_fLookBackVec){
-	int iTotalLookBack = p_fLookBackVec.size();
-	int iTotalAverage = iTotalLookBack+1;
-	int p_iTotalSamples = p_fAllSamples.size();
-	int iCurSpl;
-	for(iCurSpl = 0; iCurSpl < iTotalLookBack; ++iCurSpl){
-		p_fAllSamples[iCurSpl] /= iTotalAverage;
-		for(int iCurLookBack = (iTotalLookBack -1 -iCurSpl); iCurLookBack >= 0; --iCurLookBack){
-			p_fAllSamples[iCurSpl] += p_fLookBackVec[iCurLookBack]/iTotalAverage;
-		}
-		for(int iCurSubSpl = 0; iCurSubSpl < iCurSpl; ++iCurSubSpl){
-			p_fAllSamples[iCurSpl] += p_fAllSamples[iCurSubSpl];
-		}
+
+//==============================================================================
+int sBMP4AudioProcessor::getNumParameters()
+{
+	return paramTotalNum;
+}
+
+float sBMP4AudioProcessor::getParameter(int index)
+{
+	// This method will be called by the host, probably on the audio thread, so
+	// it's absolutely time-critical. Don't use critical sections or anything
+	// UI-related, or anything at all that may block in any way!
+	switch(index) {
+	case paramGain:     return m_fGain;
+	case paramDelay:    return m_fDelay;
+	case paramWave:     return m_fWave;
+	case paramFilterFr: return m_fFilterFr;
+	default:            return 0.0f;
+	}
+}
+
+void sBMP4AudioProcessor::setParameter(int index, float newValue)
+{
+	// This method will be called by the host, probably on the audio thread, so
+	// it's absolutely time-critical. Don't use critical sections or anything
+	// UI-related, or anything at all that may block in any way!
+	switch(index)
+	{
+	case paramGain:		m_fGain = newValue;		break;
+	case paramDelay:    m_fDelay = newValue;	break;
+	case paramWave:     setWaveType(newValue);  break;
+	case paramFilterFr: setFilterFr(newValue); break;
+	default:            break;
+	}
+}
+
+void sBMP4AudioProcessor::setWaveType(float p_fWave){
+	m_fWave = p_fWave;
+	JUCE_COMPILER_WARNING("probably the sounds should be loaded by the voices...")
+		m_oSynth.clearSounds();
+	m_oSynth.clearVoices();
+
+	if(m_fWave == 0){
+		m_oSynth.addSound(new SineWaveSound());
+		for(int i = 4; --i >= 0;)
+			m_oSynth.addVoice(new SineWaveVoice());
+	} else if(areSame(m_fWave, 1.f/3)){
+		m_oSynth.addSound(new SquareWaveSound());
+		for(int i = 4; --i >= 0;)
+			m_oSynth.addVoice(new SquareWaveVoice());
+	} else if(areSame(m_fWave, 2.f / 3)){
+		m_oSynth.addSound(new TriangleWaveSound());
+		for(int i = 4; --i >= 0;)
+			m_oSynth.addVoice(new TriangleWaveVoice());
+	} else if(m_fWave == 1){
+		m_oSynth.addSound(new SawtoothWaveSound());
+		for(int i = 4; --i >= 0;)
+			m_oSynth.addVoice(new SawtoothWaveVoice());
 	}
 
-	for(; iCurSpl < p_iTotalSamples; ++iCurSpl){
-		p_fAllSamples[iCurSpl] /= iTotalAverage;
-		for(int iCurLookBack = 0; iCurLookBack < iTotalLookBack; ++iCurLookBack){
-			p_fAllSamples[iCurSpl] += p_fAllSamples[iCurSpl-iCurLookBack-1];
-		}
+	//HAVING A MONOPHONIC SYNTH MAKES CLICKS BETWEEN NOTES BECAUSE NO TAILING OFF BETWEEN NOTES
+	//to have a polyphonic synth, need to load several voices, like this
+	//for (int i = 4; --i >= 0;){
+	//	m_oSynth.addVoice(new SineWaveVoice());   // These voices will play our custom sine-wave sounds..
+	//}
+}
+
+void sBMP4AudioProcessor::setFilterFr(float p_fFilterFr){
+	m_fFilterFr = p_fFilterFr;
+
+	if(m_fFilterFr == 0){
+		m_iFilterState = 0;
+	} else if(areSame(m_fFilterFr, 1.f / 3)){
+		m_iFilterState = 1;
+	} else if(areSame(m_fFilterFr, 2.f / 3)){
+		m_iFilterState = 2;
+	} else if(m_fFilterFr == 1){
+		m_iFilterState = 3;
+	}
+}
+
+float sBMP4AudioProcessor::getParameterDefaultValue(int index)
+{
+	switch(index)
+	{
+	case paramGain:     return defaultGain;
+	case paramDelay:    return defaultDelay;
+	case paramWave:     return defaultWave;
+	default:            break;
 	}
 
-	for(int iCurLookback = 0; iCurLookback < iTotalLookBack; ++iCurLookback){
-		p_fLookBackVec[iCurLookback] = p_fAllSamples[p_iTotalSamples-iCurLookback];
+	return 0.0f;
+}
+
+const String sBMP4AudioProcessor::getParameterName(int index)
+{
+	switch(index)
+	{
+	case paramGain:     return "gain";
+	case paramDelay:    return "delay";
+	case paramWave:     return "wave";
+	default:            break;
 	}
 
+	return String::empty;
+}
+
+const String sBMP4AudioProcessor::getParameterText(int index)
+{
+	return String(getParameter(index), 2);
+}
+
+//==============================================================================
+void sBMP4AudioProcessor::prepareToPlay(double sampleRate, int /*samplesPerBlock*/)
+{
+	// Use this method as the place to do any pre-playback
+	// initialisation that you need..
+	m_oSynth.setCurrentPlaybackSampleRate(sampleRate);
+	m_oKeyboardState.reset();
+	m_oDelayBuffer.clear();
+}
+
+void sBMP4AudioProcessor::releaseResources()
+{
+	// When playback stops, you can use this as an opportunity to free up any
+	// spare memory, etc.
+	m_oKeyboardState.reset();
+}
+
+void sBMP4AudioProcessor::reset()
+{
+	// Use this method as the place to clear any delay lines, buffers, etc, as it
+	// means there's been a break in the audio's continuity.
+	m_oDelayBuffer.clear();
 }
 
 
