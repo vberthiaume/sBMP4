@@ -53,8 +53,7 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 
 	std::vector<float> x = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 	std::vector<float> vec(2, 0.f);
-	for(size_t i = 0; i < 2; i++)
-	{
+	for(size_t i = 0; i < 2; i++){
 		simplestLP(x, vec);
 	}
 }
@@ -298,25 +297,28 @@ JUCE_COMPILER_WARNING("need to put this in my audio library")
 //}
 void sBMP4AudioProcessor::simplestLP(std::vector<float> &p_fAllSamples, std::vector<float> &p_fLookBackVec){
 	int iTotalLookBack = p_fLookBackVec.size();
+	int iTotalAverage = iTotalLookBack+1;
 	int p_iTotalSamples = p_fAllSamples.size();
 	int iCurSpl;
 	for(iCurSpl = 0; iCurSpl < iTotalLookBack; ++iCurSpl){
+		p_fAllSamples[iCurSpl] /= iTotalAverage;
 		for(int iCurLookBack = (iTotalLookBack -1 -iCurSpl); iCurLookBack >= 0; --iCurLookBack){
-			p_fAllSamples[iCurSpl] += p_fLookBackVec[iCurLookBack] / iTotalLookBack;
+			p_fAllSamples[iCurSpl] += p_fLookBackVec[iCurLookBack]/iTotalAverage;
 		}
-		for(int iCurSubSpl = 0; iCurSubSpl <= iCurSpl; ++iCurSubSpl){
-			p_fAllSamples[iCurSpl] += p_fAllSamples[iCurSubSpl] / iTotalLookBack;
+		for(int iCurSubSpl = 0; iCurSubSpl < iCurSpl; ++iCurSubSpl){
+			p_fAllSamples[iCurSpl] += p_fAllSamples[iCurSubSpl];
 		}
 	}
 
 	for(; iCurSpl < p_iTotalSamples; ++iCurSpl){
+		p_fAllSamples[iCurSpl] /= iTotalAverage;
 		for(int iCurLookBack = 0; iCurLookBack < iTotalLookBack; ++iCurLookBack){
-			p_fAllSamples[iCurSpl] += p_fAllSamples[iCurSpl - iCurLookBack] / iTotalLookBack;
+			p_fAllSamples[iCurSpl] += p_fAllSamples[iCurSpl-iCurLookBack-1];
 		}
 	}
 
 	for(int iCurLookback = 0; iCurLookback < iTotalLookBack; ++iCurLookback){
-		p_fLookBackVec[iCurLookback] = p_fAllSamples[p_iTotalSamples - iCurLookback];
+		p_fLookBackVec[iCurLookback] = p_fAllSamples[p_iTotalSamples-iCurLookback];
 	}
 
 }
