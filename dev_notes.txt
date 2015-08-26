@@ -20,3 +20,5 @@ ardour
 
 ok. so ardour is a pain. I got bitwig to work with jack audio device. start from there? Like try to
 compile juce demo plugin to make it work in bitwig?
+
+NEED TO CHECK/USE THIS: https://github.com/vinniefalco/DSPFilters
