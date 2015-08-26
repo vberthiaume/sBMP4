@@ -1,6 +1,6 @@
 sBMP4: killer subtractive synth!
 
-Copyright (C) 2014  BMP4, bbmmpp44@gmail.com
+Copyright (C) 2015  BMP4, bbmmpp44@gmail.com
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
