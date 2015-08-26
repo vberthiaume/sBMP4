@@ -100,7 +100,7 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 
 	//-----SIMPLESTLP
 	if(m_iFilterState != 0){
-		for(channel = 0; channel < 1/*getNumInputChannels()*/; ++channel) {
+		for(channel = 0; channel < getNumInputChannels(); ++channel) {
 			float* channelData = buffer.getWritePointer(channel);
 			simplestLP(channelData, numSamples, m_oLookBackVec);
 		}
@@ -217,7 +217,9 @@ void sBMP4AudioProcessor::setWaveType(float p_fWave){
 void sBMP4AudioProcessor::setFilterFr(float p_fFilterFr){
 	m_fFilterFr = p_fFilterFr;
 	suspendProcessing(true);
-	m_oLookBackVec.resize(static_cast<int>(m_fFilterFr*m_iBufferSize));
+	int i = static_cast<int>(m_fFilterFr*m_iBufferSize/10);
+	m_oLookBackVec.resize(i);
+	DBG(i);
 	suspendProcessing(false);
 }
 
