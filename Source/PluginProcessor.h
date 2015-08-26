@@ -105,10 +105,12 @@ int m_iDelayPosition;
 
 Synthesiser m_oSynth;
 
+int m_iCurChannel;
+
 bool m_bUseSimplestLP;
 
 int m_iBufferSize;
-std::vector<float> m_oLookBackVec;
+std::vector<float> m_oLookBackVec[2];
 
 JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(sBMP4AudioProcessor)
 };

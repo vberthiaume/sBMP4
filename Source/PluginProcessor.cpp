@@ -44,11 +44,14 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 	,m_bUseSimplestLP(false)
 	,m_fGain(defaultGain)
 	,m_fDelay(defaultDelay)
-	,m_oLookBackVec(100, 0.f)
 	,m_iBufferSize(100)	//totally arbitrary value
 {
     setWaveType(defaultWave);
 	setFilterFr(defaultFilterFr);
+
+	for(int iCurChannel = 0; iCurChannel < 2; ++iCurChannel){
+		m_oLookBackVec[iCurChannel] = std::vector<float>(100, 0.f);
+	}
 
 	//width of 265 is 20 (x buffer on left) + 3*75 (3 sliders) + 20 (buffer on right)
     m_oLastDimensions = std::make_pair(20+4*65+20, 150);
@@ -67,7 +70,7 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 		m_iBufferSize = numSamples;
 		setFilterFr(m_fFilterFr);	//just to update the lookback vector
 	}
-    int channel, dp = 0;
+    int iCurChannel, dp = 0;
 
     // Now pass any incoming midi messages to our keyboard state object, and let it
     // add messages to the buffer if the user is clicking on the on-screen keys
@@ -77,14 +80,14 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
     m_oSynth.renderNextBlock (buffer, midiMessages, 0, numSamples);
 
 	//-----GAIN
-	for (channel = 0; channel < getNumInputChannels(); ++channel){
-		buffer.applyGain(channel, 0, buffer.getNumSamples(), m_fGain);
+	for (iCurChannel = 0; iCurChannel < getNumInputChannels(); ++iCurChannel){
+		buffer.applyGain(iCurChannel, 0, buffer.getNumSamples(), m_fGain);
 	}
 
 	//-----DELAY
-    for (channel = 0; channel < getNumInputChannels(); ++channel) {
-        float* channelData = buffer.getWritePointer (channel);
-        float* delayData = m_oDelayBuffer.getWritePointer (jmin (channel, m_oDelayBuffer.getNumChannels() - 1));
+    for (iCurChannel = 0; iCurChannel < getNumInputChannels(); ++iCurChannel) {
+        float* channelData = buffer.getWritePointer (iCurChannel);
+        float* delayData = m_oDelayBuffer.getWritePointer (jmin (iCurChannel, m_oDelayBuffer.getNumChannels() - 1));
         dp = m_iDelayPosition;
 
         for (int i = 0; i < numSamples; ++i) {
@@ -100,9 +103,12 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 
 	//-----SIMPLESTLP
 	if(m_iFilterState != 0){
-		for(channel = 0; channel < getNumInputChannels(); ++channel) {
-			float* channelData = buffer.getWritePointer(channel);
-			simplestLP(channelData, numSamples, m_oLookBackVec);
+		//only 2 channels supported for now
+		for(iCurChannel = 0; iCurChannel < 2 /*getNumInputChannels()*/; ++iCurChannel) {
+			m_iCurChannel = iCurChannel;
+			float* channelData = buffer.getWritePointer(iCurChannel);
+			simplestLP(channelData, numSamples, m_oLookBackVec[iCurChannel]);
+			
 		}
 	}
 
@@ -218,7 +224,8 @@ void sBMP4AudioProcessor::setFilterFr(float p_fFilterFr){
 	m_fFilterFr = p_fFilterFr;
 	suspendProcessing(true);
 	int i = static_cast<int>(m_fFilterFr*m_iBufferSize/10);
-	m_oLookBackVec.resize(i);
+	m_oLookBackVec[0].resize(i);
+	m_oLookBackVec[1].resize(i);
 	DBG(i);
 	suspendProcessing(false);
 }
