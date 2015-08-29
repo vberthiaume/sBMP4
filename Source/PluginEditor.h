@@ -60,6 +60,8 @@ private:
         return static_cast<sBMP4AudioProcessor&> (processor);
     }
 
+	void addSlider(Slider* p_pSlider, const float &p_fIncrement);
+
     void displayPositionInfo (const AudioPlayHead::CurrentPositionInfo& pos);
 };
 

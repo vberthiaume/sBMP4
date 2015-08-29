@@ -44,39 +44,10 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor (sBMP4AudioProcessor& proce
 		m_oLogoImage("sBMP4")
 {
     
-    // add some sliders..
-    addAndMakeVisible (m_oWaveSlider);
-    m_oWaveSlider.setSliderStyle (Slider::RotaryHorizontalVerticalDrag);
-    m_oWaveSlider.setTextBoxStyle(Slider::NoTextBox, true, 0, 0);
-	m_oWaveSlider.setColour(Slider::ColourIds::rotarySliderFillColourId, Colours::white);
-	m_oWaveSlider.setColour(Slider::ColourIds::rotarySliderOutlineColourId, Colours::yellow);
-    m_oWaveSlider.addListener (this);
-    m_oWaveSlider.setRange (0.0, 1.0, 1.f/3);
-
-	addAndMakeVisible(m_oFilterSlider);
-	m_oFilterSlider.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
-	m_oFilterSlider.setTextBoxStyle(Slider::NoTextBox, true, 0, 0);
-	m_oFilterSlider.setColour(Slider::ColourIds::rotarySliderFillColourId, Colours::white);
-	m_oFilterSlider.setColour(Slider::ColourIds::rotarySliderOutlineColourId, Colours::yellow);
-	m_oFilterSlider.addListener(this);
-	m_oFilterSlider.setRange(0.0, 1.0, .01);
-    
-    addAndMakeVisible (m_oGainSlider);
-    m_oGainSlider.setSliderStyle (Slider::RotaryHorizontalVerticalDrag);
-    m_oGainSlider.setTextBoxStyle(Slider::NoTextBox, true, 0, 0);
-	m_oGainSlider.setColour(Slider::ColourIds::rotarySliderFillColourId, Colours::white);
-	m_oGainSlider.setColour(Slider::ColourIds::rotarySliderOutlineColourId, Colours::yellow);
-    m_oGainSlider.addListener (this);
-    m_oGainSlider.setRange (0.0, 1.0, 0.01);
-
-    addAndMakeVisible (m_oDelaySlider);
-    m_oDelaySlider.setSliderStyle (Slider::RotaryHorizontalVerticalDrag);
-    m_oDelaySlider.setTextBoxStyle(Slider::NoTextBox, true, 0, 0);
-	m_oDelaySlider.setColour(Slider::ColourIds::rotarySliderFillColourId, Colours::white);
-	m_oDelaySlider.setColour(Slider::ColourIds::rotarySliderOutlineColourId, Colours::yellow);
-    m_oDelaySlider.addListener (this);
-    m_oDelaySlider.setRange (0.0, 1.0, 0.01);
-
+    addSlider(&m_oWaveSlider	, 1.f/3);
+	addSlider(&m_oFilterSlider	, .01);    
+	addSlider(&m_oGainSlider	, .01);
+ 	addSlider(&m_oDelaySlider	, .01);
 
 	JUCE_COMPILER_WARNING("path needs to make sense on mac")
 	m_oSineImage.setImage(ImageFileFormat::loadFrom(File::createFileWithoutCheckingPath("C:\\Users\\Vincent\\Documents\\git\\sBMP4\\icons\\sine.png")));
@@ -130,6 +101,16 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor (sBMP4AudioProcessor& proce
 
 sBMP4AudioProcessorEditor::~sBMP4AudioProcessorEditor()
 {
+}
+
+void sBMP4AudioProcessorEditor::addSlider(Slider* p_pSlider, const float &p_fIncrement){
+	addAndMakeVisible(*p_pSlider);
+	p_pSlider->setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
+	p_pSlider->setTextBoxStyle(Slider::NoTextBox, true, 0, 0);
+	p_pSlider->setColour(Slider::ColourIds::rotarySliderFillColourId, Colours::white);
+	p_pSlider->setColour(Slider::ColourIds::rotarySliderOutlineColourId, Colours::yellow);
+	p_pSlider->addListener(this);
+	p_pSlider->setRange(0.0, 1.0, p_fIncrement);
 }
 
 //==============================================================================
