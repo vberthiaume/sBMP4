@@ -385,7 +385,7 @@ double sBMP4AudioProcessor::getTailLengthSeconds() const
 }
 
 //==============================================================================
-// This creates new instances of the plugin..
+// This creates new instances of the plugin.
 AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new sBMP4AudioProcessor();
