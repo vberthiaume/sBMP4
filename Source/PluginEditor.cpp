@@ -63,25 +63,31 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor (sBMP4AudioProcessor& proce
 	addAndMakeVisible(m_oLogoImage);
 
     // add some labels for the sliders
-    m_oWaveLabel.setFont (Font (11.0f));
-	m_oWaveLabel.setColour(Label::textColourId, Colours::white);
-	m_oWaveLabel.setJustificationType(Justification::centred);
-	addAndMakeVisible(m_oWaveLabel);
+	addLabel(&m_oWaveLabel);
+ //   m_oWaveLabel.setFont (Font (11.0f));
+	//m_oWaveLabel.setColour(Label::textColourId, Colours::white);
+	//m_oWaveLabel.setJustificationType(Justification::centred);
+	//addAndMakeVisible(m_oWaveLabel);
 
-	m_oFilterLabel.setFont(Font(11.0f));
-	m_oFilterLabel.setColour(Label::textColourId, Colours::white);
-	m_oFilterLabel.setJustificationType(Justification::centred);
-	addAndMakeVisible(m_oFilterLabel);
+	addLabel(&m_oFilterLabel);
+	//m_oFilterLabel.setFont(Font(11.0f));
+	//m_oFilterLabel.setColour(Label::textColourId, Colours::white);
+	//m_oFilterLabel.setJustificationType(Justification::centred);
+	//addAndMakeVisible(m_oFilterLabel);
 
-    m_oGainLabel.setFont (Font (11.0f));
-	m_oGainLabel.setColour(Label::textColourId, Colours::white);
-	m_oGainLabel.setJustificationType(Justification::centred);
-	addAndMakeVisible(m_oGainLabel);
+	addLabel(&m_oGainLabel);
+ //   m_oGainLabel.setFont (Font (11.0f));
+	//m_oGainLabel.setColour(Label::textColourId, Colours::white);
+	//m_oGainLabel.setJustificationType(Justification::centred);
+	//addAndMakeVisible(m_oGainLabel);
 
-    m_oDelayLabel.setFont (Font (11.0f));
-	m_oDelayLabel.setColour(Label::textColourId, Colours::white);
-	m_oDelayLabel.setJustificationType(Justification::centred);
-	addAndMakeVisible(m_oDelayLabel);
+	addLabel(&m_oDelayLabel);
+ //   m_oDelayLabel.setFont (Font (11.0f));
+	//m_oDelayLabel.setColour(Label::textColourId, Colours::white);
+	//m_oDelayLabel.setJustificationType(Justification::centred);
+	//addAndMakeVisible(m_oDelayLabel);
+
+
     // add the midi keyboard component..
     addAndMakeVisible (m_oMidiKeyboard);
 
@@ -111,6 +117,13 @@ void sBMP4AudioProcessorEditor::addSlider(Slider* p_pSlider, const float &p_fInc
 	p_pSlider->setColour(Slider::ColourIds::rotarySliderOutlineColourId, Colours::yellow);
 	p_pSlider->addListener(this);
 	p_pSlider->setRange(0.0, 1.0, p_fIncrement);
+}
+
+void sBMP4AudioProcessorEditor::addLabel(Label * p_pLabel){
+	p_pLabel->setFont(Font(11.0f));
+	p_pLabel->setColour(Label::textColourId, Colours::white);
+	p_pLabel->setJustificationType(Justification::centred);
+	addAndMakeVisible(p_pLabel);
 }
 
 //==============================================================================
