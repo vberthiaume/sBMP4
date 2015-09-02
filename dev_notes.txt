@@ -1,12 +1,12 @@
-ok. so doing this. What works and doesn't work?
+USING PLUGINS IN A DAW ON UBUNTU
 
 reaper?
     i don't think wineasio is installed, no sound when i run
     i can't get wineasio to install, i get an error that wine/debug.h is missing
 
 juce plugin host
-    loading juce demo plugin crashes everything!
-
+    * apparently this now works! with pulse as audio interface. 
+    * need to NOT have any inputs because it makes it glitchy af.
 ardour
     don't know where to put the plugins
     is there sound? yes there is sound. so maybe ardour is the way to go about this?
@@ -18,7 +18,15 @@ ardour
            typically installed in /usr/lib/lxvst, /usr/local/lib/lxvst or a directory mentioned in
            your LXVST_PATH environment variable.
 
-ok. so ardour is a pain. I got bitwig to work with jack audio device. start from there? Like try to
-compile juce demo plugin to make it work in bitwig?
+bitwig
+    * audio works with jack audio device. 
+    * plugins are indexed but i don't see them when adding plugins on a track.  
 
-NEED TO CHECK/USE THIS: https://github.com/vinniefalco/DSPFilters
+______________________________________________________
+TODO
+
+    * figure out how to use ctags
+    * use this library for filters: https://github.com/vinniefalco/DSPFilters
+    * figure out how to run reaper
+
+    
