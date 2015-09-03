@@ -30,4 +30,6 @@ TODO
         * figure out how to run reaper
     * OTHER
         * use this library for filters: https://github.com/vinniefalco/DSPFilters
-    
+            * i got the RBJ filter working, but it causes some noise (see reaper project). Need to
+            * perhaps use parameter smooting (this seems to not cause noise in the dsp filter juce
+            * demo app) 

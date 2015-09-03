@@ -112,8 +112,8 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 		}
 	} else {
 
-		
-		Dsp::SimpleFilter <Dsp::RBJ::LowPass, 2>  f;	//2 here is the number of channels, and is needed!
+		JUCE_COMPILER_WARNING("to use smoothing, need to use Dsp::SmoothedFilterDesign")
+		Dsp::SimpleFilter <Dsp::RBJ::LowPass, 2>  f;	//2 here is the number of channels, and is mandatory!
 		f.setup(m_oSynth.getSampleRate(), (1-m_fFilterFr) * 20000, 5.f);
 		float* channelData[2];
 		channelData[0] = buffer.getWritePointer(0);
