@@ -136,7 +136,8 @@ void sBMP4AudioProcessorEditor::resized() {
 	const int keyboardHeight = 70;
 
 	//m_oLogoImage.setBounds(x + 3 * w, 5, 48, 48);
-	m_oLogoImage.setBounds(getWidth() - (4+48), 5, 48, 48);
+	int iLogoW = 75, iLogoH = 30;
+	m_oLogoImage.setBounds(getWidth() - iLogoW, 5, iLogoW, iLogoH);
 
     
     m_oMidiKeyboard.setBounds (4, getHeight() - keyboardHeight - 4, getWidth() - 8, keyboardHeight);
