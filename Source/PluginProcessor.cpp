@@ -25,7 +25,7 @@
 #include "PluginEditor.h"
 #include "constants.h"
 #include "sBMP4SoundsAndVoices.h"
-
+#include "DspFilters/Dsp.h"
 #include <algorithm>
 
 #define _USE_MATH_DEFINES
@@ -101,14 +101,36 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
     }
     m_iDelayPosition = dp;
 
-	//-----SIMPLESTLP
-	if(m_iFilterState != 0){
+	//-----FILTER
+	bool bUseSimplest = false;
+	if(bUseSimplest){
 		//only 2 channels supported for now
 		for(iCurChannel = 0; iCurChannel < 2 /*getNumInputChannels()*/; ++iCurChannel) {
 			m_iCurChannel = iCurChannel;
 			float* channelData = buffer.getWritePointer(iCurChannel);
 			simplestLP(channelData, numSamples, m_oLookBackVec[iCurChannel]);
-			
+		}
+	} else {
+		if(!midiMessages.isEmpty()){
+			//Dsp::SimpleFilter <Dsp::RBJ::LowPass>  f;
+			//f.setup(m_oSynth.getSampleRate(), 4000, 1.f);
+			////float** channelData = buffer.getArrayOfWritePointers();
+			//float* channelData[2];
+			//channelData[0] = buffer.getWritePointer(0);
+			//channelData[1] = buffer.getWritePointer(1);
+			//f.process(numSamples, channelData);
+
+
+			Dsp::SimpleFilter <Dsp::ChebyshevI::BandStop <3>, 2> f;
+			f.setup(3,    // order
+				m_oSynth.getSampleRate(),// sample rate
+				8000, // center frequency
+				880,  // band width
+				1);   // ripple dB
+			float* channelData[2];
+			channelData[0] = buffer.getWritePointer(0);
+			channelData[1] = buffer.getWritePointer(1);
+			f.process(numSamples, channelData);
 		}
 	}
 

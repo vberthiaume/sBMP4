@@ -91,8 +91,6 @@ void simplestLP(float* p_pfSamples, int p_iTotalSamples, std::vector<float> &p_f
 
 float m_fGain, m_fDelay, m_fWave, m_fFilterFr;
 
-int m_iFilterState;
-
 void setWaveType(float p_fWave);
 
 void setFilterFr(float p_fFilterFr);
