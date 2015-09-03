@@ -111,27 +111,27 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 			simplestLP(channelData, numSamples, m_oLookBackVec[iCurChannel]);
 		}
 	} else {
-		if(!midiMessages.isEmpty()){
-			//Dsp::SimpleFilter <Dsp::RBJ::LowPass>  f;
-			//f.setup(m_oSynth.getSampleRate(), 4000, 1.f);
-			////float** channelData = buffer.getArrayOfWritePointers();
+	
+			//Dsp::SimpleFilter <Dsp::RBJ::LowPass, 2>  f;
+			//f.setup(m_oSynth.getSampleRate(), (1-m_fFilterFr) * 20000, 1.f);
 			//float* channelData[2];
 			//channelData[0] = buffer.getWritePointer(0);
 			//channelData[1] = buffer.getWritePointer(1);
 			//f.process(numSamples, channelData);
 
 
-			Dsp::SimpleFilter <Dsp::ChebyshevI::BandStop <3>, 2> f;
+			Dsp::SimpleFilter <Dsp::ChebyshevI::BandPass <3>, 2> f;
 			f.setup(3,    // order
 				m_oSynth.getSampleRate(),// sample rate
-				8000, // center frequency
-				880,  // band width
+				(1-m_fFilterFr) * 20000, // center frequency
+				200,
 				1);   // ripple dB
 			float* channelData[2];
 			channelData[0] = buffer.getWritePointer(0);
 			channelData[1] = buffer.getWritePointer(1);
 			f.process(numSamples, channelData);
-		}
+			DBG(m_fFilterFr);
+		
 	}
 
     // clear unused output channels
@@ -244,12 +244,13 @@ void sBMP4AudioProcessor::setWaveType(float p_fWave){
 
 void sBMP4AudioProcessor::setFilterFr(float p_fFilterFr){
 	m_fFilterFr = p_fFilterFr;
-	suspendProcessing(true);
-	int i = static_cast<int>(m_fFilterFr*m_iBufferSize/10);
-	m_oLookBackVec[0].resize(i);
-	m_oLookBackVec[1].resize(i);
-	DBG(i);
-	suspendProcessing(false);
+
+	//suspendProcessing(true);
+	//int i = static_cast<int>(m_fFilterFr*m_iBufferSize/10);
+	//m_oLookBackVec[0].resize(i);
+	//m_oLookBackVec[1].resize(i);
+	//DBG(i);
+	//suspendProcessing(false);
 }
 
 float sBMP4AudioProcessor::getParameterDefaultValue(int index)
