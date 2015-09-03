@@ -24,11 +24,10 @@ bitwig
 
 ______________________________________________________
 TODO
-
-    * actually, now juce plugin host is no longer working. crashes when opening sBMP4, which it does
-    * on startup
-    * figure out how to use ctags
-    * use this library for filters: https://github.com/vinniefalco/DSPFilters
-    * figure out how to run reaper
-
+    * LINUX	
+        * actually, now juce plugin host is no longer working. crashes when opening sBMP4, which it does on startup
+        * figure out how to use ctags
+        * figure out how to run reaper
+    * OTHER
+        * use this library for filters: https://github.com/vinniefalco/DSPFilters
     
