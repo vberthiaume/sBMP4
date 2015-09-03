@@ -111,27 +111,26 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 			simplestLP(channelData, numSamples, m_oLookBackVec[iCurChannel]);
 		}
 	} else {
-	
-			//Dsp::SimpleFilter <Dsp::RBJ::LowPass, 2>  f;
-			//f.setup(m_oSynth.getSampleRate(), (1-m_fFilterFr) * 20000, 1.f);
-			//float* channelData[2];
-			//channelData[0] = buffer.getWritePointer(0);
-			//channelData[1] = buffer.getWritePointer(1);
-			//f.process(numSamples, channelData);
 
-
-			Dsp::SimpleFilter <Dsp::ChebyshevI::BandPass <3>, 2> f;
-			f.setup(3,    // order
-				m_oSynth.getSampleRate(),// sample rate
-				(1-m_fFilterFr) * 20000, // center frequency
-				200,
-				1);   // ripple dB
-			float* channelData[2];
-			channelData[0] = buffer.getWritePointer(0);
-			channelData[1] = buffer.getWritePointer(1);
-			f.process(numSamples, channelData);
-			DBG(m_fFilterFr);
 		
+		Dsp::SimpleFilter <Dsp::RBJ::LowPass, 2>  f;	//2 here is the number of channels, and is needed!
+		f.setup(m_oSynth.getSampleRate(), (1-m_fFilterFr) * 20000, 5.f);
+		float* channelData[2];
+		channelData[0] = buffer.getWritePointer(0);
+		channelData[1] = buffer.getWritePointer(1);
+		f.process(numSamples, channelData);
+
+		//<3> is the filter order and 2 is the number of channels
+		//Dsp::SimpleFilter <Dsp::ChebyshevI::BandPass <3>, 2> f;
+		//f.setup(3,    // order
+		//	m_oSynth.getSampleRate(),// sample rate
+		//	(1-m_fFilterFr) * 20000, // center frequency
+		//	200,
+		//	1);   // ripple dB
+		//float* channelData[2];
+		//channelData[0] = buffer.getWritePointer(0);
+		//channelData[1] = buffer.getWritePointer(1);
+		//f.process(numSamples, channelData);		
 	}
 
     // clear unused output channels
