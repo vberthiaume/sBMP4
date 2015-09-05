@@ -50,11 +50,18 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor (sBMP4AudioProcessor& proce
  	addSlider(&m_oDelaySlider	, .01);
 
 	JUCE_COMPILER_WARNING("path needs to make sense on mac")
-	m_oSineImage.setImage(ImageFileFormat::loadFrom(File::createFileWithoutCheckingPath("C:\\Users\\Vincent\\Documents\\git\\sBMP4\\icons\\sine.png")));
-	m_oSawImage.setImage(ImageFileFormat::loadFrom(File::createFileWithoutCheckingPath("C:\\Users\\Vincent\\Documents\\git\\sBMP4\\icons\\saw.png")));
-	m_oSquareImage.setImage(ImageFileFormat::loadFrom(File::createFileWithoutCheckingPath("C:\\Users\\Vincent\\Documents\\git\\sBMP4\\icons\\square.png")));
-	m_oTriangleImage.setImage(ImageFileFormat::loadFrom(File::createFileWithoutCheckingPath("C:\\Users\\Vincent\\Documents\\git\\sBMP4\\icons\\triangle.png")));
-	m_oLogoImage.setImage(ImageFileFormat::loadFrom(File::createFileWithoutCheckingPath("C:\\Users\\Vincent\\Documents\\git\\sBMP4\\icons\\main.png")));
+		String strPrefix;
+#ifdef JUCE_LINUX
+#elif JUCE_MAC
+#elif JUCE_WINDOWS
+	strPrefix = "C:\\Users\\Vincent\\Documents\\git\\sBMP4\\icons\\";
+#endif
+	m_oSineImage.	 setImage(ImageFileFormat::loadFrom(File(strPrefix + "sine.png")));
+	m_oSawImage.	 setImage(ImageFileFormat::loadFrom(File(strPrefix + "saw.png")));
+	m_oSquareImage.	 setImage(ImageFileFormat::loadFrom(File(strPrefix + "square.png")));
+	m_oTriangleImage.setImage(ImageFileFormat::loadFrom(File(strPrefix + "triangle.png")));
+	m_oLogoImage.	 setImage(ImageFileFormat::loadFrom(File(strPrefix + "main.png")));
+
 
 	addAndMakeVisible(m_oSineImage);
 	addAndMakeVisible(m_oSawImage);
