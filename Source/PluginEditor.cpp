@@ -52,6 +52,7 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor (sBMP4AudioProcessor& proce
 	JUCE_COMPILER_WARNING("path needs to make sense on mac")
 		String strPrefix;
 #ifdef JUCE_LINUX
+        strPrefix = "/home/vberthiaume/Documents/git/sBMP4/Source/DspFilters";
 #elif JUCE_MAC
 #elif JUCE_WINDOWS
 	strPrefix = "C:\\Users\\Vincent\\Documents\\git\\sBMP4\\icons\\";
