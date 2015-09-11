@@ -93,7 +93,6 @@ public:
 protected:
 	double m_dCurrentAngle, m_dOmega, m_dLevel, m_dTailOff;
 	SynthesiserSound* m_oCurrentSynthSound;
-    int m_iK;
 };
 
 

@@ -28,7 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 Bmp4SynthVoice::Bmp4SynthVoice()
 	: m_dOmega(0.0)
 	, m_dTailOff(0.0)
-    , m_iK(50)
 {
 }
 
@@ -111,14 +110,14 @@ float Bmp4SynthVoice::getSample(double dTail) {
     } 
     else if(dynamic_cast <SquareWaveSound*> (getCurrentlyPlayingSound().get())){
         float fCurrentSample = 0.0;
-        for(int iCurK = 0; iCurK < m_iK; ++iCurK){
+        for(int iCurK = 0; iCurK < 25; ++iCurK){
             fCurrentSample += static_cast<float> (sin(m_dCurrentAngle * (2 * iCurK + 1)) / (2 * iCurK + 1));
         }
         return fCurrentSample * m_dLevel * dTail;
     } 
     else if(dynamic_cast <TriangleWaveSound*> (getCurrentlyPlayingSound().get())){
         float fCurrentSample = 0.0;
-        for(int iCurK = 0; iCurK < m_iK; ++iCurK){
+        for(int iCurK = 0; iCurK < 5; ++iCurK){
             fCurrentSample += static_cast<float> (sin(M_PI*(2 * iCurK + 1) / 2) * (sin(m_dCurrentAngle * (2 * iCurK + 1)) / pow((2 * iCurK + 1), 2)));
         }
         return (8 / pow(M_PI, 2)) * fCurrentSample * m_dLevel * dTail;
@@ -133,7 +132,7 @@ float Bmp4SynthVoice::getSample(double dTail) {
         //return (2 / M_PI) * fCurrentSample * m_dLevel * dTail;
 
         float fCurrentSample = 0.0;
-        for(int iCurK = 1; iCurK < m_iK; ++iCurK){
+        for(int iCurK = 1; iCurK < 20; ++iCurK){
             fCurrentSample += static_cast<float> (sin(m_dCurrentAngle * iCurK) / iCurK);
         }
         return 1/2 - (1 / M_PI) * fCurrentSample * m_dLevel * dTail;
