@@ -26,22 +26,22 @@
 #include "constants.h"
 
 //==============================================================================
-sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor (sBMP4AudioProcessor& processor)
-    : AudioProcessorEditor (processor),
-        m_oMidiKeyboard (processor.m_oKeyboardState, MidiKeyboardComponent::horizontalKeyboard),
-		m_oWaveLabel("", "wave"),
-		m_oFilterLabel("", "filter"),
-        m_oInfoLabel (String::empty),
-        m_oGainLabel ("", "gain"),
-        m_oDelayLabel ("", "delay"),
-        m_oWaveSlider("wave"),
-		m_oFilterSlider("Filter"),
-        m_oGainSlider ("gain"),
-        m_oDelaySlider ("delay"),
-		m_oSineImage("sine"), 
-		m_oSawImage("saw"),
-		m_oTriangleImage("triangle"), 
-		m_oLogoImage("sBMP4")
+sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor(sBMP4AudioProcessor& processor)
+    : AudioProcessorEditor(processor)
+    , m_oMidiKeyboard(processor.m_oKeyboardState, MidiKeyboardComponent::horizontalKeyboard)
+    , m_oWaveLabel("", "wave")
+    , m_oFilterLabel("", "filter")
+    , m_oInfoLabel(String::empty)
+    , m_oGainLabel("", "gain")
+    , m_oDelayLabel("", "delay")
+    , m_oWaveSlider("wave")
+    , m_oFilterSlider("Filter")
+    , m_oGainSlider("gain")
+    , m_oDelaySlider("delay")
+    , m_oSineImage("sine")
+    , m_oSawImage("saw")
+    , m_oTriangleImage("triangle")
+    , m_oLogoImage("sBMP4")
 {
     
     addSlider(&m_oWaveSlider	, 1.f/3);
@@ -124,15 +124,15 @@ void sBMP4AudioProcessorEditor::resized() {
     //m_oInfoLabel.setBounds (10, 4, 400, 25);
 
     int x = 20, y = 25, w = 75, sh = 40, wh = 20;
-    m_oWaveSlider.setBounds	(x, y,		w, sh);
-	m_oWaveLabel.setBounds(x, y + 1.5*wh, w, wh);
+    m_oWaveSlider.setBounds	    (x, y,		w, sh);
+	m_oWaveLabel.setBounds      (x, y + 1.5*wh, w, wh);
 
-	m_oSineImage.setBounds(x - 5, y + 25, 20, 20);
-	m_oSquareImage.setBounds(x + 0, y - 15, 20, 20);
-	m_oTriangleImage.setBounds(x + 7 * w / 10, y - 15, 20, 20);
-	m_oSawImage.setBounds(x + 8 * w / 10, y + 25, 20, 20);
+	m_oSineImage.setBounds      (x - 5, y + 25, 20, 20);
+	m_oSquareImage.setBounds    (x + 0, y - 15, 20, 20);
+	m_oTriangleImage.setBounds  (x + 7 * w / 10, y - 15, 20, 20);
+	m_oSawImage.setBounds       (x + 8 * w / 10, y + 25, 20, 20);
 
-    m_oFilterSlider.setBounds (x + w, y,		w, sh);
+    m_oFilterSlider.setBounds   (x + w, y,		w, sh);
 	m_oFilterLabel.setBounds	(x + w, y+1.5*wh,	w, wh);
     
 	m_oGainSlider.setBounds(x + 2 * w, y, w, sh);

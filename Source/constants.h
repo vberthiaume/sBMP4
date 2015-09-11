@@ -37,6 +37,8 @@ const float defaultDelay	= 0.0f;
 const float defaultWave		= 0.0f;
 const float defaultFilterFr = 0.0f;
 
+const float s_bUseSimplestLp = false;
+
 static bool areSame(double a, double b)
 {
     return fabs(a - b) < .0001;//std::numeric_limits<double>::epsilon();

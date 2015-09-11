@@ -65,8 +65,8 @@ sBMP4AudioProcessor::~sBMP4AudioProcessor() {
 
 void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
-    const int numSamples = buffer.getNumSamples();
-	if(m_iBufferSize != numSamples){
+   const int numSamples = buffer.getNumSamples();
+   if(s_bUseSimplestLp && m_iBufferSize != numSamples){
 		m_iBufferSize = numSamples;
 		setFilterFr(m_fFilterFr);	//just to update the lookback vector
 	}
@@ -102,8 +102,7 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
     m_iDelayPosition = dp;
 
 	//-----FILTER
-	bool bUseSimplest = false;
-	if(bUseSimplest){
+    if(s_bUseSimplestLp){
 		//only 2 channels supported for now
 		for(iCurChannel = 0; iCurChannel < 2 /*getNumInputChannels()*/; ++iCurChannel) {
 			m_iCurChannel = iCurChannel;
@@ -200,38 +199,46 @@ void sBMP4AudioProcessor::setParameter(int index, float newValue)
 	// This method will be called by the host, probably on the audio thread, so
 	// it's absolutely time-critical. Don't use critical sections or anything
 	// UI-related, or anything at all that may block in any way!
-	switch(index)
-	{
-	case paramGain:		m_fGain = newValue;		break;
-	case paramDelay:    m_fDelay = newValue;	break;
-	case paramWave:     setWaveType(newValue);  break;
-	case paramFilterFr: setFilterFr(newValue);  break;
-	default:            break;
-	}
+    switch(index) {
+    case paramGain:		m_fGain = newValue;		break;
+    case paramDelay:    m_fDelay = newValue;	break;
+    case paramWave:     setWaveType(newValue);  break;
+    case paramFilterFr: setFilterFr(newValue);  break;
+    default:            break;
+    }
 }
 
 void sBMP4AudioProcessor::setWaveType(float p_fWave){
 	m_fWave = p_fWave;
 	JUCE_COMPILER_WARNING("probably the sounds should be loaded by the voices...")
-		m_oSynth.clearSounds();
+	m_oSynth.clearSounds();
 	m_oSynth.clearVoices();
+
+    int iNumberOfVoices = 4;
 
 	if(m_fWave == 0){
 		m_oSynth.addSound(new SineWaveSound());
-		for(int i = 4; --i >= 0;)
-			m_oSynth.addVoice(new SineWaveVoice());
-	} else if(areSame(m_fWave, 1.f/3)){
+        for(int i = 0; i < iNumberOfVoices; ++i){
+            m_oSynth.addVoice(new SineWaveVoice());
+        }
+	} 
+    else if(areSame(m_fWave, 1.f/3)){
 		m_oSynth.addSound(new SquareWaveSound());
-		for(int i = 4; --i >= 0;)
-			m_oSynth.addVoice(new SquareWaveVoice());
-	} else if(areSame(m_fWave, 2.f / 3)){
+        for(int i = 0; i < iNumberOfVoices; ++i){
+            m_oSynth.addVoice(new SquareWaveVoice());
+        }
+	} 
+    else if(areSame(m_fWave, 2.f / 3)){
 		m_oSynth.addSound(new TriangleWaveSound());
-		for(int i = 4; --i >= 0;)
-			m_oSynth.addVoice(new TriangleWaveVoice());
-	} else if(m_fWave == 1){
+        for(int i = 0; i < iNumberOfVoices; ++i){
+            m_oSynth.addVoice(new TriangleWaveVoice());
+        }
+	} 
+    else if(m_fWave == 1){
 		m_oSynth.addSound(new SawtoothWaveSound());
-		for(int i = 4; --i >= 0;)
-			m_oSynth.addVoice(new SawtoothWaveVoice());
+        for(int i = 0; i < iNumberOfVoices; ++i){
+            m_oSynth.addVoice(new SawtoothWaveVoice());
+        }
 	}
 
 	//HAVING A MONOPHONIC SYNTH MAKES CLICKS BETWEEN NOTES BECAUSE NO TAILING OFF BETWEEN NOTES

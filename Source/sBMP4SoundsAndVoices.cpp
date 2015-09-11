@@ -35,30 +35,24 @@ void Bmp4SynthVoice::renderNextBlock(AudioSampleBuffer& p_oOutputBuffer, int p_i
 	if (m_dOmega == 0.0) {
 		return;
 	}
-
-	double dTailOffCopy;
-
 	for (int iCurSample = 0; iCurSample < p_iTotalSamples; ++iCurSample) {
-
 		//this will be == 1 if we don't have a tail off or = m_dTailOff if we do
-		dTailOffCopy = m_dTailOff > 0 ? m_dTailOff : 1;
+		double dTailOffCopy = (m_dTailOff > 0) ? m_dTailOff : 1;
 
-		//this is a virtual call to child functions
+		//this is a virtual call to child functions. Not sure at this point why we need a copy of the tailOff, but not doing that doesn't work
 		const float fCurrentSample = getSample(dTailOffCopy);
 
-		for (int i = p_oOutputBuffer.getNumChannels(); --i >= 0;){
+        for(int i = 0; i < p_oOutputBuffer.getNumChannels(); ++i){
 			p_oOutputBuffer.addSample(i, p_iStartSample, fCurrentSample);
 		}
 
-		m_dCurrentAngle += m_dOmega;	//m_dOmega here is in radian...?
+		m_dCurrentAngle += m_dOmega;	//m_dOmega here is in radian
 		++p_iStartSample;
 
 		if (m_dTailOff > 0) {
 			m_dTailOff *= 0.99;
-
 			if (m_dTailOff <= 0.005) {
 				clearCurrentNote();
-
 				m_dOmega = 0.0;
 				break;
 			}
@@ -95,6 +89,8 @@ void Bmp4SynthVoice::stopNote(float /*velocity*/, bool allowTailOff)  {
 	}
 }
 
+//-----------------------------------------------------------------------------------------------------------------
+
 bool SineWaveVoice::canPlaySound(SynthesiserSound* sound)  {
 
 	if (dynamic_cast <SineWaveSound*> (sound)){
@@ -108,6 +104,9 @@ float SineWaveVoice::getSample(double dTail) {
 
 	return (float)(sin(m_dCurrentAngle) * m_dLevel * dTail);
 }
+
+
+//-----------------------------------------------------------------------------------------------------------------
 
 JUCE_COMPILER_WARNING("Would probably be way more efficient to use wave tables for all these additive synthesis getSamples in square, triangle and sawtooth")
 
@@ -133,6 +132,8 @@ float SquareWaveVoice::getSample(double dTail) {
 	return fCurrentSample * m_dLevel * dTail;
 }
 
+//-----------------------------------------------------------------------------------------------------------------
+
 
 bool TriangleWaveVoice::canPlaySound(SynthesiserSound* sound) {
 
@@ -155,6 +156,8 @@ float TriangleWaveVoice::getSample(double dTail) {
 		return (8 / pow(M_PI, 2)) * fCurrentSample * m_dLevel * dTail;
 }
 
+
+//-----------------------------------------------------------------------------------------------------------------
 
 bool SawtoothWaveVoice::canPlaySound(SynthesiserSound* sound)  {
 
