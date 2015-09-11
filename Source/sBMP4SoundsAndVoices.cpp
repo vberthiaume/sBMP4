@@ -90,19 +90,30 @@ void Bmp4SynthVoice::stopNote(float /*velocity*/, bool allowTailOff)  {
 }
 
 //-----------------------------------------------------------------------------------------------------------------
+SineWaveVoice::SineWaveVoice()
+    :m_iK(50)
+{
+}
 
 bool SineWaveVoice::canPlaySound(SynthesiserSound* sound)  {
 
-	if (dynamic_cast <SineWaveSound*> (sound)){
+	//if (dynamic_cast <SineWaveSound*> (sound)){
 		return true;
-	} else {
-		return false;
-	}
+	//} else {
+		//return false;
+	//}
 }
 
 float SineWaveVoice::getSample(double dTail) {
-
-	return (float)(sin(m_dCurrentAngle) * m_dLevel * dTail);
+    if(dynamic_cast <SineWaveSound*> (getCurrentlyPlayingSound().get())){
+        return (float)(sin(m_dCurrentAngle) * m_dLevel * dTail);
+    } else if(dynamic_cast <SquareWaveSound*> (getCurrentlyPlayingSound().get())){
+        float fCurrentSample = 0.0;
+        for(int iCurK = 0; iCurK < m_iK; ++iCurK){
+            fCurrentSample += static_cast<float> (sin(m_dCurrentAngle * (2 * iCurK + 1)) / (2 * iCurK + 1));
+        }
+        return fCurrentSample * m_dLevel * dTail;
+    }
 }
 
 
@@ -110,8 +121,8 @@ float SineWaveVoice::getSample(double dTail) {
 
 JUCE_COMPILER_WARNING("Would probably be way more efficient to use wave tables for all these additive synthesis getSamples in square, triangle and sawtooth")
 
-	SquareWaveVoice::SquareWaveVoice()
-	:m_iK(50)
+SquareWaveVoice::SquareWaveVoice()
+    :m_iK(50)
 {
 }
 

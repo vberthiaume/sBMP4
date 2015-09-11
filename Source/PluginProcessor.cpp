@@ -242,7 +242,7 @@ void sBMP4AudioProcessor::setWaveType(float p_fWave){
 	m_fWave = p_fWave;
 	JUCE_COMPILER_WARNING("probably the sounds should be loaded by the voices...")
 	m_oSynth.clearSounds();
-	m_oSynth.clearVoices();
+	//m_oSynth.clearVoices();
 
     if(m_fWave == 0){
 		m_oSynth.addSound(new SineWaveSound());
@@ -252,9 +252,9 @@ void sBMP4AudioProcessor::setWaveType(float p_fWave){
 	} 
     else if(areSame(m_fWave, 1.f/3)){
 		m_oSynth.addSound(new SquareWaveSound());
-        for(int i = 0; i < s_iNumberOfVoices; ++i){
-            m_oSynth.addVoice(new SquareWaveVoice());
-        }
+        //for(int i = 0; i < s_iNumberOfVoices; ++i){
+        //    m_oSynth.addVoice(new SquareWaveVoice());
+        //}
 	} 
     else if(areSame(m_fWave, 2.f / 3)){
 		m_oSynth.addSound(new TriangleWaveSound());

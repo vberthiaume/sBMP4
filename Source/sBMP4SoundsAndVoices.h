@@ -95,19 +95,18 @@ protected:
 	SynthesiserSound* m_oCurrentSynthSound;
 };
 
-class SineWaveVoice : public Bmp4SynthVoice
-{
+class SineWaveVoice : public Bmp4SynthVoice{
+public:
+    SineWaveVoice();
+protected:
 	virtual bool canPlaySound(SynthesiserSound* sound) override;
-
 	virtual float getSample(double dTail) override;
-
+    int m_iK;
 };
 
-class SquareWaveVoice : public Bmp4SynthVoice
-{
+class SquareWaveVoice : public Bmp4SynthVoice{
 public:
 	SquareWaveVoice();
-
 protected:
 	bool canPlaySound(SynthesiserSound* sound) override;
 
