@@ -40,6 +40,7 @@ const float defaultFilterFr = 0.0f;
 const int   s_iSimpleFilterLF = 600;
 const int   s_iSimpleFilterHF = 12000;
 
+const int s_iNumberOfVoices = 5;
 const float s_bUseSimplestLp = false;
 
 static bool areSame(double a, double b)

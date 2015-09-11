@@ -161,7 +161,12 @@ void sBMP4AudioProcessor::prepareToPlay(double sampleRate, int /*samplesPerBlock
     m_oDelayBuffer.clear();
 }
 
-
+void sBMP4AudioProcessor::updateSimpleFilter(double sampleRate)
+{
+    //float fCutoffFr = (1-m_fFilterFr) * 20000;
+    float fCutoffFr = s_iSimpleFilterLF - (s_iSimpleFilterHF - s_iSimpleFilterLF) * (m_fFilterFr-1);
+    m_simpleFilter.setup(sampleRate, fCutoffFr, 5.f);
+}
 
 JUCE_COMPILER_WARNING("need to put this in my audio library")
 //from here: https://ccrma.stanford.edu/~jos/filters/Definition_Simplest_Low_Pass.html
@@ -239,29 +244,27 @@ void sBMP4AudioProcessor::setWaveType(float p_fWave){
 	m_oSynth.clearSounds();
 	m_oSynth.clearVoices();
 
-    int iNumberOfVoices = 4;
-
-	if(m_fWave == 0){
+    if(m_fWave == 0){
 		m_oSynth.addSound(new SineWaveSound());
-        for(int i = 0; i < iNumberOfVoices; ++i){
+        for(int i = 0; i < s_iNumberOfVoices; ++i){
             m_oSynth.addVoice(new SineWaveVoice());
         }
 	} 
     else if(areSame(m_fWave, 1.f/3)){
 		m_oSynth.addSound(new SquareWaveSound());
-        for(int i = 0; i < iNumberOfVoices; ++i){
+        for(int i = 0; i < s_iNumberOfVoices; ++i){
             m_oSynth.addVoice(new SquareWaveVoice());
         }
 	} 
     else if(areSame(m_fWave, 2.f / 3)){
 		m_oSynth.addSound(new TriangleWaveSound());
-        for(int i = 0; i < iNumberOfVoices; ++i){
+        for(int i = 0; i < s_iNumberOfVoices; ++i){
             m_oSynth.addVoice(new TriangleWaveVoice());
         }
 	} 
     else if(m_fWave == 1){
 		m_oSynth.addSound(new SawtoothWaveSound());
-        for(int i = 0; i < iNumberOfVoices; ++i){
+        for(int i = 0; i < s_iNumberOfVoices; ++i){
             m_oSynth.addVoice(new SawtoothWaveVoice());
         }
 	}
@@ -367,7 +370,6 @@ void sBMP4AudioProcessor::setStateInformation (const void* data, int sizeInBytes
     }
 }
 
-
 //==============================================================================
 AudioProcessorEditor* sBMP4AudioProcessor::createEditor()
 {
@@ -420,13 +422,6 @@ bool sBMP4AudioProcessor::silenceInProducesSilenceOut() const
 double sBMP4AudioProcessor::getTailLengthSeconds() const
 {
     return 0.0;
-}
-
-void sBMP4AudioProcessor::updateSimpleFilter(double sampleRate)
-{
-    //float fCutoffFr = (1-m_fFilterFr) * 20000;
-    float fCutoffFr = s_iSimpleFilterLF - (s_iSimpleFilterHF - s_iSimpleFilterLF) * (m_fFilterFr-1);
-    m_simpleFilter.setup(sampleRate, fCutoffFr, 5.f);
 }
 
 //==============================================================================
