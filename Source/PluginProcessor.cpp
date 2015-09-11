@@ -110,9 +110,6 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 		}
 	} else {
 
-		JUCE_COMPILER_WARNING("to use smoothing, need to use Dsp::SmoothedFilterDesign")
-		//Dsp::SimpleFilter <Dsp::RBJ::LowPass, 2>  m_simpleFilter;	//2 here is the number of channels, and is mandatory!
-  //      m_simpleFilter.setup(m_oSynth.getSampleRate(), (1-m_fFilterFr) * 20000, 5.f);
 		float* channelData[2];
 		channelData[0] = buffer.getWritePointer(0);
 		channelData[1] = buffer.getWritePointer(1);
@@ -148,7 +145,7 @@ void sBMP4AudioProcessor::setFilterFr(float p_fFilterFr){
         DBG(i);
         suspendProcessing(false);
     } else if(m_oSynth.getSampleRate() > 0){
-        m_simpleFilter.setup(m_oSynth.getSampleRate(), (1-m_fFilterFr) * 20000, 5.f);
+        updateSimpleFilter(m_oSynth.getSampleRate());
     }
 }
 
@@ -158,11 +155,13 @@ void sBMP4AudioProcessor::prepareToPlay(double sampleRate, int /*samplesPerBlock
     // initialisation that you need..
     m_oSynth.setCurrentPlaybackSampleRate(sampleRate);
     if(!s_bUseSimplestLp){
-        m_simpleFilter.setup(sampleRate, (1-m_fFilterFr) * 20000, 5.f);
+        updateSimpleFilter(sampleRate);
     }
     m_oKeyboardState.reset();
     m_oDelayBuffer.clear();
 }
+
+
 
 JUCE_COMPILER_WARNING("need to put this in my audio library")
 //from here: https://ccrma.stanford.edu/~jos/filters/Definition_Simplest_Low_Pass.html
@@ -421,6 +420,13 @@ bool sBMP4AudioProcessor::silenceInProducesSilenceOut() const
 double sBMP4AudioProcessor::getTailLengthSeconds() const
 {
     return 0.0;
+}
+
+void sBMP4AudioProcessor::updateSimpleFilter(double sampleRate)
+{
+    //float fCutoffFr = (1-m_fFilterFr) * 20000;
+    float fCutoffFr = s_iSimpleFilterLF - (s_iSimpleFilterHF - s_iSimpleFilterLF) * (m_fFilterFr-1);
+    m_simpleFilter.setup(sampleRate, fCutoffFr, 5.f);
 }
 
 //==============================================================================

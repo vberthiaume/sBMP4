@@ -40,6 +40,9 @@ public:
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
+
+    void updateSimpleFilter(double sampleRate);
+
     void releaseResources() override;
     void processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages) override;
     void reset() override;
