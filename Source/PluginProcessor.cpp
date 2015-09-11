@@ -45,7 +45,12 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 	,m_fDelay(defaultDelay)
 	,m_iBufferSize(100)	//totally arbitrary value
 {
+    for(int iCurVox = 0; iCurVox < s_iNumberOfVoices; ++iCurVox){
+        m_oSynth.addVoice(new SineWaveVoice());
+    }
+
     setWaveType(defaultWave);
+
 	setFilterFr(defaultFilterFr);
 
 	for(int iCurChannel = 0; iCurChannel < 2; ++iCurChannel){
@@ -54,7 +59,6 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 
 	//width of 265 is 20 (x buffer on left) + 3*75 (3 sliders) + 20 (buffer on right)
     m_oLastDimensions = std::make_pair(20+4*65+20, 150);
-
     m_iDelayPosition = 0;
 }
 
@@ -246,27 +250,15 @@ void sBMP4AudioProcessor::setWaveType(float p_fWave){
 
     if(m_fWave == 0){
 		m_oSynth.addSound(new SineWaveSound());
-        for(int i = 0; i < s_iNumberOfVoices; ++i){
-            m_oSynth.addVoice(new SineWaveVoice());
-        }
 	} 
     else if(areSame(m_fWave, 1.f/3)){
 		m_oSynth.addSound(new SquareWaveSound());
-        //for(int i = 0; i < s_iNumberOfVoices; ++i){
-        //    m_oSynth.addVoice(new SquareWaveVoice());
-        //}
 	} 
     else if(areSame(m_fWave, 2.f / 3)){
 		m_oSynth.addSound(new TriangleWaveSound());
-        for(int i = 0; i < s_iNumberOfVoices; ++i){
-            m_oSynth.addVoice(new TriangleWaveVoice());
-        }
 	} 
     else if(m_fWave == 1){
 		m_oSynth.addSound(new SawtoothWaveSound());
-        for(int i = 0; i < s_iNumberOfVoices; ++i){
-            m_oSynth.addVoice(new SawtoothWaveVoice());
-        }
 	}
 
 	//HAVING A MONOPHONIC SYNTH MAKES CLICKS BETWEEN NOTES BECAUSE NO TAILING OFF BETWEEN NOTES

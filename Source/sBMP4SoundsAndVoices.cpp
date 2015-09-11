@@ -97,104 +97,53 @@ SineWaveVoice::SineWaveVoice()
 
 bool SineWaveVoice::canPlaySound(SynthesiserSound* sound)  {
 
-	//if (dynamic_cast <SineWaveSound*> (sound)){
+	if (dynamic_cast <SineWaveSound*> (sound) ||
+        dynamic_cast <SquareWaveSound*> (sound) ||
+        dynamic_cast <TriangleWaveSound*> (sound) ||
+        dynamic_cast <SawtoothWaveSound*> (sound)){
 		return true;
-	//} else {
-		//return false;
-	//}
+	} else {
+		return false;
+	}
 }
+
+JUCE_COMPILER_WARNING("Would probably be way more efficient to use wave tables for all these additive synthesis getSamples in square, triangle and sawtooth")
 
 float SineWaveVoice::getSample(double dTail) {
     if(dynamic_cast <SineWaveSound*> (getCurrentlyPlayingSound().get())){
         return (float)(sin(m_dCurrentAngle) * m_dLevel * dTail);
-    } else if(dynamic_cast <SquareWaveSound*> (getCurrentlyPlayingSound().get())){
+    } 
+    else if(dynamic_cast <SquareWaveSound*> (getCurrentlyPlayingSound().get())){
         float fCurrentSample = 0.0;
         for(int iCurK = 0; iCurK < m_iK; ++iCurK){
             fCurrentSample += static_cast<float> (sin(m_dCurrentAngle * (2 * iCurK + 1)) / (2 * iCurK + 1));
         }
         return fCurrentSample * m_dLevel * dTail;
+    } 
+    else if(dynamic_cast <TriangleWaveSound*> (getCurrentlyPlayingSound().get())){
+        float fCurrentSample = 0.0;
+        for(int iCurK = 0; iCurK < m_iK; ++iCurK){
+            fCurrentSample += static_cast<float> (sin(M_PI*(2 * iCurK + 1) / 2) * (sin(m_dCurrentAngle * (2 * iCurK + 1)) / pow((2 * iCurK + 1), 2)));
+        }
+        return (8 / pow(M_PI, 2)) * fCurrentSample * m_dLevel * dTail;
+    } 
+    else if(dynamic_cast <SawtoothWaveSound*> (getCurrentlyPlayingSound().get())){
+        //float fCurrentSample = 0.0;
+
+        //for (int iCurK = 1; iCurK < m_iK; ++iCurK){
+        //	fCurrentSample += static_cast<float> (sin((M_PI * iCurK) / 2) * (sin(m_dCurrentAngle * iCurK) / iCurK));
+        //}
+
+        //return (2 / M_PI) * fCurrentSample * m_dLevel * dTail;
+
+        float fCurrentSample = 0.0;
+        for(int iCurK = 1; iCurK < m_iK; ++iCurK){
+            fCurrentSample += static_cast<float> (sin(m_dCurrentAngle * iCurK) / iCurK);
+        }
+        return 1/2 - (1 / M_PI) * fCurrentSample * m_dLevel * dTail;
     }
 }
 
 
-//-----------------------------------------------------------------------------------------------------------------
 
-JUCE_COMPILER_WARNING("Would probably be way more efficient to use wave tables for all these additive synthesis getSamples in square, triangle and sawtooth")
-
-SquareWaveVoice::SquareWaveVoice()
-    :m_iK(50)
-{
-}
-
-bool SquareWaveVoice::canPlaySound(SynthesiserSound* sound) {
-
-	if (dynamic_cast <SquareWaveSound*> (sound)){
-		return true;
-	} else {
-		return false;
-	}
-}
-
-float SquareWaveVoice::getSample(double dTail) {
-	float fCurrentSample = 0.0;
-	for (int iCurK = 0; iCurK < m_iK; ++iCurK){
-		fCurrentSample += static_cast<float> (sin(m_dCurrentAngle * (2 * iCurK + 1)) / (2 * iCurK + 1));
-	}
-	return fCurrentSample * m_dLevel * dTail;
-}
-
-//-----------------------------------------------------------------------------------------------------------------
-
-
-bool TriangleWaveVoice::canPlaySound(SynthesiserSound* sound) {
-
-	if (dynamic_cast <TriangleWaveSound*> (sound)){
-		return true;
-	} else {
-		return false;
-	}
-}
-
-float TriangleWaveVoice::getSample(double dTail) {
-
-	float fCurrentSample = 0.0;
-
-	for (int iCurK = 0; iCurK < m_iK; ++iCurK){
-		fCurrentSample += static_cast<float> (sin(M_PI*(2 * iCurK + 1) / 2) * (sin(m_dCurrentAngle * (2 * iCurK + 1)) / pow((2 * iCurK + 1), 2)));
-	}
-
-	JUCE_COMPILER_WARNING(new std::string("p_dLevel doesn<t seem to work for any wave"))
-		return (8 / pow(M_PI, 2)) * fCurrentSample * m_dLevel * dTail;
-}
-
-
-//-----------------------------------------------------------------------------------------------------------------
-
-bool SawtoothWaveVoice::canPlaySound(SynthesiserSound* sound)  {
-
-	if (dynamic_cast <SawtoothWaveSound*> (sound)){
-		return true;
-	} else {
-		return false;
-	}
-}
-
-float SawtoothWaveVoice::getSample(double dTail) {
-
-	//float fCurrentSample = 0.0;
-
-	//for (int iCurK = 1; iCurK < m_iK; ++iCurK){
-	//	fCurrentSample += static_cast<float> (sin((M_PI * iCurK) / 2) * (sin(m_dCurrentAngle * iCurK) / iCurK));
-	//}
-
-	//return (2 / M_PI) * fCurrentSample * m_dLevel * dTail;
-
-	float fCurrentSample = 0.0;
-
-	for (int iCurK = 1; iCurK < m_iK; ++iCurK){
-		fCurrentSample += static_cast<float> (sin(m_dCurrentAngle * iCurK) / iCurK);
-	}
-
-	return 1/2 - (1 / M_PI) * fCurrentSample * m_dLevel * dTail;
-}
 

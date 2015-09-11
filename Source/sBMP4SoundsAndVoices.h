@@ -104,30 +104,5 @@ protected:
     int m_iK;
 };
 
-class SquareWaveVoice : public Bmp4SynthVoice{
-public:
-	SquareWaveVoice();
-protected:
-	bool canPlaySound(SynthesiserSound* sound) override;
-
-	virtual float getSample(double dTail);
-
-	int m_iK;
-};
-
-class TriangleWaveVoice : public SquareWaveVoice
-{
-	virtual bool canPlaySound(SynthesiserSound* sound) override;
-
-	virtual float getSample(double dTail);
-
-};
-
-class SawtoothWaveVoice : public SquareWaveVoice
-{
-	virtual bool canPlaySound(SynthesiserSound* sound) override;
-
-	virtual float getSample(double dTail);
-};
 
 #endif //sBMP4_Sounds_h
