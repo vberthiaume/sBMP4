@@ -72,9 +72,9 @@ public:
 	Bmp4SynthVoice();
 
 	// this is where we determine which unique sound this voice can play
-	bool canPlaySound(SynthesiserSound* sound) = 0;
+    bool canPlaySound(SynthesiserSound* sound);
 
-	virtual float getSample(double dTail) = 0;
+    virtual float getSample(double dTail);
 
 	void renderNextBlock(AudioSampleBuffer& p_oOutputBuffer, int p_iStartSample, int p_iTotalSamples) override;
 
@@ -93,16 +93,10 @@ public:
 protected:
 	double m_dCurrentAngle, m_dOmega, m_dLevel, m_dTailOff;
 	SynthesiserSound* m_oCurrentSynthSound;
-};
-
-class SineWaveVoice : public Bmp4SynthVoice{
-public:
-    SineWaveVoice();
-protected:
-	virtual bool canPlaySound(SynthesiserSound* sound) override;
-	virtual float getSample(double dTail) override;
     int m_iK;
 };
+
+
 
 
 #endif //sBMP4_Sounds_h

@@ -46,7 +46,7 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 	,m_iBufferSize(100)	//totally arbitrary value
 {
     for(int iCurVox = 0; iCurVox < s_iNumberOfVoices; ++iCurVox){
-        m_oSynth.addVoice(new SineWaveVoice());
+        m_oSynth.addVoice(new Bmp4SynthVoice());
     }
 
     setWaveType(defaultWave);

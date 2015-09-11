@@ -26,8 +26,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <math.h>
 
 Bmp4SynthVoice::Bmp4SynthVoice()
-	: m_dOmega(0.0),
-	m_dTailOff(0.0)
+	: m_dOmega(0.0)
+	, m_dTailOff(0.0)
+    , m_iK(50)
 {
 }
 
@@ -89,13 +90,8 @@ void Bmp4SynthVoice::stopNote(float /*velocity*/, bool allowTailOff)  {
 	}
 }
 
-//-----------------------------------------------------------------------------------------------------------------
-SineWaveVoice::SineWaveVoice()
-    :m_iK(50)
-{
-}
 
-bool SineWaveVoice::canPlaySound(SynthesiserSound* sound)  {
+bool Bmp4SynthVoice::canPlaySound(SynthesiserSound* sound)  {
 
 	if (dynamic_cast <SineWaveSound*> (sound) ||
         dynamic_cast <SquareWaveSound*> (sound) ||
@@ -109,7 +105,7 @@ bool SineWaveVoice::canPlaySound(SynthesiserSound* sound)  {
 
 JUCE_COMPILER_WARNING("Would probably be way more efficient to use wave tables for all these additive synthesis getSamples in square, triangle and sawtooth")
 
-float SineWaveVoice::getSample(double dTail) {
+float Bmp4SynthVoice::getSample(double dTail) {
     if(dynamic_cast <SineWaveSound*> (getCurrentlyPlayingSound().get())){
         return (float)(sin(m_dCurrentAngle) * m_dLevel * dTail);
     } 
