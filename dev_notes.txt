@@ -15,9 +15,7 @@ ardour
         what i produce are vsts, with .so extension which is linux for dll
         only vst 2.4 is supported
             ok, so maybe that is why everything crashed when I used the juce demo stuff
-           from manual: Linux VST (LXVST) plugins are distributed as shared library files. They are
-           typically installed in /usr/lib/lxvst, /usr/local/lib/lxvst or a directory mentioned in
-           your LXVST_PATH environment variable.
+           from manual: Linux VST (LXVST) plugins are distributed as shared library files. They are typically installed in /usr/lib/lxvst, /usr/local/lib/lxvst or a directory mentioned in your LXVST_PATH environment variable.
 
 bitwig
     * audio works with jack audio device. 
@@ -38,8 +36,16 @@ MAKING REAPER WORK
     sudo apt-get install kxstudio-repos
     sudo apt-get update
     sudo apt-get install wineasio
-* ok, so now i got that wineasio installed, and i went in reaper to select the asio drivers, but i
+* ok, so now i got that wineasio installed. I went in reaper to select the asio drivers, but no inputs/outputs were available. Then it crashed, and it crashes everytime I try to open it, even after a reinstall. so moving on for now. I suppose that next I could either try to start over from the reaper official instructions, or use start over using kxstudio instructions. 
 ___________________________________________________________________________________
+
+DEBUGGING JUCE PLUGIN HOST
+
+* ok, so the problem is with the gui. when i open the plugin that is when it crashes. it says: Opening VST UI: sBMP4 
+    * this fucking line is in 
+        audio plugin host/JuceLibraryCode/modules/juce_audio_processors/format_types/juce_VSTPluginFormat.cpp
+____________________________________________________________________________________
+
 TODO
     * LINUX	
         * actually, now juce plugin host is no longer working. crashes when opening sBMP4, which it does on startup
