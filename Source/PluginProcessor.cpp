@@ -24,7 +24,7 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 #include "constants.h"
-#include "sBMP4SoundsAndVoices.h"
+#include "BMP4SynthVoice.h"
 #include <algorithm>
 
 #define _USE_MATH_DEFINES
@@ -50,12 +50,13 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
     }
 
     setWaveType(defaultWave);
-
 	setFilterFr(defaultFilterFr);
 
-	for(int iCurChannel = 0; iCurChannel < 2; ++iCurChannel){
-		m_oLookBackVec[iCurChannel] = std::vector<float>(100, 0.f);
-	}
+    if(s_bUseSimplestLp){
+        for(int iCurChannel = 0; iCurChannel < 2; ++iCurChannel){
+            m_oLookBackVec[iCurChannel] = std::vector<float>(100, 0.f);
+        }
+    }
 
 	//width of 265 is 20 (x buffer on left) + 3*75 (3 sliders) + 20 (buffer on right)
     m_oLastDimensions = std::make_pair(20+4*65+20, 150);
