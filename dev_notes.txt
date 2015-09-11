@@ -3,6 +3,7 @@ USING PLUGINS IN A DAW ON UBUNTU
 reaper?
     i don't think wineasio is installed, no sound when i run
     i can't get wineasio to install, i get an error that wine/debug.h is missing
+    let's try that again.
 
 juce plugin host
     * apparently this now works! with pulse as audio interface. 
@@ -21,8 +22,24 @@ ardour
 bitwig
     * audio works with jack audio device. 
     * plugins are indexed but i don't see them when adding plugins on a track.  
+___________________________________________________
 
-______________________________________________________
+MAKING REAPER WORK
+
+* http://wiki.cockos.com/wiki/index.php/How_to_run_Reaper_in_Wine_on_Linux
+* these instructions are to use thread priorities similar to windows: https://dl.dropboxusercontent.com/u/879835/wine-rt-101107.patch  
+    * A recommended starting point might be runnning your app using: "env WINE_RT=15 WINE_SRV_RT=10 wine appname.exe"
+* so my main problem is that i can't get wineasio to install. on the wineasio sourceforge page, they
+* say to install the kxstudio repositories, then install wineasio from there. 
+* found these instructions: https://lkubuntu.wordpress.com/2014/01/09/how-to-set-up-wineasio/
+    sudo apt-get install software-properties-common wget
+    sudo add-apt-repository ppa:kxstudio-debian/kxstudio
+    sudo apt-get update
+    sudo apt-get install kxstudio-repos
+    sudo apt-get update
+    sudo apt-get install wineasio
+* ok, so now i got that wineasio installed, and i went in reaper to select the asio drivers, but i
+___________________________________________________________________________________
 TODO
     * LINUX	
         * actually, now juce plugin host is no longer working. crashes when opening sBMP4, which it does on startup
