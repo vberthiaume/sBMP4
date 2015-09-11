@@ -25,7 +25,6 @@
 #include "PluginEditor.h"
 #include "constants.h"
 #include "sBMP4SoundsAndVoices.h"
-#include "DspFilters/Dsp.h"
 #include <algorithm>
 
 #define _USE_MATH_DEFINES
@@ -112,12 +111,12 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 	} else {
 
 		JUCE_COMPILER_WARNING("to use smoothing, need to use Dsp::SmoothedFilterDesign")
-		Dsp::SimpleFilter <Dsp::RBJ::LowPass, 2>  f;	//2 here is the number of channels, and is mandatory!
-		f.setup(m_oSynth.getSampleRate(), (1-m_fFilterFr) * 20000, 5.f);
+		//Dsp::SimpleFilter <Dsp::RBJ::LowPass, 2>  m_simpleFilter;	//2 here is the number of channels, and is mandatory!
+  //      m_simpleFilter.setup(m_oSynth.getSampleRate(), (1-m_fFilterFr) * 20000, 5.f);
 		float* channelData[2];
 		channelData[0] = buffer.getWritePointer(0);
 		channelData[1] = buffer.getWritePointer(1);
-		f.process(numSamples, channelData);
+        m_simpleFilter.process(numSamples, channelData);
 
 		//<3> is the filter order and 2 is the number of channels
 		//Dsp::SimpleFilter <Dsp::ChebyshevI::BandPass <3>, 2> f;
@@ -136,6 +135,33 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 	for (int i = getNumInputChannels(); i < getNumOutputChannels(); ++i){
 		buffer.clear(i, 0, buffer.getNumSamples());
 	}
+}
+
+void sBMP4AudioProcessor::setFilterFr(float p_fFilterFr){
+    m_fFilterFr = p_fFilterFr;
+
+    if(s_bUseSimplestLp){
+        suspendProcessing(true);
+        int i = static_cast<int>(m_fFilterFr*m_iBufferSize/10);
+        m_oLookBackVec[0].resize(i);
+        m_oLookBackVec[1].resize(i);
+        DBG(i);
+        suspendProcessing(false);
+    } else if(m_oSynth.getSampleRate() > 0){
+        m_simpleFilter.setup(m_oSynth.getSampleRate(), (1-m_fFilterFr) * 20000, 5.f);
+    }
+}
+
+void sBMP4AudioProcessor::prepareToPlay(double sampleRate, int /*samplesPerBlock*/)
+{
+    // Use this method as the place to do any pre-playback
+    // initialisation that you need..
+    m_oSynth.setCurrentPlaybackSampleRate(sampleRate);
+    if(!s_bUseSimplestLp){
+        m_simpleFilter.setup(sampleRate, (1-m_fFilterFr) * 20000, 5.f);
+    }
+    m_oKeyboardState.reset();
+    m_oDelayBuffer.clear();
 }
 
 JUCE_COMPILER_WARNING("need to put this in my audio library")
@@ -248,16 +274,7 @@ void sBMP4AudioProcessor::setWaveType(float p_fWave){
 	//}
 }
 
-void sBMP4AudioProcessor::setFilterFr(float p_fFilterFr){
-	m_fFilterFr = p_fFilterFr;
 
-	//suspendProcessing(true);
-	//int i = static_cast<int>(m_fFilterFr*m_iBufferSize/10);
-	//m_oLookBackVec[0].resize(i);
-	//m_oLookBackVec[1].resize(i);
-	//DBG(i);
-	//suspendProcessing(false);
-}
 
 float sBMP4AudioProcessor::getParameterDefaultValue(int index)
 {
@@ -291,14 +308,7 @@ const String sBMP4AudioProcessor::getParameterText(int index)
 }
 
 //==============================================================================
-void sBMP4AudioProcessor::prepareToPlay(double sampleRate, int /*samplesPerBlock*/)
-{
-	// Use this method as the place to do any pre-playback
-	// initialisation that you need..
-	m_oSynth.setCurrentPlaybackSampleRate(sampleRate);
-	m_oKeyboardState.reset();
-	m_oDelayBuffer.clear();
-}
+
 
 void sBMP4AudioProcessor::releaseResources()
 {

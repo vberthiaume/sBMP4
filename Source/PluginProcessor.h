@@ -25,7 +25,7 @@
 #define __PLUGINPROCESSOR_H_526ED7A9__
 
 #include "../JuceLibraryCode/JuceHeader.h"
-
+#include "DspFilters/Dsp.h"
 
 //==============================================================================
 /**
@@ -87,30 +87,32 @@ public:
 
 private:
 
-void simplestLP(float* p_pfSamples, int p_iTotalSamples, std::vector<float> &p_fLookBackVec);
+    void simplestLP(float* p_pfSamples, int p_iTotalSamples, std::vector<float> &p_fLookBackVec);
 
-float m_fGain, m_fDelay, m_fWave, m_fFilterFr;
+    float m_fGain, m_fDelay, m_fWave, m_fFilterFr;
 
-void setWaveType(float p_fWave);
+    void setWaveType(float p_fWave);
 
-void setFilterFr(float p_fFilterFr);
+    void setFilterFr(float p_fFilterFr);
 
-std::pair<int, int> m_oLastDimensions;
+    std::pair<int, int> m_oLastDimensions;
 
-//==============================================================================
-AudioSampleBuffer m_oDelayBuffer;
-int m_iDelayPosition;
+    //==============================================================================
+    AudioSampleBuffer m_oDelayBuffer;
+    int m_iDelayPosition;
 
-Synthesiser m_oSynth;
+    Synthesiser m_oSynth;
 
-int m_iCurChannel;
+    int m_iCurChannel;
 
-bool m_bUseSimplestLP;
+    bool m_bUseSimplestLP;
 
-int m_iBufferSize;
-std::vector<float> m_oLookBackVec[2];
+    int m_iBufferSize;
+    std::vector<float> m_oLookBackVec[2];
 
-JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(sBMP4AudioProcessor)
+    Dsp::SimpleFilter <Dsp::RBJ::LowPass, 2>  m_simpleFilter;	//2 here is the number of channels, and is mandatory!
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(sBMP4AudioProcessor)
 };
 
 #endif  // __PLUGINPROCESSOR_H_526ED7A9__
