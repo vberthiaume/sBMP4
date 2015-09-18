@@ -30,7 +30,7 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor(sBMP4AudioProcessor& proces
     : AudioProcessorEditor(processor)
     , m_oMidiKeyboard(processor.m_oKeyboardState, MidiKeyboardComponent::horizontalKeyboard)
     , m_oWaveLabel("", "wave")
-    , m_oFilterLabel("", "filter")
+    , m_oFilterLabel("", "LP filter")
     , m_oInfoLabel(String::empty)
     , m_oGainLabel("", "gain")
     , m_oDelayLabel("", "delay")
@@ -85,7 +85,7 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor(sBMP4AudioProcessor& proces
 
     // add the triangular m_pResizer component for the bottom-right of the UI
     addAndMakeVisible (m_pResizer = new ResizableCornerComponent (this, &m_oResizeLimits));
-    m_oResizeLimits.setSizeLimits (20+4*65+20, 150, 800, 300);
+    m_oResizeLimits.setSizeLimits (20+4*65+25, 150, 800, 300);
 
     // set our component's initial size to be the last one that was stored in the filter's settings
     setSize (processor.getDimensions().first, processor.getDimensions().second);
