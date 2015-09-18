@@ -32,6 +32,8 @@ enum Parameters{
     ,paramTotalNum
 };
 
+
+
 const float defaultGain		= 1.0f;
 const float defaultDelay	= 0.0f;
 const float defaultWave		= 0.0f;
@@ -47,5 +49,7 @@ static bool areSame(double a, double b)
 {
     return fabs(a - b) < .0001;//std::numeric_limits<double>::epsilon();
 }
+
+
 
 #endif

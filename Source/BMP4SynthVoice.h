@@ -29,6 +29,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 //Synth sounds
 
+enum sounds{
+     soundSine
+    ,soundSquare
+    ,soundTriangle
+    ,soundSawtooth
+    ,soundTotalCount
+};
+
 class SineWaveSound : public SynthesiserSound
 {
 public:
@@ -92,10 +100,7 @@ public:
 
 protected:
 	double m_dCurrentAngle, m_dOmega, m_dLevel, m_dTailOff;
-	SynthesiserSound* m_oCurrentSynthSound;
+    int m_iCurSound;
 };
-
-
-
 
 #endif //sBMP4_Sounds_h

@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 Bmp4SynthVoice::Bmp4SynthVoice()
 	: m_dOmega(0.0)
 	, m_dTailOff(0.0)
+    , m_iCurSound(soundSine)
 {
 }
 
@@ -69,7 +70,15 @@ void Bmp4SynthVoice::startNote(int midiNoteNumber, float velocity, SynthesiserSo
 	double dNormalizedFreq = dFrequency / getSampleRate();
 	m_dOmega = dNormalizedFreq * 2.0 * double_Pi;
 
-	m_oCurrentSynthSound = dynamic_cast<SynthesiserSound*>(sound);
+    if(dynamic_cast <SineWaveSound*> (getCurrentlyPlayingSound().get())){
+        m_iCurSound = soundSine;
+    } else if(dynamic_cast <SquareWaveSound*> (getCurrentlyPlayingSound().get())){
+        m_iCurSound = soundSquare;
+    } else if(dynamic_cast <TriangleWaveSound*> (getCurrentlyPlayingSound().get())){
+        m_iCurSound = soundTriangle;
+    } else if(dynamic_cast <SawtoothWaveSound*> (getCurrentlyPlayingSound().get())){
+        m_iCurSound = soundSawtooth;
+    }
 }
 
 void Bmp4SynthVoice::stopNote(float /*velocity*/, bool allowTailOff)  {
@@ -105,37 +114,37 @@ bool Bmp4SynthVoice::canPlaySound(SynthesiserSound* sound)  {
 JUCE_COMPILER_WARNING("Would probably be way more efficient to use wave tables for all these additive synthesis getSamples in square, triangle and sawtooth")
 
 float Bmp4SynthVoice::getSample(double dTail) {
-    if(dynamic_cast <SineWaveSound*> (getCurrentlyPlayingSound().get())){
+
+    switch(m_iCurSound)
+    {
+    case soundSine:
+    default:
         return (float)(sin(m_dCurrentAngle) * m_dLevel * dTail);
-    } 
-    else if(dynamic_cast <SquareWaveSound*> (getCurrentlyPlayingSound().get())){
+        break;
+    case soundSquare:{
         float fCurrentSample = 0.0;
         for(int iCurK = 0; iCurK < 25; ++iCurK){
             fCurrentSample += static_cast<float> (sin(m_dCurrentAngle * (2 * iCurK + 1)) / (2 * iCurK + 1));
         }
         return fCurrentSample * m_dLevel * dTail;
-    } 
-    else if(dynamic_cast <TriangleWaveSound*> (getCurrentlyPlayingSound().get())){
+        break;
+    }
+    case soundTriangle:{
         float fCurrentSample = 0.0;
         for(int iCurK = 0; iCurK < 5; ++iCurK){
             fCurrentSample += static_cast<float> (sin(M_PI*(2 * iCurK + 1) / 2) * (sin(m_dCurrentAngle * (2 * iCurK + 1)) / pow((2 * iCurK + 1), 2)));
         }
         return (8 / pow(M_PI, 2)) * fCurrentSample * m_dLevel * dTail;
-    } 
-    else if(dynamic_cast <SawtoothWaveSound*> (getCurrentlyPlayingSound().get())){
-        //float fCurrentSample = 0.0;
-
-        //for (int iCurK = 1; iCurK < m_iK; ++iCurK){
-        //	fCurrentSample += static_cast<float> (sin((M_PI * iCurK) / 2) * (sin(m_dCurrentAngle * iCurK) / iCurK));
-        //}
-
-        //return (2 / M_PI) * fCurrentSample * m_dLevel * dTail;
-
+        break;
+    }
+    case soundSawtooth:{
         float fCurrentSample = 0.0;
         for(int iCurK = 1; iCurK < 20; ++iCurK){
             fCurrentSample += static_cast<float> (sin(m_dCurrentAngle * iCurK) / iCurK);
         }
         return 1/2 - (1 / M_PI) * fCurrentSample * m_dLevel * dTail;
+        break;
+    }
     }
 }
 
