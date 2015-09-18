@@ -63,7 +63,6 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor(sBMP4AudioProcessor& proces
 	m_oTriangleImage.setImage(ImageFileFormat::loadFrom(File(strPrefix + "triangle.png")));
 	m_oLogoImage.	 setImage(ImageFileFormat::loadFrom(File(strPrefix + "main.png")));
 
-
 	addAndMakeVisible(m_oSineImage);
 	addAndMakeVisible(m_oSawImage);
 	addAndMakeVisible(m_oSquareImage);
@@ -78,10 +77,6 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor(sBMP4AudioProcessor& proces
 
     // add the midi keyboard component..
     addAndMakeVisible (m_oMidiKeyboard);
-
-    // add a label that will display the current timecode and status..
-//    addAndMakeVisible (m_oInfoLabel);
-//    m_oInfoLabel.setColour (Label::textColourId, Colours::blue);
 
     // add the triangular m_pResizer component for the bottom-right of the UI
     addAndMakeVisible (m_pResizer = new ResizableCornerComponent (this, &m_oResizeLimits));
@@ -143,15 +138,10 @@ void sBMP4AudioProcessorEditor::resized() {
 
 	const int keyboardHeight = 70;
 
-	//m_oLogoImage.setBounds(x + 3 * w, 5, 48, 48);
 	int iLogoW = 75, iLogoH = 30;
 	m_oLogoImage.setBounds(getWidth() - iLogoW, 5, iLogoW, iLogoH);
-
-    
     m_oMidiKeyboard.setBounds (4, getHeight() - keyboardHeight - 4, getWidth() - 8, keyboardHeight);
-
     m_pResizer->setBounds (getWidth() - 16, getHeight() - 16, 16, 16);
-
     getProcessor().setDimensions(std::make_pair(getWidth(), getHeight()));
 }
 
@@ -159,9 +149,10 @@ void sBMP4AudioProcessorEditor::resized() {
 // This timer periodically checks whether any of the filter's parameters have changed...
 void sBMP4AudioProcessorEditor::timerCallback() {
     sBMP4AudioProcessor& ourProcessor = getProcessor();
-
-    m_oGainSlider.setValue (ourProcessor.getParameter(paramGain), dontSendNotification);
-    m_oDelaySlider.setValue (ourProcessor.getParameter(paramDelay), dontSendNotification);
+    m_oGainSlider  .setValue(ourProcessor.getParameter(paramGain),      dontSendNotification);
+    m_oDelaySlider .setValue(ourProcessor.getParameter(paramDelay),     dontSendNotification);
+    m_oWaveSlider  .setValue(ourProcessor.getParameter(paramWave),      dontSendNotification); 
+    m_oFilterSlider.setValue(ourProcessor.getParameter(paramFilterFr),  dontSendNotification);
 }
 
 // This is our Slider::Listener callback, when the user drags a slider.
@@ -177,61 +168,4 @@ void sBMP4AudioProcessorEditor::sliderValueChanged (Slider* slider) {
 	}
 }
 
-//==============================================================================
-// quick-and-dirty function to format a timecode string
-static const String timeToTimecodeString (const double seconds)
-{
-    const double absSecs = fabs (seconds);
 
-    const int hours =  (int) (absSecs / (60.0 * 60.0));
-    const int mins  = ((int) (absSecs / 60.0)) % 60;
-    const int secs  = ((int) absSecs) % 60;
-
-    String s (seconds < 0 ? "-" : "");
-
-    s << String (hours).paddedLeft ('0', 2) << ":"
-      << String (mins) .paddedLeft ('0', 2) << ":"
-      << String (secs) .paddedLeft ('0', 2) << ":"
-      << String (roundToInt (absSecs * 1000) % 1000).paddedLeft ('0', 3);
-
-    return s;
-}
-
-// quick-and-dirty function to format a bars/beats string
-static const String ppqToBarsBeatsString (double ppq, double /*lastBarPPQ*/, int numerator, int denominator)
-{
-    if (numerator == 0 || denominator == 0)
-        return "1|1|0";
-
-    const int ppqPerBar = (numerator * 4 / denominator);
-    const double beats  = (fmod (ppq, ppqPerBar) / ppqPerBar) * numerator;
-
-    const int bar    = ((int) ppq) / ppqPerBar + 1;
-    const int beat   = ((int) beats) + 1;
-    const int ticks  = ((int) (fmod (beats, 1.0) * 960.0 + 0.5));
-
-    String s;
-    s << bar << '|' << beat << '|' << ticks;
-    return s;
-}
-
-// Updates the text in our position label.
-void sBMP4AudioProcessorEditor::displayPositionInfo (const AudioPlayHead::CurrentPositionInfo& pos)
-{
-    m_oLastDisplayedPosition = pos;
-    String displayText;
-    displayText.preallocateBytes (128);
-
-    displayText << String (pos.bpm, 2) << " bpm, "
-                << pos.timeSigNumerator << '/' << pos.timeSigDenominator
-                << "  -  " << timeToTimecodeString (pos.timeInSeconds)
-                << "  -  " << ppqToBarsBeatsString (pos.ppqPosition, pos.ppqPositionOfLastBarStart,
-                                                    pos.timeSigNumerator, pos.timeSigDenominator);
-
-    if (pos.isRecording)
-        displayText << "  (recording)";
-    else if (pos.isPlaying)
-        displayText << "  (playing)";
-
-    m_oInfoLabel.setText ("[" + SystemStats::getJUCEVersion() + "]   " + displayText, dontSendNotification);
-}

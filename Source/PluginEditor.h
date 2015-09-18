@@ -61,10 +61,7 @@ private:
     }
 
 	void addSlider(Slider* p_pSlider, const float &p_fIncrement);
-
 	void addLabel(Label * p_pLabel);
-
-    void displayPositionInfo (const AudioPlayHead::CurrentPositionInfo& pos);
 };
 
 

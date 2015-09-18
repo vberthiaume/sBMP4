@@ -51,7 +51,6 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 
     setWaveType(defaultWave);
 	setFilterFr(defaultFilterFr);
-
     if(s_bUseSimplestLp){
         for(int iCurChannel = 0; iCurChannel < 2; ++iCurChannel){
             m_oLookBackVec[iCurChannel] = std::vector<float>(100, 0.f);
@@ -59,7 +58,7 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
     }
 
 	//width of 265 is 20 (x buffer on left) + 3*75 (3 sliders) + 20 (buffer on right)
-    m_oLastDimensions = std::make_pair(20+4*65+20, 150);
+    m_oLastDimensions = std::make_pair(20+4*65+25, 150);
     m_iDelayPosition = 0;
 }
 
@@ -87,7 +86,6 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 	for (iCurChannel = 0; iCurChannel < getNumInputChannels(); ++iCurChannel){
 		buffer.applyGain(iCurChannel, 0, buffer.getNumSamples(), m_fGain);
 	}
-
 	//-----DELAY
     for (iCurChannel = 0; iCurChannel < getNumInputChannels(); ++iCurChannel) {
         float* channelData = buffer.getWritePointer (iCurChannel);
@@ -104,7 +102,6 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
         }
     }
     m_iDelayPosition = dp;
-
 	//-----FILTER
     if(s_bUseSimplestLp){
 		//only 2 channels supported for now
@@ -114,7 +111,6 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 			simplestLP(channelData, numSamples, m_oLookBackVec[iCurChannel]);
 		}
 	} else {
-
 		float* channelData[2];
 		channelData[0] = buffer.getWritePointer(0);
 		channelData[1] = buffer.getWritePointer(1);
@@ -141,7 +137,6 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 
 void sBMP4AudioProcessor::setFilterFr(float p_fFilterFr){
     m_fFilterFr = p_fFilterFr;
-
     if(s_bUseSimplestLp){
         suspendProcessing(true);
         int i = static_cast<int>(m_fFilterFr*m_iBufferSize/10);
@@ -210,8 +205,7 @@ void sBMP4AudioProcessor::simplestLP(float* p_pfSamples, int p_iTotalSamples, st
 }
 
 //==============================================================================
-int sBMP4AudioProcessor::getNumParameters()
-{
+int sBMP4AudioProcessor::getNumParameters(){
 	return paramTotalNum;
 }
 
@@ -269,51 +263,43 @@ void sBMP4AudioProcessor::setWaveType(float p_fWave){
 	//}
 }
 
+float sBMP4AudioProcessor::getParameterDefaultValue(int index){
+    switch(index){
+    case paramGain:     return defaultGain;
+    case paramDelay:    return defaultDelay;
+    case paramWave:     return defaultWave;
+    case paramFilterFr: return defaultFilterFr;
+    default:            break;
+    }
 
-
-float sBMP4AudioProcessor::getParameterDefaultValue(int index)
-{
-	switch(index)
-	{
-	case paramGain:     return defaultGain;
-	case paramDelay:    return defaultDelay;
-	case paramWave:     return defaultWave;
-	default:            break;
-	}
-
-	return 0.0f;
+    return 0.0f;
 }
 
-const String sBMP4AudioProcessor::getParameterName(int index)
-{
-	switch(index)
-	{
+const String sBMP4AudioProcessor::getParameterName(int index){
+	switch(index){
 	case paramGain:     return "gain";
 	case paramDelay:    return "delay";
 	case paramWave:     return "wave";
+    case paramFilterFr: return "filter";
 	default:            break;
 	}
-
 	return String::empty;
 }
 
-const String sBMP4AudioProcessor::getParameterText(int index)
-{
+const String sBMP4AudioProcessor::getParameterText(int index){
 	return String(getParameter(index), 2);
 }
 
 //==============================================================================
 
 
-void sBMP4AudioProcessor::releaseResources()
-{
+void sBMP4AudioProcessor::releaseResources(){
 	// When playback stops, you can use this as an opportunity to free up any
 	// spare memory, etc.
 	m_oKeyboardState.reset();
 }
 
-void sBMP4AudioProcessor::reset()
-{
+void sBMP4AudioProcessor::reset(){
 	// Use this method as the place to clear any delay lines, buffers, etc, as it
 	// means there's been a break in the audio's continuity.
 	m_oDelayBuffer.clear();
@@ -321,20 +307,15 @@ void sBMP4AudioProcessor::reset()
 
 
 //==============================================================================
-void sBMP4AudioProcessor::getStateInformation (MemoryBlock& destData)
-{
-    // You should use this method to store your parameters in the memory block.
-    // Here's an example of how you can use XML to make it easy and more robust:
-
-    // Create an outer XML element..
+void sBMP4AudioProcessor::getStateInformation (MemoryBlock& destData){
     XmlElement xml ("SBMP4SETTINGS");
 
-    // add some attributes to it..
     xml.setAttribute ("uiWidth", m_oLastDimensions.first);
     xml.setAttribute ("uiHeight", m_oLastDimensions.second);
     xml.setAttribute ("gain", m_fGain);
     xml.setAttribute ("delay", m_fDelay);
     xml.setAttribute ("wave", m_fWave);
+    xml.setAttribute ("filter", m_fFilterFr);
 
     // then use this helper function to stuff it into the binary blob and return it..
     copyXmlToBinary (xml, destData);
@@ -355,42 +336,36 @@ void sBMP4AudioProcessor::setStateInformation (const void* data, int sizeInBytes
             m_oLastDimensions.first  = xmlState->getIntAttribute ("uiWidth", m_oLastDimensions.first);
             m_oLastDimensions.second = xmlState->getIntAttribute ("uiHeight", m_oLastDimensions.second);
 
-            m_fGain  = (float) xmlState->getDoubleAttribute ("gain", m_fGain);
-            m_fDelay = (float) xmlState->getDoubleAttribute ("delay", m_fDelay);
-            m_fWave  = (float) xmlState->getDoubleAttribute ("wave", m_fWave);
-
+            m_fGain     = (float)xmlState->getDoubleAttribute("gain",   m_fGain);
+            m_fDelay    = (float)xmlState->getDoubleAttribute("delay",  m_fDelay);
+            m_fWave     = (float)xmlState->getDoubleAttribute("wave",   m_fWave);
+            m_fFilterFr = (float)xmlState->getDoubleAttribute("filter", m_fFilterFr);
         }
     }
 }
 
 //==============================================================================
-AudioProcessorEditor* sBMP4AudioProcessor::createEditor()
-{
+AudioProcessorEditor* sBMP4AudioProcessor::createEditor(){
     return new sBMP4AudioProcessorEditor (*this);
 }
 
-const String sBMP4AudioProcessor::getInputChannelName (const int channelIndex) const
-{
+const String sBMP4AudioProcessor::getInputChannelName (const int channelIndex) const{
     return String (channelIndex + 1);
 }
 
-const String sBMP4AudioProcessor::getOutputChannelName (const int channelIndex) const
-{
+const String sBMP4AudioProcessor::getOutputChannelName (const int channelIndex) const{
     return String (channelIndex + 1);
 }
 
-bool sBMP4AudioProcessor::isInputChannelStereoPair (int /*index*/) const
-{
+bool sBMP4AudioProcessor::isInputChannelStereoPair (int /*index*/) const{
     return true;
 }
 
-bool sBMP4AudioProcessor::isOutputChannelStereoPair (int /*index*/) const
-{
+bool sBMP4AudioProcessor::isOutputChannelStereoPair (int /*index*/) const{
     return true;
 }
 
-bool sBMP4AudioProcessor::acceptsMidi() const
-{
+bool sBMP4AudioProcessor::acceptsMidi() const{
    #if JucePlugin_WantsMidiInput
     return true;
    #else
@@ -398,8 +373,7 @@ bool sBMP4AudioProcessor::acceptsMidi() const
    #endif
 }
 
-bool sBMP4AudioProcessor::producesMidi() const
-{
+bool sBMP4AudioProcessor::producesMidi() const{
    #if JucePlugin_ProducesMidiOutput
     return true;
    #else
@@ -407,19 +381,15 @@ bool sBMP4AudioProcessor::producesMidi() const
    #endif
 }
 
-bool sBMP4AudioProcessor::silenceInProducesSilenceOut() const
-{
+bool sBMP4AudioProcessor::silenceInProducesSilenceOut() const{
     return false;
 }
 
-double sBMP4AudioProcessor::getTailLengthSeconds() const
-{
+double sBMP4AudioProcessor::getTailLengthSeconds() const{
     return 0.0;
 }
 
-//==============================================================================
 // This creates new instances of the plugin.
-AudioProcessor* JUCE_CALLTYPE createPluginFilter()
-{
+AudioProcessor* JUCE_CALLTYPE createPluginFilter(){
     return new sBMP4AudioProcessor();
 }
