@@ -338,8 +338,8 @@ void sBMP4AudioProcessor::setStateInformation (const void* data, int sizeInBytes
 
             m_fGain     = (float)xmlState->getDoubleAttribute("gain",   m_fGain);
             m_fDelay    = (float)xmlState->getDoubleAttribute("delay",  m_fDelay);
-            m_fWave     = (float)xmlState->getDoubleAttribute("wave",   m_fWave);
-            m_fFilterFr = (float)xmlState->getDoubleAttribute("filter", m_fFilterFr);
+            setWaveType((float)xmlState->getDoubleAttribute("wave",   m_fWave));
+            setFilterFr((float)xmlState->getDoubleAttribute("filter", m_fFilterFr));
         }
     }
 }

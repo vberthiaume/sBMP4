@@ -19,12 +19,12 @@
             isInstrument="0" fileTime="0" numInputs="2" numOutputs="0" isShell="0"/>
     <STATE>0.</STATE>
   </FILTER>
-  <FILTER uid="4" x="0.300752" y="0.387324" uiLastX="1739" uiLastY="-141">
+  <FILTER uid="4" x="0.302057" y="0.386076" uiLastX="1739" uiLastY="-141">
     <PLUGIN name="sBMP4" format="VST" category="Synth" manufacturer="BMP4"
             version="V1.0.0" file="C:\Users\Vincent\Documents\git\sBMP4\Builds\VisualStudio2013\Debug\sBMP4.dll"
-            uid="73424d50" isInstrument="1" fileTime="14fe12bcf06" numInputs="2"
+            uid="73424d50" isInstrument="1" fileTime="14fe16c18d0" numInputs="2"
             numOutputs="2" isShell="0"/>
-    <STATE>324.CMlaKA....fQBMDZ....ALmPMAE....Y....A...............................................................................................................................................................................jZ0PxDxl....7LkPMAEMSUDUTkjSGMEH0k1UoQFcn0iHy.SMh.RcogTYocFZz0iHwTCLh.xYgkla8HBLtPSM4jSN4jyM3TCMxLiL2fCNh.BYkwVX40iHv3BMwjSN4jSN3XCN3XSN2fSL0HBH2Elck0iHv3xLyLyLyLyLzLiL1bCMz.CNh.hYowFckIWOh.iK0HSN4jSN4bSLyfSN2bCL0DiHu3C.</STATE>
+    <STATE>307.CMlaKA....fQBMDZ....ALmPMAE....Y....A...............................................................................................................................................................................SZ0PxDhh....7LkPMAEMSUDUTkjSGMEH0k1UoQFcn0iHy.SMh.RcogTYocFZz0iHwTCLh.xYgkla8HBLtPSM4jSN4jyM3TCMxLiL2fCNh.BYkwVX40iHv3BMwjSN4jSN3XCN3XSN2fSL0HBH2Elck0iHwHBHlkFazUlb8HBLtTiL4jSN4jyMwLCN4byMvTSLh7hO..</STATE>
   </FILTER>
   <FILTER uid="5" x="0.597744" y="0.378521" uiLastX="0" uiLastY="0">
     <PLUGIN name="JuceDemoPlugin" descriptiveName="Juce Demo Plugin" format="VST"
