@@ -126,7 +126,8 @@ float Bmp4SynthVoice::getSample(double dTail) {
         for(int iCurK = 0; iCurK < 25; ++iCurK){
             fCurrentSample += static_cast<float> (sin(m_dCurrentAngle * (2 * iCurK + 1)) / (2 * iCurK + 1));
         }
-        return fCurrentSample * m_dLevel * dTail;
+        float fReducingFactor = .75; //this is to make this wave appear as loud at the other ones
+        return fCurrentSample * m_dLevel * dTail * fReducingFactor;
         break;
     }
     case soundTriangle:{
