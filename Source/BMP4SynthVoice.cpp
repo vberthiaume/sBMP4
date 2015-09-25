@@ -30,7 +30,37 @@ Bmp4SynthVoice::Bmp4SynthVoice()
 	: m_dOmega(0.0)
 	, m_dTailOff(0.0)
     , m_iCurSound(soundSine)
-{ }
+{
+    if (s_bUseWaveTables){
+        JUCE_COMPILER_WARNING("use vectors and for range loop here!")
+        for(size_t iCurFrame = 0; iCurFrame < kTotalWaveFrames; ++iCurFrame) {
+            //formula for sine is sin(2 * PI * f/fs * t)
+            fSineTbl[iCurFrame] = static_cast<float>(sin(2. * M_PI * iCurFrame / kTotalWaveFrames));
+            
+            //square:
+            double dCurrentSample = 0.0;
+            for(int iCurK = 0; iCurK < 50; ++iCurK){
+                dCurrentSample += sin(m_dCurrentAngle * (2 * iCurK + 1)) / (2 * iCurK + 1);
+            }
+            fSquareTbl[iCurFrame] = static_cast<float> (dCurrentSample * .75);  //this .75 factor is to make this wave appear as loud at the other ones
+
+            //triangle
+            dCurrentSample = 0.0;
+            for(int iCurK = 0; iCurK < 5; ++iCurK){
+                dCurrentSample += sin(M_PI*(2 * iCurK + 1) / 2) * (sin(m_dCurrentAngle * (2 * iCurK + 1)) / pow((2 * iCurK + 1), 2));
+            }
+            fTriangleTbl[iCurFrame] = static_cast<float> ((8 / pow(M_PI, 2)) * dCurrentSample);
+
+
+            //sawtooth
+            double dCurrentSample = 0.0;
+            for(int iCurK = 1; iCurK < 50; ++iCurK){
+                dCurrentSample += sin((2. * M_PI * iCurFrame / kTotalWaveFrames) * iCurK) / iCurK;
+            }
+            fSawtoothTbl[iCurFrame] = static_cast<float>(1/2 - (1 / M_PI) * dCurrentSample);
+        }
+    }
+}
 
 void Bmp4SynthVoice::startNote(int midiNoteNumber, float velocity, SynthesiserSound* sound, int /*currentPitchWheelPosition*/)  {
     m_dCurrentAngle = 0.0;
@@ -104,14 +134,11 @@ bool Bmp4SynthVoice::canPlaySound(SynthesiserSound* sound)  {
 JUCE_COMPILER_WARNING("Would probably be way more efficient to use wave tables for all these additive synthesis getSamples in square, triangle and sawtooth")
 
 float Bmp4SynthVoice::getSample(double dTail) {
-
     if (s_bUseWaveTables){
         return getSampleWaveTable(dTail);
-
     } else {
         return getSampleAdditiveSynthesis(dTail);
     }
-
 }
 
 float Bmp4SynthVoice::getSampleWaveTable(double dTail) {

@@ -105,6 +105,10 @@ public:
 protected:
 	double m_dCurrentAngle, m_dOmega, m_dLevel, m_dTailOff;
     int m_iCurSound;
+    float fSawtoothTbl  [kTotalWaveFrames];
+    float fPulseTbl     [kTotalWaveFrames];
+    float fSineTbl      [kTotalWaveFrames];
+    float fTriangleTbl  [kTotalWaveFrames];
 };
 
 #endif //sBMP4_Sounds_h

@@ -47,10 +47,6 @@ const bool  s_bUseSimplestLp = false;
 //-------stuff related to wavetables
 const bool  s_bUseWaveTables = true;
 const int   kTotalWaveFrames = 4096;		// samples (must be power of 2 here)
-static float sawtooth   [kTotalWaveFrames];
-static float pulse      [kTotalWaveFrames];
-static float sine       [kTotalWaveFrames];
-static float triangle   [kTotalWaveFrames];
 
 static bool areSame(double a, double b)
 {
