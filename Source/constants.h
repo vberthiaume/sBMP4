@@ -33,7 +33,6 @@ enum Parameters{
 };
 
 
-
 const float defaultGain		= 1.0f;
 const float defaultDelay	= 0.0f;
 const float defaultWave		= 0.0f;
@@ -42,8 +41,9 @@ const float defaultFilterFr = 0.0f;
 const int   s_iSimpleFilterLF = 600;
 const int   s_iSimpleFilterHF = 12000;
 
-const int s_iNumberOfVoices = 5;
-const float s_bUseSimplestLp = false;
+const int   s_iNumberOfVoices = 5;
+const bool  s_bUseSimplestLp = false;
+const bool  s_bUseWaveTables = true;
 
 static bool areSame(double a, double b)
 {
