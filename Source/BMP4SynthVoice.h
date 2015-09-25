@@ -84,6 +84,10 @@ public:
 
     virtual float getSample(double dTail);
 
+    float getSampleWaveTable(double dTail);
+
+    float getSampleAdditiveSynthesis(double dTail);
+
 	void renderNextBlock(AudioSampleBuffer& p_oOutputBuffer, int p_iStartSample, int p_iTotalSamples) override;
 
 	void startNote(int midiNoteNumber, float velocity, SynthesiserSound* sound, int /*currentPitchWheelPosition*/) override;

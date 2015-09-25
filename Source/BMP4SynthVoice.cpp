@@ -24,14 +24,33 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "BMP4SynthVoice.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include "constants.h"
 
 Bmp4SynthVoice::Bmp4SynthVoice()
 	: m_dOmega(0.0)
 	, m_dTailOff(0.0)
     , m_iCurSound(soundSine)
-{
-}
+{ }
 
+void Bmp4SynthVoice::startNote(int midiNoteNumber, float velocity, SynthesiserSound* sound, int /*currentPitchWheelPosition*/)  {
+    m_dCurrentAngle = 0.0;
+    m_dLevel = velocity * 0.15;
+    m_dTailOff = 0.0;
+
+    double dFrequency = MidiMessage::getMidiNoteInHertz(midiNoteNumber);
+    double dNormalizedFreq = dFrequency / getSampleRate();
+    m_dOmega = dNormalizedFreq * 2.0 * double_Pi;
+
+    if(dynamic_cast <SineWaveSound*> (getCurrentlyPlayingSound().get())){
+        m_iCurSound = soundSine;
+    } else if(dynamic_cast <SquareWaveSound*> (getCurrentlyPlayingSound().get())){
+        m_iCurSound = soundSquare;
+    } else if(dynamic_cast <TriangleWaveSound*> (getCurrentlyPlayingSound().get())){
+        m_iCurSound = soundTriangle;
+    } else if(dynamic_cast <SawtoothWaveSound*> (getCurrentlyPlayingSound().get())){
+        m_iCurSound = soundSawtooth;
+    }
+}
 void Bmp4SynthVoice::renderNextBlock(AudioSampleBuffer& p_oOutputBuffer, int p_iStartSample, int p_iTotalSamples)  {
 	if (m_dOmega == 0.0) {
 		return;
@@ -46,10 +65,8 @@ void Bmp4SynthVoice::renderNextBlock(AudioSampleBuffer& p_oOutputBuffer, int p_i
         for(int i = 0; i < p_oOutputBuffer.getNumChannels(); ++i){
 			p_oOutputBuffer.addSample(i, p_iStartSample, fCurrentSample);
 		}
-
-		m_dCurrentAngle += m_dOmega;	//m_dOmega here is in radian
+		m_dCurrentAngle += m_dOmega;	//m_dOmega here is in radian (as it always is!)
 		++p_iStartSample;
-
 		if (m_dTailOff > 0) {
 			m_dTailOff *= 0.99;
 			if (m_dTailOff <= 0.005) {
@@ -60,45 +77,18 @@ void Bmp4SynthVoice::renderNextBlock(AudioSampleBuffer& p_oOutputBuffer, int p_i
 		}
 	}
 }
-
-void Bmp4SynthVoice::startNote(int midiNoteNumber, float velocity, SynthesiserSound* sound, int /*currentPitchWheelPosition*/)  {
-	m_dCurrentAngle = 0.0;
-	m_dLevel = velocity * 0.15;
-	m_dTailOff = 0.0;
-
-	double dFrequency = MidiMessage::getMidiNoteInHertz(midiNoteNumber);
-	double dNormalizedFreq = dFrequency / getSampleRate();
-	m_dOmega = dNormalizedFreq * 2.0 * double_Pi;
-
-    if(dynamic_cast <SineWaveSound*> (getCurrentlyPlayingSound().get())){
-        m_iCurSound = soundSine;
-    } else if(dynamic_cast <SquareWaveSound*> (getCurrentlyPlayingSound().get())){
-        m_iCurSound = soundSquare;
-    } else if(dynamic_cast <TriangleWaveSound*> (getCurrentlyPlayingSound().get())){
-        m_iCurSound = soundTriangle;
-    } else if(dynamic_cast <SawtoothWaveSound*> (getCurrentlyPlayingSound().get())){
-        m_iCurSound = soundSawtooth;
-    }
-}
-
 void Bmp4SynthVoice::stopNote(float /*velocity*/, bool allowTailOff)  {
 
 	if (allowTailOff) {
-		// start a tail-off by setting this flag. The render callback will pick up on
-		// this and do a fade out, calling clearCurrentNote() when it's finished.
-
-		if (m_dTailOff == 0.0)	// we only need to begin a tail-off if it's not already doing so - the
-			// stopNote method could be called more than once.
+		// start a tail-off by setting this flag. The render callback will pick up on this and do a fade out, calling clearCurrentNote() when it's finished.
+		if (m_dTailOff == 0.0)	// we only need to begin a tail-off if it's not already doing so - the stopNote method could be called more than once.
 			m_dTailOff = 1.0;
 	} else {
 		// we're being told to stop playing immediately, so reset everything..
-
 		clearCurrentNote();
 		m_dOmega = 0.0;
 	}
 }
-
-
 bool Bmp4SynthVoice::canPlaySound(SynthesiserSound* sound)  {
 
 	if (dynamic_cast <SineWaveSound*> (sound) ||
@@ -115,19 +105,28 @@ JUCE_COMPILER_WARNING("Would probably be way more efficient to use wave tables f
 
 float Bmp4SynthVoice::getSample(double dTail) {
 
-    switch(m_iCurSound)
-    {
+    if (s_bUseWaveTables){
+        return getSampleWaveTable(dTail);
+
+    } else {
+        return getSampleAdditiveSynthesis(dTail);
+    }
+
+}
+
+float Bmp4SynthVoice::getSampleWaveTable(double dTail) {
+    switch(m_iCurSound) {
     case soundSine:
     default:
         return (float)(sin(m_dCurrentAngle) * m_dLevel * dTail);
         break;
     case soundSquare:{
-        float fCurrentSample = 0.0;
+        double dCurrentSample = 0.0;
         for(int iCurK = 0; iCurK < 25; ++iCurK){
-            fCurrentSample += static_cast<float> (sin(m_dCurrentAngle * (2 * iCurK + 1)) / (2 * iCurK + 1));
+            dCurrentSample += sin(m_dCurrentAngle * (2 * iCurK + 1)) / (2 * iCurK + 1);
         }
-        float fReducingFactor = .75; //this is to make this wave appear as loud at the other ones
-        return fCurrentSample * m_dLevel * dTail * fReducingFactor;
+        double dReducingFactor = .75; //this is to make this wave appear as loud at the other ones
+        return static_cast<float> (dCurrentSample * m_dLevel * dTail * dReducingFactor);
         break;
     }
     case soundTriangle:{
@@ -148,6 +147,42 @@ float Bmp4SynthVoice::getSample(double dTail) {
     }
     }
 }
+
+float Bmp4SynthVoice::getSampleAdditiveSynthesis(double dTail) {
+    switch(m_iCurSound) {
+    case soundSine:
+    default:
+        return (float)(sin(m_dCurrentAngle) * m_dLevel * dTail);
+        break;
+    case soundSquare:{
+        double dCurrentSample = 0.0;
+        for(int iCurK = 0; iCurK < 25; ++iCurK){
+            dCurrentSample += sin(m_dCurrentAngle * (2 * iCurK + 1)) / (2 * iCurK + 1);
+        }
+        double dReducingFactor = .75; //this is to make this wave appear as loud at the other ones
+        return static_cast<float> (dCurrentSample * m_dLevel * dTail * dReducingFactor);
+        break;
+    }
+    case soundTriangle:{
+        float fCurrentSample = 0.0;
+        for(int iCurK = 0; iCurK < 5; ++iCurK){
+            fCurrentSample += static_cast<float> (sin(M_PI*(2 * iCurK + 1) / 2) * (sin(m_dCurrentAngle * (2 * iCurK + 1)) / pow((2 * iCurK + 1), 2)));
+        }
+        return (8 / pow(M_PI, 2)) * fCurrentSample * m_dLevel * dTail;
+        break;
+    }
+    case soundSawtooth:{
+        float fCurrentSample = 0.0;
+        for(int iCurK = 1; iCurK < 20; ++iCurK){
+            fCurrentSample += static_cast<float> (sin(m_dCurrentAngle * iCurK) / iCurK);
+        }
+        return 1/2 - (1 / M_PI) * fCurrentSample * m_dLevel * dTail;
+        break;
+    }
+    }
+}
+
+
 
 
 
