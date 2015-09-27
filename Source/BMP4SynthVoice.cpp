@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "BMP4SynthVoice.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
-#include "constants.h"
+
 
 Bmp4SynthVoice::Bmp4SynthVoice()
 	: m_dOmega(0.0)
@@ -37,6 +37,7 @@ Bmp4SynthVoice::Bmp4SynthVoice()
             //formula for sine is sin(2 * PI * f/fs * t)
             fSineTbl[iCurFrame] = static_cast<float>(sin(2. * M_PI * iCurFrame / kTotalWaveFrames));
             
+            JUCE_COMPILER_WARNING("could use lambdas for those?")
             //square:
             double dCurrentSample = 0.0;
             for(int iCurK = 0; iCurK < 50; ++iCurK){
@@ -51,9 +52,8 @@ Bmp4SynthVoice::Bmp4SynthVoice()
             }
             fTriangleTbl[iCurFrame] = static_cast<float> ((8 / pow(M_PI, 2)) * dCurrentSample);
 
-
             //sawtooth
-            double dCurrentSample = 0.0;
+            dCurrentSample = 0.0;
             for(int iCurK = 1; iCurK < 50; ++iCurK){
                 dCurrentSample += sin((2. * M_PI * iCurFrame / kTotalWaveFrames) * iCurK) / iCurK;
             }
@@ -107,34 +107,8 @@ void Bmp4SynthVoice::renderNextBlock(AudioSampleBuffer& p_oOutputBuffer, int p_i
 		}
 	}
 }
-void Bmp4SynthVoice::stopNote(float /*velocity*/, bool allowTailOff)  {
-
-	if (allowTailOff) {
-		// start a tail-off by setting this flag. The render callback will pick up on this and do a fade out, calling clearCurrentNote() when it's finished.
-		if (m_dTailOff == 0.0)	// we only need to begin a tail-off if it's not already doing so - the stopNote method could be called more than once.
-			m_dTailOff = 1.0;
-	} else {
-		// we're being told to stop playing immediately, so reset everything..
-		clearCurrentNote();
-		m_dOmega = 0.0;
-	}
-}
-bool Bmp4SynthVoice::canPlaySound(SynthesiserSound* sound)  {
-
-	if (dynamic_cast <SineWaveSound*> (sound) ||
-        dynamic_cast <SquareWaveSound*> (sound) ||
-        dynamic_cast <TriangleWaveSound*> (sound) ||
-        dynamic_cast <SawtoothWaveSound*> (sound)){
-		return true;
-	} else {
-		return false;
-	}
-}
-
-JUCE_COMPILER_WARNING("Would probably be way more efficient to use wave tables for all these additive synthesis getSamples in square, triangle and sawtooth")
-
 float Bmp4SynthVoice::getSample(double dTail) {
-    if (s_bUseWaveTables){
+    if(s_bUseWaveTables){
         return getSampleWaveTable(dTail);
     } else {
         return getSampleAdditiveSynthesis(dTail);
@@ -145,7 +119,9 @@ float Bmp4SynthVoice::getSampleWaveTable(double dTail) {
     switch(m_iCurSound) {
     case soundSine:
     default:
-        return (float)(sin(m_dCurrentAngle) * m_dLevel * dTail);
+
+        JUCE_COMPILER_WARNING("ok, so the problem here is converting this m_dCurrentAngle into some kind of index for fSineTbl")
+            return (float)(sin(m_dCurrentAngle) * m_dLevel * dTail);
         break;
     case soundSquare:{
         double dCurrentSample = 0.0;
@@ -208,6 +184,31 @@ float Bmp4SynthVoice::getSampleAdditiveSynthesis(double dTail) {
     }
     }
 }
+void Bmp4SynthVoice::stopNote(float /*velocity*/, bool allowTailOff)  {
+
+	if (allowTailOff) {
+		// start a tail-off by setting this flag. The render callback will pick up on this and do a fade out, calling clearCurrentNote() when it's finished.
+		if (m_dTailOff == 0.0)	// we only need to begin a tail-off if it's not already doing so - the stopNote method could be called more than once.
+			m_dTailOff = 1.0;
+	} else {
+		// we're being told to stop playing immediately, so reset everything..
+		clearCurrentNote();
+		m_dOmega = 0.0;
+	}
+}
+bool Bmp4SynthVoice::canPlaySound(SynthesiserSound* sound)  {
+
+	if (dynamic_cast <SineWaveSound*> (sound) ||
+        dynamic_cast <SquareWaveSound*> (sound) ||
+        dynamic_cast <TriangleWaveSound*> (sound) ||
+        dynamic_cast <SawtoothWaveSound*> (sound)){
+		return true;
+	} else {
+		return false;
+	}
+}
+
+JUCE_COMPILER_WARNING("Would probably be way more efficient to use wave tables for all these additive synthesis getSamples in square, triangle and sawtooth")
 
 
 

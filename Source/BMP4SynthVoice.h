@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define sBMP4_Sounds_h
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "constants.h"
 
 //==============================================================================
 //Synth sounds
@@ -105,10 +106,10 @@ public:
 protected:
 	double m_dCurrentAngle, m_dOmega, m_dLevel, m_dTailOff;
     int m_iCurSound;
-    float fSawtoothTbl  [kTotalWaveFrames];
-    float fPulseTbl     [kTotalWaveFrames];
     float fSineTbl      [kTotalWaveFrames];
+    float fSquareTbl     [kTotalWaveFrames];
     float fTriangleTbl  [kTotalWaveFrames];
+    float fSawtoothTbl  [kTotalWaveFrames];
 };
 
 #endif //sBMP4_Sounds_h
