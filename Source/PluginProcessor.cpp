@@ -161,10 +161,11 @@ void sBMP4AudioProcessor::prepareToPlay(double sampleRate, int /*samplesPerBlock
     m_oDelayBuffer.clear();
 }
 
-void sBMP4AudioProcessor::updateSimpleFilter(double sampleRate)
-{
-    //float fCutoffFr = (1-m_fFilterFr) * 20000;
-    float fCutoffFr = s_iSimpleFilterLF - (s_iSimpleFilterHF - s_iSimpleFilterLF) * (m_fFilterFr-1);
+void sBMP4AudioProcessor::updateSimpleFilter(double sampleRate) {
+    //linear 
+    //float fCutoffFr = s_iSimpleFilterLF - (s_iSimpleFilterHF - s_iSimpleFilterLF) * (m_fFilterFr-1);
+    float fCutoffFr =  (s_iSimpleFilterHF - s_iSimpleFilterLF) * m_fFilterFr + s_iSimpleFilterLF;
+    DBG(fCutoffFr);
     m_simpleFilter.setup(sampleRate, fCutoffFr, 5.f);
 }
 
