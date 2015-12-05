@@ -162,9 +162,12 @@ void sBMP4AudioProcessor::prepareToPlay(double sampleRate, int /*samplesPerBlock
 }
 
 void sBMP4AudioProcessor::updateSimpleFilter(double sampleRate) {
-    //linear 
-    //float fCutoffFr = s_iSimpleFilterLF - (s_iSimpleFilterHF - s_iSimpleFilterLF) * (m_fFilterFr-1);
-    float fCutoffFr =  (s_iSimpleFilterHF - s_iSimpleFilterLF) * m_fFilterFr + s_iSimpleFilterLF;
+    //linear
+    //float fCutoffFr =  (s_iSimpleFilterHF - s_iSimpleFilterLF) * m_fFilterFr + s_iSimpleFilterLF;
+
+    float fMultiple = 10;   //the higher this is, the more linear and less curvy the exponential is
+    float fCutoffFr = fMultiple*pow(M_E, log(s_iSimpleFilterHF/fMultiple) * m_fFilterFr) + s_iSimpleFilterLF;
+
     DBG(fCutoffFr);
     m_simpleFilter.setup(sampleRate, fCutoffFr, 5.f);
 }
