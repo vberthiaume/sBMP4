@@ -8,10 +8,14 @@ maxFr = 20000
 
 exponent = np.log(maxFr)
 
-y = np.exp(exponent*x)
+k = 200
+exponent2 = np.log(maxFr/k)
 
+y = np.exp(exponent*x)
+y2 = k * np.exp(exponent2*x)
 
 plt.plot(x,y)
+plt.plot(x,y2)
 # plt.axis([-.1,.1.1,-.8,.8])
 # plt.xlabel('time')
 # plt.ylabel('amplitude')
