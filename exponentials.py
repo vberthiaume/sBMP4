@@ -1,17 +1,17 @@
 import matplotlib.pyplot as plt
 import numpy as np
  
-t = np.arange(0, 1, .001)
+x = np.arange(0, 1, .001)
 
 minFr = 400	#this should probably be the f0 of the pressed key, yes, that's exatly what it should be
 maxFr = 20000
 
 exponent = np.log(maxFr)
 
-exp = np.exp(exponent*t)
+y = np.exp(exponent*x)
 
 
-plt.plot(t,exp)
+plt.plot(x,y)
 # plt.axis([-.1,.1.1,-.8,.8])
 # plt.xlabel('time')
 # plt.ylabel('amplitude')
