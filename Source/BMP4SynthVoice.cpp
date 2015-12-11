@@ -66,7 +66,6 @@ void Bmp4SynthVoice::startNote(int midiNoteNumber, float velocity, SynthesiserSo
     m_dCurrentAngle = 0.0;
     m_dLevel = velocity * 0.15;
     m_dTailOff = 0.0;
-
     double dFrequency = MidiMessage::getMidiNoteInHertz(midiNoteNumber);
     double dNormalizedFreq = dFrequency / getSampleRate();
     m_dOmega = dNormalizedFreq * 2.0 * double_Pi;
@@ -119,8 +118,7 @@ float Bmp4SynthVoice::getSampleWaveTable(double dTail) {
     switch(m_iCurSound) {
     case soundSine:
     default:
-
-        JUCE_COMPILER_WARNING("ok, so the problem here is converting this m_dCurrentAngle into some kind of index for fSineTbl")
+        JUCE_COMPILER_WARNING("FOR NOW, THIS FUNCTION IS EXACTLY LIKE ADDITIVE SYNTHESIS. ok, so the problem here is converting this m_dCurrentAngle into some kind of index for fSineTbl")
             return (float)(sin(m_dCurrentAngle) * m_dLevel * dTail);
         break;
     case soundSquare:{

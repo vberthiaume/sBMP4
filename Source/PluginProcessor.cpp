@@ -44,6 +44,7 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 	,m_fGain(defaultGain)
 	,m_fDelay(defaultDelay)
 	,m_iBufferSize(100)	//totally arbitrary value
+    ,m_dLfoCurAngle(0.)
 {
     for(int iCurVox = 0; iCurVox < s_iNumberOfVoices; ++iCurVox){
         m_oSynth.addVoice(new Bmp4SynthVoice());
@@ -64,7 +65,6 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 
 sBMP4AudioProcessor::~sBMP4AudioProcessor() {
 }
-
 
 void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
@@ -129,6 +129,15 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 		//f.process(numSamples, channelData);		
 	}
 
+    //-----LFO
+    bool bLfoActive = true;
+    double dCurLfoValue = 1.;
+    double dLfoFr = 5;
+    if (bLfoActive){
+        dCurLfoValue = sin(m_dLfoCurAngle);
+        m_dLfoCurAngle += dLfoFr * 2.0 * double_Pi;
+    }
+
     // clear unused output channels
 	for (int i = getNumInputChannels(); i < getNumOutputChannels(); ++i){
 		buffer.clear(i, 0, buffer.getNumSamples());
@@ -160,11 +169,15 @@ void sBMP4AudioProcessor::prepareToPlay(double sampleRate, int /*samplesPerBlock
 }
 
 void sBMP4AudioProcessor::updateSimpleFilter(double sampleRate) {
+
     float fMultiple = 1;   //the higher this is, the more linear and less curvy the exponential is
+    JUCE_COMPILER_WARNING("s_iSimpleFilterLF should be the currently played note... but this is hard" + 
+             "to get because as far as I know, we can only access that from the voice, which is buried in m_oSynth")
     float fExpCutoffFr = fMultiple * exp(log(s_iSimpleFilterHF * m_fFilterFr/fMultiple)) + s_iSimpleFilterLF;
     
-    //this is called setup, but really it's just setting some values
-    m_simpleFilter.setup(sampleRate, fExpCutoffFr, 5.f);
+    //this is called setup, but really it's just setting some values. 
+    float q = 1.f;
+    m_simpleFilter.setup(sampleRate, fExpCutoffFr, q);
 }
 
 JUCE_COMPILER_WARNING("need to put this in my audio library")

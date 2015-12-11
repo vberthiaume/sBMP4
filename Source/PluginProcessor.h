@@ -105,7 +105,7 @@ private:
     int m_iDelayPosition;
 
     Synthesiser m_oSynth;
-
+    double m_dLfoCurAngle;
     int m_iCurChannel;
 
     bool m_bUseSimplestLP;
