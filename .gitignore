@@ -361,3 +361,4 @@ FakesAssemblies/
 
 #vim swap files
 *.swo
+*.ods#
