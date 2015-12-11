@@ -142,7 +142,6 @@ void sBMP4AudioProcessor::setFilterFr(float p_fFilterFr){
         int i = static_cast<int>(m_fFilterFr*m_iBufferSize/10);
         m_oLookBackVec[0].resize(i);
         m_oLookBackVec[1].resize(i);
-        DBG(i);
         suspendProcessing(false);
     } else if(m_oSynth.getSampleRate() > 0){
         updateSimpleFilter(m_oSynth.getSampleRate());
@@ -162,14 +161,12 @@ void sBMP4AudioProcessor::prepareToPlay(double sampleRate, int /*samplesPerBlock
 }
 
 void sBMP4AudioProcessor::updateSimpleFilter(double sampleRate) {
-    //linear
-    //float fCutoffFr =  (s_iSimpleFilterHF - s_iSimpleFilterLF) * m_fFilterFr + s_iSimpleFilterLF;
-
-    float fMultiple = 10;   //the higher this is, the more linear and less curvy the exponential is
-    float fCutoffFr = fMultiple*pow(M_E, log(s_iSimpleFilterHF/fMultiple) * m_fFilterFr) + s_iSimpleFilterLF;
-
-    DBG(fCutoffFr);
-    m_simpleFilter.setup(sampleRate, fCutoffFr, 5.f);
+    
+    float fMultiple = 1;   //the higher this is, the more linear and less curvy the exponential is
+    float fExpCutoffFr = fMultiple * exp(log(s_iSimpleFilterHF * m_fFilterFr/fMultiple)) + s_iSimpleFilterLF;
+    
+    JUCE_COMPILER_WARNING("do I need to do setup everytime simply for updating?")
+    m_simpleFilter.setup(sampleRate, fExpCutoffFr, 5.f);
 }
 
 JUCE_COMPILER_WARNING("need to put this in my audio library")
