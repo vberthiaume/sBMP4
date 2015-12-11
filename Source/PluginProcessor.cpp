@@ -85,9 +85,8 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 	//-----GAIN
 	for (iCurChannel = 0; iCurChannel < getNumInputChannels(); ++iCurChannel){
 		buffer.applyGain(iCurChannel, 0, buffer.getNumSamples(), m_fGain);
-	}
+	
 	//-----DELAY
-    for (iCurChannel = 0; iCurChannel < getNumInputChannels(); ++iCurChannel) {
         float* channelData = buffer.getWritePointer (iCurChannel);
         float* delayData = m_oDelayBuffer.getWritePointer (jmin (iCurChannel, m_oDelayBuffer.getNumChannels() - 1));
         dp = m_iDelayPosition;
@@ -130,7 +129,7 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 	}
 
     //-----LFO
-    bool bLfoActive = true;
+    bool bLfoActive = false;
     double dCurLfoValue = 1.;
     double dLfoFr = 5;
     if (bLfoActive){
@@ -176,7 +175,7 @@ void sBMP4AudioProcessor::updateSimpleFilter(double sampleRate) {
     float fExpCutoffFr = fMultiple * exp(log(s_iSimpleFilterHF * m_fFilterFr/fMultiple)) + s_iSimpleFilterLF;
     
     //this is called setup, but really it's just setting some values. 
-    float q = 1.f;
+    float q = 5.f;
     m_simpleFilter.setup(sampleRate, fExpCutoffFr, q);
 }
 
