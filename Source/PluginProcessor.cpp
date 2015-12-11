@@ -148,8 +148,7 @@ void sBMP4AudioProcessor::setFilterFr(float p_fFilterFr){
     }
 }
 
-void sBMP4AudioProcessor::prepareToPlay(double sampleRate, int /*samplesPerBlock*/)
-{
+void sBMP4AudioProcessor::prepareToPlay(double sampleRate, int /*samplesPerBlock*/) {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
     m_oSynth.setCurrentPlaybackSampleRate(sampleRate);
@@ -161,11 +160,10 @@ void sBMP4AudioProcessor::prepareToPlay(double sampleRate, int /*samplesPerBlock
 }
 
 void sBMP4AudioProcessor::updateSimpleFilter(double sampleRate) {
-    
     float fMultiple = 1;   //the higher this is, the more linear and less curvy the exponential is
     float fExpCutoffFr = fMultiple * exp(log(s_iSimpleFilterHF * m_fFilterFr/fMultiple)) + s_iSimpleFilterLF;
     
-    JUCE_COMPILER_WARNING("do I need to do setup everytime simply for updating?")
+    //this is called setup, but really it's just setting some values
     m_simpleFilter.setup(sampleRate, fExpCutoffFr, 5.f);
 }
 
