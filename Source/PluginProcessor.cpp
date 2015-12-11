@@ -84,16 +84,17 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 
 
 	for (iCurChannel = 0; iCurChannel < getNumInputChannels(); ++iCurChannel){
-        //-----GAIN
-		buffer.applyGain(iCurChannel, 0, buffer.getNumSamples(), m_fGain);
-	
-        //-----LFO
+        
+        //-----GAIN/LFO
         bool bLfoActive = false;
         if(bLfoActive){
             double dCurLfoValue = 1.;
             double dLfoFr = 5;
             dCurLfoValue = sin(m_dLfoCurAngle);
+            buffer.applyGain(iCurChannel, 0, buffer.getNumSamples(), dCurLfoValue*m_fGain);
             m_dLfoCurAngle += dLfoFr * 2.0 * double_Pi;
+        } else {
+            buffer.applyGain(iCurChannel, 0, buffer.getNumSamples(), m_fGain);
         }
 
 	    
