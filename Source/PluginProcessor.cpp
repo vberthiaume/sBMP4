@@ -82,60 +82,67 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
     // and now get the synth to process these midi events and generate its output.
     m_oSynth.renderNextBlock (buffer, midiMessages, 0, numSamples);
 
-	//-----GAIN
+
 	for (iCurChannel = 0; iCurChannel < getNumInputChannels(); ++iCurChannel){
+        //-----GAIN
 		buffer.applyGain(iCurChannel, 0, buffer.getNumSamples(), m_fGain);
 	
-	//-----DELAY
+        //-----LFO
+        bool bLfoActive = false;
+        if(bLfoActive){
+            double dCurLfoValue = 1.;
+            double dLfoFr = 5;
+            dCurLfoValue = sin(m_dLfoCurAngle);
+            m_dLfoCurAngle += dLfoFr * 2.0 * double_Pi;
+        }
+
+	    
         float* channelData = buffer.getWritePointer (iCurChannel);
+        
+        //-----DELAY
         float* delayData = m_oDelayBuffer.getWritePointer (jmin (iCurChannel, m_oDelayBuffer.getNumChannels() - 1));
         dp = m_iDelayPosition;
-
         for (int i = 0; i < numSamples; ++i) {
             const float in = channelData[i];
             channelData[i] += delayData[dp];
             delayData[dp] = (delayData[dp] + in) * m_fDelay;
-			if (++dp >= m_oDelayBuffer.getNumSamples()){
-				dp = 0;
-			}
+            if(++dp >= m_oDelayBuffer.getNumSamples()){
+                dp = 0;
+            }
         }
+
+        //-----FILTER
+        if(s_bUseSimplestLp){
+            //only 2 channels supported for now
+            //for(iCurChannel = 0; iCurChannel < 2 /*getNumInputChannels()*/; ++iCurChannel) {
+                m_iCurChannel = iCurChannel;
+                float* channelData = buffer.getWritePointer(iCurChannel);
+                simplestLP(channelData, numSamples, m_oLookBackVec[iCurChannel]);
+            //}
+        } 
     }
     m_iDelayPosition = dp;
-	//-----FILTER
-    if(s_bUseSimplestLp){
-		//only 2 channels supported for now
-		for(iCurChannel = 0; iCurChannel < 2 /*getNumInputChannels()*/; ++iCurChannel) {
-			m_iCurChannel = iCurChannel;
-			float* channelData = buffer.getWritePointer(iCurChannel);
-			simplestLP(channelData, numSamples, m_oLookBackVec[iCurChannel]);
-		}
-	} else {
-		float* channelData[2];
-		channelData[0] = buffer.getWritePointer(0);
-		channelData[1] = buffer.getWritePointer(1);
-        m_simpleFilter.process(numSamples, channelData);
 
-		//<3> is the filter order and 2 is the number of channels
-		//Dsp::SimpleFilter <Dsp::ChebyshevI::BandPass <3>, 2> f;
-		//f.setup(3,    // order
-		//	m_oSynth.getSampleRate(),// sample rate
-		//	(1-m_fFilterFr) * 20000, // center frequency
-		//	200,
-		//	1);   // ripple dB
-		//float* channelData[2];
-		//channelData[0] = buffer.getWritePointer(0);
-		//channelData[1] = buffer.getWritePointer(1);
-		//f.process(numSamples, channelData);		
-	}
+    JUCE_COMPILER_WARNING("this stuff should be done in the main loop above...")
+    //-----FILTER, IF NOT DONE ABOVE
+    if(!s_bUseSimplestLp){
+       float* channelData[2];
+       channelData[0] = buffer.getWritePointer(0);
+       channelData[1] = buffer.getWritePointer(1);
+       m_simpleFilter.process(numSamples, channelData);
 
-    //-----LFO
-    bool bLfoActive = false;
-    double dCurLfoValue = 1.;
-    double dLfoFr = 5;
-    if (bLfoActive){
-        dCurLfoValue = sin(m_dLfoCurAngle);
-        m_dLfoCurAngle += dLfoFr * 2.0 * double_Pi;
-    }
+       //<3> is the filter order and 2 is the number of channels
+       //Dsp::SimpleFilter <Dsp::ChebyshevI::BandPass <3>, 2> f;
+       //f.setup(3,    // order
+       //	m_oSynth.getSampleRate(),// sample rate
+       //	(1-m_fFilterFr) * 20000, // center frequency
+       //	200,
+       //	1);   // ripple dB
+       //float* channelData[2];
+       //channelData[0] = buffer.getWritePointer(0);
+       //channelData[1] = buffer.getWritePointer(1);
+       //f.process(numSamples, channelData);		
+   }
 
     // clear unused output channels
 	for (int i = getNumInputChannels(); i < getNumOutputChannels(); ++i){
