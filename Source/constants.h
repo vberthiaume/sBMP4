@@ -45,7 +45,7 @@ const int   s_iNumberOfVoices = 5;
 const bool  s_bUseSimplestLp = false;
 
 //-------stuff related to wavetables
-const bool  s_bUseWaveTables = true;
+const bool  s_bUseWaveTables = false;
 const int   kTotalWaveFrames = 4096;		// samples (must be power of 2 here)
 
 static bool areSame(double a, double b)
