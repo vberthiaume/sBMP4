@@ -30,6 +30,7 @@ Bmp4SynthVoice::Bmp4SynthVoice()
 	: m_dOmega(0.0)
 	, m_dTailOff(0.0)
     , m_iCurSound(soundSine)
+    , m_dLfoCurAngle(0.)
 {
     if (s_bUseWaveTables){
         JUCE_COMPILER_WARNING("use vectors and for range loop here!")
@@ -110,7 +111,17 @@ float Bmp4SynthVoice::getSample(double dTail) {
     if(s_bUseWaveTables){
         return getSampleWaveTable(dTail);
     } else {
-        return getSampleAdditiveSynthesis(dTail);
+        bool bLfoActive = false;
+        if(bLfoActive){
+            double dCurLfoValue = 1.;
+            double dLfoFr = 5;
+            dCurLfoValue = sin(m_dLfoCurAngle);
+            
+            m_dLfoCurAngle += dLfoFr * 2.0 * double_Pi;
+            return dCurLfoValue*getSampleAdditiveSynthesis(dTail);
+        } else {
+
+        }
     }
 }
 
