@@ -275,7 +275,7 @@ public:
 
        #if JUCE_WIN32_TIMER_PERIOD > 0
         const MMRESULT res = timeBeginPeriod (JUCE_WIN32_TIMER_PERIOD);
-        (void) res;
+        ignoreUnused (res);
         jassert (res == TIMERR_NOERROR);
        #endif
 
@@ -429,7 +429,7 @@ String SystemStats::getFullUserName()
 
 String SystemStats::getComputerName()
 {
-    TCHAR text [MAX_COMPUTERNAME_LENGTH + 1] = { 0 };
+    TCHAR text[128] = { 0 };
     DWORD len = (DWORD) numElementsInArray (text) - 1;
     GetComputerName (text, &len);
     return String (text, len);

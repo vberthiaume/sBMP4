@@ -37,7 +37,7 @@ namespace CoreMidiHelpers
         Logger::writeToLog ("CoreMIDI error: " + String (lineNum) + " - " + String::toHexString ((int) err));
        #endif
 
-        (void) lineNum;
+        ignoreUnused (lineNum);
         return false;
     }
 
@@ -332,10 +332,11 @@ MidiOutput* MidiOutput::openDevice (int index)
         {
             MIDIClientRef client = CoreMidiHelpers::getGlobalMidiClient();
             MIDIPortRef port;
+            String deviceName = CoreMidiHelpers::getConnectedEndpointName (endPoint);
 
             if (client != 0 && CHECK_ERROR (MIDIOutputPortCreate (client, pname.cfString, &port)))
             {
-                mo = new MidiOutput();
+                mo = new MidiOutput (deviceName);
                 mo->internal = new CoreMidiHelpers::MidiPortAndEndpoint (port, endPoint);
             }
         }
@@ -354,7 +355,7 @@ MidiOutput* MidiOutput::createNewDevice (const String& deviceName)
 
     if (client != 0 && CHECK_ERROR (MIDISourceCreate (client, name.cfString, &endPoint)))
     {
-        MidiOutput* mo = new MidiOutput();
+        MidiOutput* mo = new MidiOutput (deviceName);
         mo->internal = new CoreMidiHelpers::MidiPortAndEndpoint (0, endPoint);
         return mo;
     }

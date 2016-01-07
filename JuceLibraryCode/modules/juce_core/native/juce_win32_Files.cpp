@@ -65,7 +65,7 @@ namespace WindowsFileHelpers
         path.copyToUTF16 (pathCopy, numBytes);
 
         if (PathStripToRoot (pathCopy))
-            path = static_cast <const WCHAR*> (pathCopy);
+            path = static_cast<const WCHAR*> (pathCopy);
 
         return path;
     }
@@ -120,6 +120,7 @@ namespace WindowsFileHelpers
 const juce_wchar File::separator = '\\';
 const String File::separatorString ("\\");
 
+void* getUser32Function (const char*);
 
 //==============================================================================
 bool File::exists() const
@@ -631,13 +632,55 @@ String File::getVersion() const
 }
 
 //==============================================================================
-bool File::isLink() const
+bool File::isSymbolicLink() const
+{
+    return (GetFileAttributes (fullPath.toWideCharPointer()) & FILE_ATTRIBUTE_REPARSE_POINT) != 0;
+}
+
+bool File::isShortcut() const
 {
     return hasFileExtension (".lnk");
 }
 
 File File::getLinkedTarget() const
 {
+   #if JUCE_WINDOWS
+    typedef DWORD (WINAPI* GetFinalPathNameByHandleFunc) (HANDLE, LPTSTR, DWORD, DWORD);
+
+    static GetFinalPathNameByHandleFunc getFinalPathNameByHandle
+             = (GetFinalPathNameByHandleFunc) getUser32Function ("GetFinalPathNameByHandle");
+
+    if (getFinalPathNameByHandle != nullptr)
+    {
+        HANDLE h = CreateFile (getFullPathName().toWideCharPointer(),
+                               GENERIC_READ, FILE_SHARE_READ, nullptr,
+                               OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, 0);
+
+        if (h != INVALID_HANDLE_VALUE)
+        {
+            if (DWORD requiredSize = getFinalPathNameByHandle (h, nullptr, 0, 0 /* FILE_NAME_NORMALIZED */))
+            {
+                HeapBlock<WCHAR> buffer (requiredSize + 2, true);
+
+                if (getFinalPathNameByHandle (h, buffer, requiredSize, 0 /* FILE_NAME_NORMALIZED */) > 0)
+                {
+                    CloseHandle (h);
+
+                    const StringRef prefix ("\\\\?\\");
+                    const String path (buffer);
+
+                    // It turns out that GetFinalPathNameByHandleW prepends \\?\ to the path.
+                    // This is not a bug, it's feature. See MSDN for more information.
+                    return File (path.startsWith (prefix) ? path.substring (prefix.length())
+                                                          : path);
+                }
+            }
+
+            CloseHandle (h);
+        }
+    }
+   #endif
+
     File result (*this);
     String p (getFullPathName());
 
@@ -664,7 +707,7 @@ File File::getLinkedTarget() const
     return result;
 }
 
-bool File::createLink (const String& description, const File& linkFileToCreate) const
+bool File::createShortcut (const String& description, const File& linkFileToCreate) const
 {
     linkFileToCreate.deleteFile();
 
@@ -755,14 +798,8 @@ bool DirectoryIterator::NativeIterator::next (String& filenameFound,
 //==============================================================================
 bool JUCE_CALLTYPE Process::openDocument (const String& fileName, const String& parameters)
 {
-    HINSTANCE hInstance = 0;
-
-    JUCE_TRY
-    {
-        hInstance = ShellExecute (0, 0, fileName.toWideCharPointer(),
-                                  parameters.toWideCharPointer(), 0, SW_SHOWDEFAULT);
-    }
-    JUCE_CATCH_ALL
+    HINSTANCE hInstance = ShellExecute (0, 0, fileName.toWideCharPointer(),
+                                        parameters.toWideCharPointer(), 0, SW_SHOWDEFAULT);
 
     return hInstance > (HINSTANCE) 32;
 }
@@ -788,7 +825,7 @@ void File::revealToUser() const
 class NamedPipe::Pimpl
 {
 public:
-    Pimpl (const String& pipeName, const bool createPipe)
+    Pimpl (const String& pipeName, const bool createPipe, bool mustNotExist)
         : filename ("\\\\.\\pipe\\" + File::createLegalFileName (pipeName)),
           pipeH (INVALID_HANDLE_VALUE),
           cancelEvent (CreateEvent (0, FALSE, FALSE, 0)),
@@ -800,7 +837,7 @@ public:
                                      PIPE_ACCESS_DUPLEX | FILE_FLAG_OVERLAPPED, 0,
                                      PIPE_UNLIMITED_INSTANCES, 4096, 4096, 0, 0);
 
-            if (GetLastError() == ERROR_ALREADY_EXISTS)
+            if (mustNotExist && GetLastError() == ERROR_ALREADY_EXISTS)
                 closePipeHandle();
         }
     }
@@ -995,9 +1032,9 @@ void NamedPipe::close()
     }
 }
 
-bool NamedPipe::openInternal (const String& pipeName, const bool createPipe)
+bool NamedPipe::openInternal (const String& pipeName, const bool createPipe, bool mustNotExist)
 {
-    pimpl = new Pimpl (pipeName, createPipe);
+    pimpl = new Pimpl (pipeName, createPipe, mustNotExist);
 
     if (createPipe && pimpl->pipeH == INVALID_HANDLE_VALUE)
     {
