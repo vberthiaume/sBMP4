@@ -40,7 +40,6 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter();
 sBMP4AudioProcessor::sBMP4AudioProcessor()
     :m_oLastDimensions()
     ,m_oDelayBuffer (2, 12000)
-	,m_bUseSimplestLP(false)
 	,m_fGain(defaultGain)
 	,m_fDelay(defaultDelay)
 	,m_iBufferSize(100)	//totally arbitrary value

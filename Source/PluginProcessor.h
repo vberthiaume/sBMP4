@@ -108,8 +108,6 @@ private:
     double m_dLfoCurAngle;
     int m_iCurChannel;
 
-    bool m_bUseSimplestLP;
-
     int m_iBufferSize;
     std::vector<float> m_oLookBackVec[2];
 
