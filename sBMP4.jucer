@@ -8,14 +8,14 @@
               pluginIsSynth="1" pluginWantsMidiIn="1" pluginProducesMidiOut="1"
               pluginSilenceInIsSilenceOut="0" pluginEditorRequiresKeys="0"
               pluginAUExportPrefix="sbmp4" pluginRTASCategory="" aaxIdentifier="com.yourcompany.NewProject"
-              pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="3.2.0"
-              companyName="BMP4">
+              pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="4.1.0"
+              companyName="BMP4" pluginIsMidiEffectPlugin="0">
   <MAINGROUP id="L2BB6f" name="sBMP4">
     <GROUP id="{39E19610-035A-894F-49C7-807C24EA4071}" name="Source">
-      <FILE id="Kr7Qkc" name="sBMP4SoundsAndVoices.cpp" compile="1" resource="0"
-            file="Source/sBMP4SoundsAndVoices.cpp"/>
-      <FILE id="m9gsqo" name="sBMP4SoundsAndVoices.h" compile="0" resource="0"
-            file="Source/sBMP4SoundsAndVoices.h"/>
+      <FILE id="xEkEE0" name="BMP4SynthVoice.cpp" compile="1" resource="0"
+            file="Source/BMP4SynthVoice.cpp"/>
+      <FILE id="LmU6qQ" name="BMP4SynthVoice.h" compile="0" resource="0"
+            file="Source/BMP4SynthVoice.h"/>
       <FILE id="smKi9v" name="constants.h" compile="0" resource="0" file="Source/constants.h"/>
       <FILE id="faJx9M" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
@@ -78,7 +78,7 @@
         <MODULEPATH id="juce_audio_basics" path="../../juce"/>
       </MODULEPATHS>
     </VS2013>
-    <LINUX_MAKE targetFolder="Builds/LinuxMakefile" vstFolder="~/Documents/sdks/vstsdk2.4"
+    <LINUX_MAKE targetFolder="Builds/LinuxMakefile" vstFolder="/home/vberthiaume/Documents/sdks/VST3 SDK/"
                 vst3Folder="~/Documents/sdks/VST3 SDK">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/" isDebug="1" optimisation="1"
