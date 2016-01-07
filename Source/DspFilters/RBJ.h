@@ -36,10 +36,10 @@ THE SOFTWARE.
 #ifndef DSPFILTERS_RBJ_H
 #define DSPFILTERS_RBJ_H
 
-#include "DspFilters/Common.h"
-#include "DspFilters/Biquad.h"
-#include "DspFilters/Design.h"
-#include "DspFilters/Filter.h"
+#include "Common.h"
+#include "Biquad.h"
+#include "Design.h"
+#include "Filter.h"
 
 namespace Dsp {
 

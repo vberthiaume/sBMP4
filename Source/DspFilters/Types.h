@@ -36,8 +36,8 @@ THE SOFTWARE.
 #ifndef DSPFILTERS_TYPES_H
 #define DSPFILTERS_TYPES_H
 
-#include "DspFilters/Common.h"
-#include "DspFilters/MathSupplement.h"
+#include "Common.h"
+#include "MathSupplement.h"
 
 namespace Dsp {
 

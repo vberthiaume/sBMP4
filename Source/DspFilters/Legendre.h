@@ -36,12 +36,12 @@ THE SOFTWARE.
 #ifndef DSPFILTERS_LEGENDRE_H
 #define DSPFILTERS_LEGENDRE_H
 
-#include "DspFilters/Common.h"
-#include "DspFilters/Cascade.h"
-#include "DspFilters/Design.h"
-#include "DspFilters/Filter.h"
-#include "DspFilters/PoleFilter.h"
-#include "DspFilters/RootFinder.h"
+#include "Common.h"
+#include "Cascade.h"
+#include "Design.h"
+#include "Filter.h"
+#include "PoleFilter.h"
+#include "RootFinder.h"
 
 namespace Dsp {
 

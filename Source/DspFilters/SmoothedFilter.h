@@ -36,8 +36,8 @@ THE SOFTWARE.
 #ifndef DSPFILTERS_SMOOTHEDFILTER_H
 #define DSPFILTERS_SMOOTHEDFILTER_H
 
-#include "DspFilters/Common.h"
-#include "DspFilters/Filter.h"
+#include "Common.h"
+#include "Filter.h"
 
 namespace Dsp {
 

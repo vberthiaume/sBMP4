@@ -36,8 +36,8 @@ THE SOFTWARE.
 #ifndef DSPFILTERS_ROOTFINDER_H
 #define DSPFILTERS_ROOTFINDER_H
 
-#include "DspFilters/Common.h"
-#include "DspFilters/Types.h"
+#include "Common.h"
+#include "Types.h"
 
 namespace Dsp {
 
