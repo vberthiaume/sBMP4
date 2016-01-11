@@ -40,7 +40,7 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter();
 sBMP4AudioProcessor::sBMP4AudioProcessor()
     :m_oLastDimensions()
     ,m_oDelayBuffer (2, 12000)
-	,m_bUseSimplestLP(false)
+	,m_bUseSimplestLP(true)
 	,m_fGain(defaultGain)
 	,m_fDelay(defaultDelay)
 	,m_iBufferSize(100)	//totally arbitrary value
@@ -184,7 +184,7 @@ void sBMP4AudioProcessor::updateSimpleFilter(double sampleRate) {
     
     //this is called setup, but really it's just setting some values. 
     float q = 5.f;
-    m_simpleFilter.setup(sampleRate, fExpCutoffFr, q);
+    // m_simpleFilter.setup(sampleRate, fExpCutoffFr, q);
 }
 
 JUCE_COMPILER_WARNING("need to put this in my audio library")
