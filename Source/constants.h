@@ -32,7 +32,6 @@ enum Parameters{
     ,paramTotalNum
 };
 
-
 const float defaultGain		= 1.0f;
 const float defaultDelay	= 0.0f;
 const float defaultWave		= 0.0f;
@@ -42,8 +41,11 @@ const int   s_iSimpleFilterLF = 600;
 const int   s_iSimpleFilterHF = 20000;// 12000;
 
 const int   s_iNumberOfVoices = 5;
+#if	WIN32
 const bool  s_bUseSimplestLp = false;
-
+#elif
+const bool  s_bUseSimplestLp = true;
+#endif
 //-------stuff related to wavetables
 const bool  s_bUseWaveTables = false;
 const int   kTotalWaveFrames = 4096;		// samples (must be power of 2 here)
