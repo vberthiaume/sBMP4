@@ -4,7 +4,7 @@
               bundleIdentifier="com.BMP4.synth" includeBinaryInAppConfig="1"
               buildVST="1" buildVST3="0" buildAU="0" buildRTAS="0" buildAAX="0"
               pluginName="sBMP4" pluginDesc="killer subtractive synth" pluginManufacturer="BMP4"
-              pluginManufacturerCode="BMP4" pluginCode="sBMP" pluginChannelConfigs="{1, 1}, {2, 2}"
+              pluginManufacturerCode="BMP4" pluginCode="sBMP" pluginChannelConfigs=""
               pluginIsSynth="1" pluginWantsMidiIn="1" pluginProducesMidiOut="1"
               pluginSilenceInIsSilenceOut="0" pluginEditorRequiresKeys="0"
               pluginAUExportPrefix="sbmp4" pluginRTASCategory="" aaxIdentifier="com.yourcompany.NewProject"
@@ -12,6 +12,33 @@
               companyName="BMP4" pluginIsMidiEffectPlugin="0">
   <MAINGROUP id="L2BB6f" name="sBMP4">
     <GROUP id="{39E19610-035A-894F-49C7-807C24EA4071}" name="Source">
+      <GROUP id="{F37C226D-BAD0-2B33-3039-51C452AA40C4}" name="DspFilters">
+        <FILE id="n5KYwY" name="Bessel.h" compile="0" resource="0" file="Source/DspFilters/Bessel.h"/>
+        <FILE id="rG0U7S" name="Biquad.h" compile="0" resource="0" file="Source/DspFilters/Biquad.h"/>
+        <FILE id="ZQl9BB" name="Butterworth.h" compile="0" resource="0" file="Source/DspFilters/Butterworth.h"/>
+        <FILE id="DH5VJP" name="Cascade.h" compile="0" resource="0" file="Source/DspFilters/Cascade.h"/>
+        <FILE id="kQkP3Z" name="ChebyshevI.h" compile="0" resource="0" file="Source/DspFilters/ChebyshevI.h"/>
+        <FILE id="AImSfv" name="ChebyshevII.h" compile="0" resource="0" file="Source/DspFilters/ChebyshevII.h"/>
+        <FILE id="Gg6k0A" name="Common.h" compile="0" resource="0" file="Source/DspFilters/Common.h"/>
+        <FILE id="CkbVzv" name="Custom.h" compile="0" resource="0" file="Source/DspFilters/Custom.h"/>
+        <FILE id="nDqLFh" name="Design.h" compile="0" resource="0" file="Source/DspFilters/Design.h"/>
+        <FILE id="H9iafa" name="Dsp.h" compile="0" resource="0" file="Source/DspFilters/Dsp.h"/>
+        <FILE id="yfxEdf" name="Elliptic.h" compile="0" resource="0" file="Source/DspFilters/Elliptic.h"/>
+        <FILE id="Tm3DXC" name="Filter.h" compile="0" resource="0" file="Source/DspFilters/Filter.h"/>
+        <FILE id="k2aTfZ" name="Layout.h" compile="0" resource="0" file="Source/DspFilters/Layout.h"/>
+        <FILE id="LqEsVH" name="Legendre.h" compile="0" resource="0" file="Source/DspFilters/Legendre.h"/>
+        <FILE id="F8RdUu" name="MathSupplement.h" compile="0" resource="0"
+              file="Source/DspFilters/MathSupplement.h"/>
+        <FILE id="Fh0UhL" name="Params.h" compile="0" resource="0" file="Source/DspFilters/Params.h"/>
+        <FILE id="UOGzZ6" name="PoleFilter.h" compile="0" resource="0" file="Source/DspFilters/PoleFilter.h"/>
+        <FILE id="cb73vB" name="RBJ.h" compile="0" resource="0" file="Source/DspFilters/RBJ.h"/>
+        <FILE id="Zq9P5s" name="RootFinder.h" compile="0" resource="0" file="Source/DspFilters/RootFinder.h"/>
+        <FILE id="Cew231" name="SmoothedFilter.h" compile="0" resource="0"
+              file="Source/DspFilters/SmoothedFilter.h"/>
+        <FILE id="TsAwf8" name="State.h" compile="0" resource="0" file="Source/DspFilters/State.h"/>
+        <FILE id="m8YT29" name="Types.h" compile="0" resource="0" file="Source/DspFilters/Types.h"/>
+        <FILE id="eITljP" name="Utilities.h" compile="0" resource="0" file="Source/DspFilters/Utilities.h"/>
+      </GROUP>
       <FILE id="xEkEE0" name="BMP4SynthVoice.cpp" compile="1" resource="0"
             file="Source/BMP4SynthVoice.cpp"/>
       <FILE id="LmU6qQ" name="BMP4SynthVoice.h" compile="0" resource="0"
@@ -53,31 +80,6 @@
         <MODULEPATH id="juce_audio_utils" path="../JUCE/modules"/>
       </MODULEPATHS>
     </XCODE_MAC>
-    <VS2013 targetFolder="Builds/VisualStudio2013" vstFolder="C:\Users\Vincent\Documents\sdks\steinberg\vstsdk2.4"
-            vst3Folder="C:\Users\Vincent\Documents\sdks\steinberg\VST3 SDK">
-      <CONFIGURATIONS>
-        <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="1" optimisation="1" targetName="sBMP4"/>
-        <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="0" optimisation="3" targetName="sBMP4"/>
-      </CONFIGURATIONS>
-      <MODULEPATHS>
-        <MODULEPATH id="juce_video" path="../../juce"/>
-        <MODULEPATH id="juce_opengl" path="../../juce"/>
-        <MODULEPATH id="juce_gui_extra" path="../../juce"/>
-        <MODULEPATH id="juce_gui_basics" path="../../juce"/>
-        <MODULEPATH id="juce_graphics" path="../../juce"/>
-        <MODULEPATH id="juce_events" path="../../juce"/>
-        <MODULEPATH id="juce_data_structures" path="../../juce"/>
-        <MODULEPATH id="juce_core" path="../../juce"/>
-        <MODULEPATH id="juce_audio_utils" path="../../juce"/>
-        <MODULEPATH id="juce_audio_processors" path="../../juce"/>
-        <MODULEPATH id="juce_audio_plugin_client" path="../../juce"/>
-        <MODULEPATH id="juce_audio_formats" path="../../juce"/>
-        <MODULEPATH id="juce_audio_devices" path="../../juce"/>
-        <MODULEPATH id="juce_audio_basics" path="../../juce"/>
-      </MODULEPATHS>
-    </VS2013>
     <LINUX_MAKE targetFolder="Builds/LinuxMakefile" vstFolder="/home/vberthiaume/Documents/sdks/VST3 SDK/"
                 vst3Folder="~/Documents/sdks/VST3 SDK">
       <CONFIGURATIONS>
@@ -103,6 +105,33 @@
         <MODULEPATH id="juce_audio_basics" path="../../juce"/>
       </MODULEPATHS>
     </LINUX_MAKE>
+    <VS2015 targetFolder="Builds/VisualStudio2015" vstFolder="C:\Users\barth\Documents\sdks\steinberg\3.6.5\VST3 SDK"
+            externalLibraries="DSPFilters.lib">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+                       isDebug="1" optimisation="1" targetName="sBMP4_Win32" libraryPath="C:\Users\barth\Documents\git\sBMP4\lib\Win32Debug"/>
+        <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+                       isDebug="0" optimisation="3" targetName="sBMP4_Win32" libraryPath="C:\Users\barth\Documents\git\sBMP4\lib\Win32Release"/>
+        <CONFIGURATION name="Release_x64" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
+                       targetName="sBMP4_Win64" optimisation="3" libraryPath="C:\Users\barth\Documents\git\sBMP4\lib\x64Release"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_video" path="../../juce"/>
+        <MODULEPATH id="juce_opengl" path="../../juce"/>
+        <MODULEPATH id="juce_gui_extra" path="../../juce"/>
+        <MODULEPATH id="juce_gui_basics" path="../../juce"/>
+        <MODULEPATH id="juce_graphics" path="../../juce"/>
+        <MODULEPATH id="juce_events" path="../../juce"/>
+        <MODULEPATH id="juce_data_structures" path="../../juce"/>
+        <MODULEPATH id="juce_core" path="../../juce"/>
+        <MODULEPATH id="juce_audio_utils" path="../../juce"/>
+        <MODULEPATH id="juce_audio_processors" path="../../juce"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../../juce"/>
+        <MODULEPATH id="juce_audio_formats" path="../../juce"/>
+        <MODULEPATH id="juce_audio_devices" path="../../juce"/>
+        <MODULEPATH id="juce_audio_basics" path="../../juce"/>
+      </MODULEPATHS>
+    </VS2015>
   </EXPORTFORMATS>
   <MODULES>
     <MODULES id="juce_audio_basics" showAllCode="1" useLocalCopy="1"/>
