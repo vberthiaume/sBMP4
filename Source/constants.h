@@ -42,7 +42,7 @@ const int   s_iSimpleFilterLF = 600;
 const int   s_iSimpleFilterHF = 20000;// 12000;
 
 const int   s_iNumberOfVoices = 5;
-const bool  s_bUseSimplestLp = false;
+const bool  s_bUseSimplestLp = true;
 
 //-------stuff related to wavetables
 const bool  s_bUseWaveTables = false;
