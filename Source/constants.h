@@ -43,7 +43,7 @@ const int   s_iSimpleFilterHF = 20000;// 12000;
 const int   s_iNumberOfVoices = 5;
 #if	WIN32
 const bool  s_bUseSimplestLp = false;
-#elif
+#else
 const bool  s_bUseSimplestLp = true;
 #endif
 //-------stuff related to wavetables
