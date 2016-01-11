@@ -120,7 +120,7 @@ float Bmp4SynthVoice::getSample(double dTail) {
             m_dLfoCurAngle += dLfoFr * 2.0 * double_Pi;
             return dCurLfoValue*getSampleAdditiveSynthesis(dTail);
         } else {
-
+			return getSampleAdditiveSynthesis(dTail);
         }
     }
 }
