@@ -72,7 +72,6 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 		m_iBufferSize = numSamples;
 		setFilterFr(m_fFilterFr);	//just to update the lookback vector
 	}
-    int iCurChannel, dp = 0;
 
     // Now pass any incoming midi messages to our keyboard state object, and let it
     // add messages to the buffer if the user is clicking on the on-screen keys
@@ -81,7 +80,8 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
     // and now get the synth to process these midi events and generate its output.
     m_oSynth.renderNextBlock (buffer, midiMessages, 0, numSamples);
 
-	for (iCurChannel = 0; iCurChannel < getNumOutputChannels(); ++iCurChannel){
+	int iDelayPosition = 0;
+	for (int iCurChannel = 0; iCurChannel < getNumOutputChannels(); ++iCurChannel){
         
         //-----GAIN/LFO
         bool bLfoActive = false;
@@ -100,13 +100,13 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
         
         //-----DELAY
         float* delayData = m_oDelayBuffer.getWritePointer (jmin (iCurChannel, m_oDelayBuffer.getNumChannels() - 1));
-        dp = m_iDelayPosition;
+        iDelayPosition = m_iDelayPosition;
         for (int i = 0; i < numSamples; ++i) {
             const float in = channelData[i];
-            channelData[i] += delayData[dp];
-            delayData[dp] = (delayData[dp] + in) * m_fDelay;
-            if(++dp >= m_oDelayBuffer.getNumSamples()){
-                dp = 0;
+            channelData[i] += delayData[iDelayPosition];
+            delayData[iDelayPosition] = (delayData[iDelayPosition] + in) * m_fDelay;
+            if(++iDelayPosition >= m_oDelayBuffer.getNumSamples()){
+                iDelayPosition = 0;
             }
         }
 
@@ -120,7 +120,7 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
             //}
         } 
     }
-    m_iDelayPosition = dp;
+    m_iDelayPosition = iDelayPosition;
 
     JUCE_COMPILER_WARNING("this stuff should be done in the main loop above...")
     //-----FILTER, IF NOT DONE ABOVE
@@ -144,9 +144,9 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
    }
 
     // clear unused output channels
-	for (int i = getNumInputChannels(); i < getNumOutputChannels(); ++i){
-		buffer.clear(i, 0, buffer.getNumSamples());
-	}
+	//for (int i = getNumInputChannels(); i < getNumOutputChannels(); ++i){
+	//	buffer.clear(i, 0, buffer.getNumSamples());
+	//}
 }
 
 void sBMP4AudioProcessor::setFilterFr(float p_fFilterFr){
