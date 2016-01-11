@@ -42,17 +42,14 @@ const int   s_iSimpleFilterLF = 600;
 const int   s_iSimpleFilterHF = 20000;// 12000;
 
 const int   s_iNumberOfVoices = 5;
-const bool  s_bUseSimplestLp = true;
+const bool  s_bUseSimplestLp = false;
 
 //-------stuff related to wavetables
 const bool  s_bUseWaveTables = false;
 const int   kTotalWaveFrames = 4096;		// samples (must be power of 2 here)
 
-static bool areSame(double a, double b)
-{
+static bool areSame(double a, double b){
     return fabs(a - b) < .0001;//std::numeric_limits<double>::epsilon();
 }
-
-
 
 #endif

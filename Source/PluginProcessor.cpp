@@ -182,7 +182,7 @@ void sBMP4AudioProcessor::updateSimpleFilter(double sampleRate) {
     
     //this is called setup, but really it's just setting some values. 
     float q = 5.f;
-    // m_simpleFilter.setup(sampleRate, fExpCutoffFr, q);
+    m_simpleFilter.setup(sampleRate, fExpCutoffFr, q);
 }
 
 JUCE_COMPILER_WARNING("need to put this in my audio library")
