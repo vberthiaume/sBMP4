@@ -4,7 +4,7 @@
               bundleIdentifier="com.BMP4.synth" includeBinaryInAppConfig="1"
               buildVST="1" buildVST3="0" buildAU="0" buildRTAS="0" buildAAX="0"
               pluginName="sBMP4" pluginDesc="killer subtractive synth" pluginManufacturer="BMP4"
-              pluginManufacturerCode="BMP4" pluginCode="sBMP" pluginChannelConfigs="{1, 1}, {2, 2}"
+              pluginManufacturerCode="BMP4" pluginCode="sBMP" pluginChannelConfigs=""
               pluginIsSynth="1" pluginWantsMidiIn="1" pluginProducesMidiOut="1"
               pluginSilenceInIsSilenceOut="0" pluginEditorRequiresKeys="0"
               pluginAUExportPrefix="sbmp4" pluginRTASCategory="" aaxIdentifier="com.yourcompany.NewProject"

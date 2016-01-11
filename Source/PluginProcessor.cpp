@@ -81,8 +81,7 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
     // and now get the synth to process these midi events and generate its output.
     m_oSynth.renderNextBlock (buffer, midiMessages, 0, numSamples);
 
-
-	for (iCurChannel = 0; iCurChannel < getNumInputChannels(); ++iCurChannel){
+	for (iCurChannel = 0; iCurChannel < getNumOutputChannels(); ++iCurChannel){
         
         //-----GAIN/LFO
         bool bLfoActive = false;
