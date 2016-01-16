@@ -49,13 +49,13 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor(sBMP4AudioProcessor& proces
 	addSlider(&m_oGainSlider	, .01);
  	addSlider(&m_oDelaySlider	, .01);
 
-	JUCE_COMPILER_WARNING("path needs to make sense on mac")
+	JUCE_COMPILER_WARNING("path needs to make sense on mac, not be hard-coded")
 		String strPrefix;
 #ifdef JUCE_LINUX
         strPrefix = "/home/vberthiaume/Documents/git/sBMP4/Source/DspFilters";
 #elif JUCE_MAC
 #elif JUCE_WINDOWS
-	strPrefix = "C:\\Users\\Vincent\\Documents\\git\\sBMP4\\icons\\";
+	strPrefix = "C:\\Users\\barth\\Documents\\git\\sBMP4\\icons\\";
 #endif
 	m_oSineImage.	 setImage(ImageFileFormat::loadFrom(File(strPrefix + "sine.png")));
 	m_oSawImage.	 setImage(ImageFileFormat::loadFrom(File(strPrefix + "saw.png")));
