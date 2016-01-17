@@ -94,8 +94,6 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
         } else {
             buffer.applyGain(iCurChannel, 0, buffer.getNumSamples(), m_fGain);
         }
-
-	    
         float* channelData = buffer.getWritePointer (iCurChannel);
         
         //-----DELAY
@@ -174,7 +172,6 @@ void sBMP4AudioProcessor::prepareToPlay(double sampleRate, int /*samplesPerBlock
 }
 
 void sBMP4AudioProcessor::updateSimpleFilter(double sampleRate) {
-
     float fMultiple = 1;   //the higher this is, the more linear and less curvy the exponential is
     JUCE_COMPILER_WARNING("s_iSimpleFilterLF should be the currently played note... but this is hard" + 
              "to get because as far as I know, we can only access that from the voice, which is buried in m_oSynth")

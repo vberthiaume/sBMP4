@@ -57,11 +57,12 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor(sBMP4AudioProcessor& proces
 #elif JUCE_WINDOWS
 	strPrefix = "C:\\Users\\barth\\Documents\\git\\sBMP4\\icons\\";
 #endif
-	m_oSineImage.	 setImage(ImageFileFormat::loadFrom(File(strPrefix + "sine.png")));
-	m_oSawImage.	 setImage(ImageFileFormat::loadFrom(File(strPrefix + "saw.png")));
-	m_oSquareImage.	 setImage(ImageFileFormat::loadFrom(File(strPrefix + "square.png")));
+	m_oSineImage.setImage(ImageFileFormat::loadFrom(File(strPrefix + "sine.png")));
+	m_oSawImage.setImage(ImageFileFormat::loadFrom(File(strPrefix + "saw.png")));
+	m_oSquareImage.setImage(ImageFileFormat::loadFrom(File(strPrefix + "square.png")));
 	m_oTriangleImage.setImage(ImageFileFormat::loadFrom(File(strPrefix + "triangle.png")));
-	m_oLogoImage.	 setImage(ImageFileFormat::loadFrom(File(strPrefix + "main.png")));
+	m_oLogoImage.setImage(ImageFileFormat::loadFrom(File(strPrefix + "main.png")));
+
 
 	addAndMakeVisible(m_oSineImage);
 	addAndMakeVisible(m_oSawImage);
@@ -167,5 +168,3 @@ void sBMP4AudioProcessorEditor::sliderValueChanged (Slider* slider) {
 		getProcessor().setParameterNotifyingHost(paramFilterFr, (float)m_oFilterSlider.getValue());
 	}
 }
-
-
