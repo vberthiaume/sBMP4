@@ -140,11 +140,6 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
        //channelData[1] = buffer.getWritePointer(1);
        //f.process(numSamples, channelData);		
    }
-
-    // clear unused output channels
-	//for (int i = getNumInputChannels(); i < getNumOutputChannels(); ++i){
-	//	buffer.clear(i, 0, buffer.getNumSamples());
-	//}
 }
 
 void sBMP4AudioProcessor::setFilterFr(float p_fFilterFr){

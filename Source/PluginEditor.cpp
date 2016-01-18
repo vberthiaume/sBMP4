@@ -62,8 +62,7 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor(sBMP4AudioProcessor& proces
 	m_oSquareImage.setImage(ImageFileFormat::loadFrom(File(strPrefix + "square.png")));
 	m_oTriangleImage.setImage(ImageFileFormat::loadFrom(File(strPrefix + "triangle.png")));
 	m_oLogoImage.setImage(ImageFileFormat::loadFrom(File(strPrefix + "main.png")));
-
-
+	
 	addAndMakeVisible(m_oSineImage);
 	addAndMakeVisible(m_oSawImage);
 	addAndMakeVisible(m_oSquareImage);
