@@ -29,26 +29,30 @@
 sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor(sBMP4AudioProcessor& processor)
     : AudioProcessorEditor(processor)
     , m_oMidiKeyboard(processor.m_oKeyboardState, MidiKeyboardComponent::horizontalKeyboard)
-    , m_oWaveLabel("", "wave")
-    , m_oFilterLabel("", "LP filter")
-	, m_oLfoLabel("", "LFO")
-    , m_oGainLabel("", "gain")
-    , m_oDelayLabel("", "delay")
     , m_oWaveSlider("wave")
-    , m_oFilterSlider("Filter")
-    , m_oGainSlider("gain")
-    , m_oDelaySlider("delay")
+	, m_oWaveLabel("", "wave")
+	, m_oFilterSlider("Filter")
+    , m_oFilterLabel("", "LP filter")
+	, m_oQSlider("Resonance")
+    , m_oQLabel("", "Resonance")
 	, m_oLfoSlider("LFO")
+	, m_oLfoLabel("", "LFO")
+	, m_oDelaySlider("delay")
+    , m_oDelayLabel("", "delay")
+    , m_oGainSlider("gain")
+    , m_oGainLabel("", "gain")
     , m_oSineImage("sine")
     , m_oSawImage("saw")
     , m_oTriangleImage("triangle")
     , m_oLogoImage("sBMP4")
 {
     addSlider(&m_oWaveSlider	, 1.f/3);
-	addSlider(&m_oFilterSlider	, .01);
-	addSlider(&m_oGainSlider	, .01);
- 	addSlider(&m_oDelaySlider	, .01);
 	addSlider(&m_oLfoSlider		, .01);
+	addSlider(&m_oFilterSlider	, .01);
+	addSlider(&m_oQSlider		, .01);
+ 	addSlider(&m_oDelaySlider	, .01);
+	addSlider(&m_oGainSlider	, .01);
+
 	
 
 JUCE_COMPILER_WARNING("path needs to make sense on mac, not be hard-coded")
@@ -74,8 +78,9 @@ JUCE_COMPILER_WARNING("path needs to make sense on mac, not be hard-coded")
 
     // add some labels for the sliders
 	addLabel(&m_oWaveLabel);
-	addLabel(&m_oFilterLabel);
 	addLabel(&m_oLfoLabel);
+	addLabel(&m_oFilterLabel);
+	addLabel(&m_oQLabel);
 	addLabel(&m_oGainLabel);
 	addLabel(&m_oDelayLabel);
 
@@ -121,7 +126,7 @@ void sBMP4AudioProcessorEditor::paint (Graphics& g)
 }
 
 void sBMP4AudioProcessorEditor::resized() {
-    int x = s_iXMargin, y = s_iYMargin;
+    int x = s_iXMargin, y = s_iYMargin, iCurCol = 0, iCurRow = 0;
 
     m_oWaveSlider.setBounds	    (x, y,		s_iSliderWidth, s_iSliderHeight);
 	m_oWaveLabel.setBounds      (x, y + 1.5*s_iLabelHeight, s_iSliderWidth, s_iLabelHeight);
@@ -131,17 +136,32 @@ void sBMP4AudioProcessorEditor::resized() {
 	m_oTriangleImage.setBounds  (x + 7 * s_iSliderWidth / 10, y - 15, 20, 20);
 	m_oSawImage.setBounds       (x + 8 * s_iSliderWidth / 10, y + 25, 20, 20);
 
-	m_oLfoSlider.setBounds		(x, y + s_iSliderHeight + s_iLabelHeight, s_iSliderWidth, s_iSliderHeight);
-	m_oLfoLabel.setBounds		(x, y + s_iSliderHeight + 2.5*s_iLabelHeight, s_iSliderWidth, s_iLabelHeight);
+	++iCurRow;
 
-    m_oFilterSlider.setBounds   (x + s_iSliderWidth, y,		s_iSliderWidth, s_iSliderHeight);
-	m_oFilterLabel.setBounds	(x + s_iSliderWidth, y+1.5*s_iLabelHeight,	s_iSliderWidth, s_iLabelHeight);
+	m_oLfoSlider.setBounds		(x + iCurCol * s_iSliderWidth, y + iCurRow * (s_iSliderHeight + s_iLabelHeight), s_iSliderWidth, s_iSliderHeight);
+	m_oLfoLabel.setBounds		(x + iCurCol * s_iSliderWidth, y + iCurRow * (s_iSliderHeight + 2.5*s_iLabelHeight), s_iSliderWidth, s_iLabelHeight);
 
-	m_oDelaySlider.setBounds	(x + 2 * s_iSliderWidth, y, s_iSliderWidth, s_iSliderHeight);
-	m_oDelayLabel.setBounds		(x + 2 * s_iSliderWidth, y + 1.5*s_iLabelHeight, s_iSliderWidth, s_iLabelHeight);
+	--iCurRow;
+	++iCurCol;
 
-	m_oGainSlider.setBounds		(x + 3 * s_iSliderWidth, y, s_iSliderWidth, s_iSliderHeight);
-	m_oGainLabel.setBounds		(x + 3 * s_iSliderWidth, y + 1.5*s_iLabelHeight, s_iSliderWidth, s_iLabelHeight);
+    m_oFilterSlider.setBounds   (x + iCurCol * s_iSliderWidth, y,		s_iSliderWidth, s_iSliderHeight);
+	m_oFilterLabel.setBounds	(x + iCurCol *  s_iSliderWidth, y + 1.5*s_iLabelHeight,	s_iSliderWidth, s_iLabelHeight);
+
+	++iCurRow;
+
+	m_oQSlider.setBounds		(x + iCurCol * s_iSliderWidth, y + iCurRow * (s_iSliderHeight + s_iLabelHeight), s_iSliderWidth, s_iSliderHeight);
+	m_oQLabel.setBounds			(x + iCurCol * s_iSliderWidth, y + iCurRow * (s_iSliderHeight + 2.5*s_iLabelHeight), s_iSliderWidth, s_iLabelHeight);
+
+	--iCurRow;
+	++iCurCol;
+
+	m_oDelaySlider.setBounds	(x + iCurCol *  s_iSliderWidth, y, s_iSliderWidth, s_iSliderHeight);
+	m_oDelayLabel.setBounds		(x + iCurCol *  s_iSliderWidth, y + 1.5*s_iLabelHeight, s_iSliderWidth, s_iLabelHeight);
+
+	++iCurCol;
+
+	m_oGainSlider.setBounds		(x + iCurCol *  s_iSliderWidth, y, s_iSliderWidth, s_iSliderHeight);
+	m_oGainLabel.setBounds		(x + iCurCol *  s_iSliderWidth, y + 1.5*s_iLabelHeight, s_iSliderWidth, s_iLabelHeight);
 
 
 
@@ -174,6 +194,8 @@ void sBMP4AudioProcessorEditor::sliderValueChanged (Slider* slider) {
 		getProcessor().setParameterNotifyingHost(paramFilterFr, (float)m_oFilterSlider.getValue());
 	} else if (slider == &m_oLfoSlider) {
 		getProcessor().setParameterNotifyingHost(paramLfoFr, (float)m_oLfoSlider.getValue());
+	} else if (slider == &m_oQSlider) {
+		getProcessor().setParameterNotifyingHost(paramQ, (float)m_oQSlider.getValue());
 	}
 
 }

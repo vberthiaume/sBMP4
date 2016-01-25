@@ -39,6 +39,7 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 , m_fGain(defaultGain)
 , m_fDelay(defaultDelay)
 , m_fLfoFr(defaultLfoFr)
+, m_fQ(defaultQ)
 , m_iBufferSize(100)	//totally arbitrary value
 , m_dLfoCurAngle(0.)
 {
@@ -151,9 +152,9 @@ void sBMP4AudioProcessor::updateSimpleFilter(double sampleRate) {
     float fExpCutoffFr = fMultiple * exp(log(s_iSimpleFilterHF * m_fFilterFr/fMultiple)) + s_iSimpleFilterLF;
     
     //this is called setup, but really it's just setting some values. 
-    float q = 5.f;
+	//float q = 5.f;
 #if	WIN32
-    m_simpleFilter.setup(sampleRate, fExpCutoffFr, q);
+    m_simpleFilter.setup(sampleRate, fExpCutoffFr, m_fQ*10);
 #endif
 }
 
@@ -223,6 +224,7 @@ void sBMP4AudioProcessor::setParameter(int index, float newValue)
     case paramWave:     setWaveType(newValue);  break;
     case paramFilterFr: setFilterFr(newValue);  break;
 	case paramLfoFr:	m_fLfoFr = newValue;  break;
+	case paramQ:		m_fQ = newValue;  break;
     default:            break;
     }
 }

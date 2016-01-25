@@ -30,6 +30,7 @@ enum Parameters{
     ,paramWave
 	,paramFilterFr
 	,paramLfoFr
+	,paramQ
     ,paramTotalNum
 };
 
@@ -38,6 +39,7 @@ const float defaultDelay	= 0.0f;
 const float defaultWave		= 0.0f;
 const float defaultFilterFr = 0.0f;
 const float defaultLfoFr	= 0.0f;
+const float defaultQ		= 0.5f;
 
 
 const int   s_iSimpleFilterLF = 600;

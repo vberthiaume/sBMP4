@@ -93,7 +93,7 @@ private:
 
     void simplestLP(float* p_pfSamples, int p_iTotalSamples, std::vector<float> &p_fLookBackVec);
 
-    float m_fGain, m_fDelay, m_fWave, m_fFilterFr, m_fLfoFr;
+    float m_fGain, m_fDelay, m_fWave, m_fFilterFr, m_fLfoFr, m_fQ;
 
     void setWaveType(float p_fWave);
 
