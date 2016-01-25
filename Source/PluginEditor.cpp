@@ -121,32 +121,33 @@ void sBMP4AudioProcessorEditor::paint (Graphics& g)
 }
 
 void sBMP4AudioProcessorEditor::resized() {
-    int x = 20, y = 25, w = 75, sh = 40, wh = 20;
-    m_oWaveSlider.setBounds	    (x, y,		w, sh);
-	m_oWaveLabel.setBounds      (x, y + 1.5*wh, w, wh);
+    int x = s_iXMargin, y = s_iYMargin;
+
+    m_oWaveSlider.setBounds	    (x, y,		s_iSliderWidth, s_iSliderHeight);
+	m_oWaveLabel.setBounds      (x, y + 1.5*s_iLabelHeight, s_iSliderWidth, s_iLabelHeight);
 
 	m_oSineImage.setBounds      (x - 5, y + 25, 20, 20);
 	m_oSquareImage.setBounds    (x + 0, y - 15, 20, 20);
-	m_oTriangleImage.setBounds  (x + 7 * w / 10, y - 15, 20, 20);
-	m_oSawImage.setBounds       (x + 8 * w / 10, y + 25, 20, 20);
+	m_oTriangleImage.setBounds  (x + 7 * s_iSliderWidth / 10, y - 15, 20, 20);
+	m_oSawImage.setBounds       (x + 8 * s_iSliderWidth / 10, y + 25, 20, 20);
 
-	m_oLfoSlider.setBounds		(x + w, y, w, sh);
-	m_oLfoLabel.setBounds		(x + w, y + 1.5*wh, w, wh);
+	m_oLfoSlider.setBounds		(x, y + s_iSliderHeight + s_iLabelHeight, s_iSliderWidth, s_iSliderHeight);
+	m_oLfoLabel.setBounds		(x, y + s_iSliderHeight + 2.5*s_iLabelHeight, s_iSliderWidth, s_iLabelHeight);
 
-    m_oFilterSlider.setBounds   (x + 2 * w, y,		w, sh);
-	m_oFilterLabel.setBounds	(x + 2 * w, y+1.5*wh,	w, wh);
+    m_oFilterSlider.setBounds   (x + s_iSliderWidth, y,		s_iSliderWidth, s_iSliderHeight);
+	m_oFilterLabel.setBounds	(x + s_iSliderWidth, y+1.5*s_iLabelHeight,	s_iSliderWidth, s_iLabelHeight);
 
-	m_oDelaySlider.setBounds(x + 3 * w, y, w, sh);
-	m_oDelayLabel.setBounds(x + 3 * w, y + 1.5*wh, w, wh);
+	m_oDelaySlider.setBounds	(x + 2 * s_iSliderWidth, y, s_iSliderWidth, s_iSliderHeight);
+	m_oDelayLabel.setBounds		(x + 2 * s_iSliderWidth, y + 1.5*s_iLabelHeight, s_iSliderWidth, s_iLabelHeight);
 
-	m_oGainSlider.setBounds		(x + 4 * w, y, w, sh);
-	m_oGainLabel.setBounds		(x + 4 * w, y + 1.5*wh, w, wh);
+	m_oGainSlider.setBounds		(x + 3 * s_iSliderWidth, y, s_iSliderWidth, s_iSliderHeight);
+	m_oGainLabel.setBounds		(x + 3 * s_iSliderWidth, y + 1.5*s_iLabelHeight, s_iSliderWidth, s_iLabelHeight);
 
-	const int keyboardHeight = 70;
 
-	int iLogoW = 75, iLogoH = 30;
-	m_oLogoImage.setBounds(getWidth() - iLogoW, 5, iLogoW, iLogoH);
-    m_oMidiKeyboard.setBounds (4, getHeight() - keyboardHeight - 4, getWidth() - 8, keyboardHeight);
+
+	
+	m_oLogoImage.setBounds(getWidth() - s_iLogoW, 5, s_iLogoW, s_iLogoH);
+    m_oMidiKeyboard.setBounds (4, getHeight() - s_iKeyboardHeight - 4, getWidth() - 8, s_iKeyboardHeight);
     m_pResizer->setBounds (getWidth() - 16, getHeight() - 16, 16, 16);
     getProcessor().setDimensions(std::make_pair(getWidth(), getHeight()));
 }

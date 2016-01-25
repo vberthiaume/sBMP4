@@ -38,6 +38,7 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 , m_oDelayBuffer(2, 12000)
 , m_fGain(defaultGain)
 , m_fDelay(defaultDelay)
+, m_fLfoFr(defaultLfoFr)
 , m_iBufferSize(100)	//totally arbitrary value
 , m_dLfoCurAngle(0.)
 {
@@ -64,7 +65,9 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
     }
 
 	//width of 265 is 20 (x buffer on left) + 3*75 (3 sliders) + 20 (buffer on right)
-    m_oLastDimensions = std::make_pair(20+5*70+25, 150);
+    /*m_oLastDimensions = std::make_pair(20+5*70+25, s_iKeyboardHeight + 80 + 60);*/
+	m_oLastDimensions = std::make_pair(2*s_iXMargin + s_iNumberOfHorizontalSliders*s_iSliderWidth, 
+									   s_iYMargin   + s_iNumberOfVerticaltalSliders * (s_iSliderHeight + s_iLabelHeight) + s_iKeyboardHeight);
     m_iDelayPosition = 0;
 }
 
@@ -88,31 +91,11 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 	//this loop is useless since we only have 1 output, but leave it for future expansion
 	for (int iCurChannel = 0; iCurChannel < getMainBusNumOutputChannels(); ++iCurChannel){
 
-		//-----GAIN/LFO
-#if USE_LFO
-		double dCurLfoValue = 1.;
-		double dLfoFr = 5;
-		dCurLfoValue = sin(m_dLfoCurAngle);
-		buffer.applyGain(iCurChannel, 0, buffer.getNumSamples(), dCurLfoValue*m_fGain);
-		m_dLfoCurAngle += dLfoFr * 2.0 * double_Pi;
-#else
+		//-----GAIN
 		buffer.applyGain(iCurChannel, 0, buffer.getNumSamples(), m_fGain);
-#endif
 
         float* channelData = buffer.getWritePointer (iCurChannel);
         
-        //-----DELAY
-        float* delayData = m_oDelayBuffer.getWritePointer (jmin (iCurChannel, m_oDelayBuffer.getNumChannels() - 1));
-        iDelayPosition = m_iDelayPosition;
-        for (int i = 0; i < numSamples; ++i) {
-            const float in = channelData[i];
-            channelData[i] += delayData[iDelayPosition];
-            delayData[iDelayPosition] = (delayData[iDelayPosition] + in) * m_fDelay;
-            if(++iDelayPosition >= m_oDelayBuffer.getNumSamples()){
-                iDelayPosition = 0;
-            }
-        }
-
         //-----FILTER
         if(s_bUseSimplestLp){
 			simplestLP(channelData, numSamples, m_oLookBackVec[iCurChannel]);
@@ -120,6 +103,18 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 			float* channelData[1];
 			channelData[0] = buffer.getWritePointer(iCurChannel);
 			m_simpleFilter.process(numSamples, channelData);
+		}
+
+		//-----DELAY
+		float* delayData = m_oDelayBuffer.getWritePointer(jmin(iCurChannel, m_oDelayBuffer.getNumChannels() - 1));
+		iDelayPosition = m_iDelayPosition;
+		for (int i = 0; i < numSamples; ++i) {
+			const float in = channelData[i];
+			channelData[i] += delayData[iDelayPosition];
+			delayData[iDelayPosition] = (delayData[iDelayPosition] + in) * m_fDelay;
+			if (++iDelayPosition >= m_oDelayBuffer.getNumSamples()) {
+				iDelayPosition = 0;
+			}
 		}
     }
     m_iDelayPosition = iDelayPosition;

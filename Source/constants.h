@@ -24,15 +24,6 @@
 #ifndef sBMP4_Header_h
 #define sBMP4_Header_h
 
- //#ifndef USE_LFO
- //#define USE_LFO 1
- //#endif
-
-#ifndef USE_LFO_IN_VOICE
-#define USE_LFO_IN_VOICE 1
-#endif
-
-
 enum Parameters{
      paramGain = 0
     ,paramDelay
@@ -46,22 +37,39 @@ const float defaultGain		= 1.0f;
 const float defaultDelay	= 0.0f;
 const float defaultWave		= 0.0f;
 const float defaultFilterFr = 0.0f;
+const float defaultLfoFr	= 0.0f;
+
 
 const int   s_iSimpleFilterLF = 600;
 const int   s_iSimpleFilterHF = 20000;// 12000;
 
 const int   s_iNumberOfVoices = 5;
+
 #if	WIN32
 const bool  s_bUseSimplestLp = false;
 #else
 const bool  s_bUseSimplestLp = true;
 #endif
-//-------stuff related to wavetables
-const bool  s_bUseWaveTables = false;
-const int   kTotalWaveFrames = 4096;		// samples (must be power of 2 here)
 
 static bool areSame(double a, double b){
     return fabs(a - b) < .0001;//std::numeric_limits<double>::epsilon();
 }
+
+//-------stuff related to wavetables
+const bool  s_bUseWaveTables = false;
+const int   kTotalWaveFrames = 4096;		// samples (must be power of 2 here)
+
+//-------stuff related to size of things
+const int s_iXMargin		= 20;
+const int s_iYMargin		= 25;
+const int s_iKeyboardHeight	= 70;
+const int s_iSliderWidth	= 75;
+const int s_iSliderHeight	= 40;
+const int s_iLabelHeight	= 20;
+const int s_iLogoW			= 75;
+const int s_iLogoH			= 30;
+
+const int s_iNumberOfHorizontalSliders	= 4;
+const int s_iNumberOfVerticaltalSliders = 2;
 
 #endif
