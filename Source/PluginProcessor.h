@@ -110,7 +110,7 @@ private:
     int m_iBufferSize;
     std::vector<float> m_oLookBackVec[2];
 
-    Dsp::SimpleFilter <Dsp::RBJ::LowPass, 2>  m_simpleFilter;	//2 here is the number of channels, and is mandatory!
+    Dsp::SimpleFilter <Dsp::RBJ::LowPass, 1>  m_simpleFilter;	//2 here is the number of channels, and is mandatory!
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(sBMP4AudioProcessor)
 };

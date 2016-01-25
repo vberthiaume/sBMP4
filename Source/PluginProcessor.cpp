@@ -115,30 +115,13 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
         //-----FILTER
         if(s_bUseSimplestLp){
 			simplestLP(channelData, numSamples, m_oLookBackVec[iCurChannel]);
-        } 
+		} else {
+			float* channelData[1];
+			channelData[0] = buffer.getWritePointer(iCurChannel);
+			m_simpleFilter.process(numSamples, channelData);
+		}
     }
     m_iDelayPosition = iDelayPosition;
-
-    JUCE_COMPILER_WARNING("this stuff should be done in the main loop above...")
-    //-----FILTER, IF NOT DONE ABOVE
-    if(!s_bUseSimplestLp){
-       float* channelData[2];
-       channelData[0] = buffer.getWritePointer(0);
-       channelData[1] = buffer.getWritePointer(1);
-       m_simpleFilter.process(numSamples, channelData);
-
-       //<3> is the filter order and 2 is the number of channels
-       //Dsp::SimpleFilter <Dsp::ChebyshevI::BandPass <3>, 2> f;
-       //f.setup(3,    // order
-       //	m_oSynth.getSampleRate(),// sample rate
-       //	(1-m_fFilterFr) * 20000, // center frequency
-       //	200,
-       //	1);   // ripple dB
-       //float* channelData[2];
-       //channelData[0] = buffer.getWritePointer(0);
-       //channelData[1] = buffer.getWritePointer(1);
-       //f.process(numSamples, channelData);		
-   }
 }
 
 void sBMP4AudioProcessor::setFilterFr(float p_fFilterFr){
