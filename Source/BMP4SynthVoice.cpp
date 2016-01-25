@@ -63,6 +63,10 @@ Bmp4SynthVoice::Bmp4SynthVoice()
     }
 }
 
+void Bmp4SynthVoice::setProcessor(sBMP4AudioProcessor* p_processor) {
+	m_processor = p_processor;
+}
+
 void Bmp4SynthVoice::startNote(int midiNoteNumber, float velocity, SynthesiserSound* sound, int /*currentPitchWheelPosition*/)  {
     m_dCurrentAngle = 0.0;
 	m_dLfoCurAngle = 0.0;
@@ -72,7 +76,8 @@ void Bmp4SynthVoice::startNote(int midiNoteNumber, float velocity, SynthesiserSo
     double dNormalizedFreq = dFrequency / getSampleRate();
     m_dOmega = dNormalizedFreq * 2.0 * double_Pi;
 
-	double dLfoFrequency = 5.0;
+	JUCE_COMPILER_WARNING("this needs to be sommewhere else, to be dynamic");
+	double dLfoFrequency = m_processor->getLfoFr();
 	double dLfoNormalizedFreq = dLfoFrequency / getSampleRate();
 	m_dLfoOmega = dLfoNormalizedFreq * 2.0 * double_Pi;
 

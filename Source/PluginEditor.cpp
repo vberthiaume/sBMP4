@@ -31,6 +31,7 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor(sBMP4AudioProcessor& proces
     , m_oMidiKeyboard(processor.m_oKeyboardState, MidiKeyboardComponent::horizontalKeyboard)
     , m_oWaveLabel("", "wave")
     , m_oFilterLabel("", "LP filter")
+	, m_oLfoLabel("", "LFO")
     , m_oInfoLabel(String::empty)
     , m_oGainLabel("", "gain")
     , m_oDelayLabel("", "delay")
@@ -38,30 +39,33 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor(sBMP4AudioProcessor& proces
     , m_oFilterSlider("Filter")
     , m_oGainSlider("gain")
     , m_oDelaySlider("delay")
+	, m_oLfoSlider("LFO")
     , m_oSineImage("sine")
     , m_oSawImage("saw")
     , m_oTriangleImage("triangle")
     , m_oLogoImage("sBMP4")
 {
-    
     addSlider(&m_oWaveSlider	, 1.f/3);
-	addSlider(&m_oFilterSlider	, .01);    
+	addSlider(&m_oFilterSlider	, .01);
 	addSlider(&m_oGainSlider	, .01);
  	addSlider(&m_oDelaySlider	, .01);
+	addSlider(&m_oLfoSlider		, .01);
+	
 
-	JUCE_COMPILER_WARNING("path needs to make sense on mac, not be hard-coded")
+JUCE_COMPILER_WARNING("path needs to make sense on mac, not be hard-coded")
 		String strPrefix;
 #ifdef JUCE_LINUX
         strPrefix = "/home/vberthiaume/Documents/git/sBMP4/Source/DspFilters";
 #elif JUCE_MAC
+
 #elif JUCE_WINDOWS
 	strPrefix = "C:\\Users\\barth\\Documents\\git\\sBMP4\\icons\\";
 #endif
-	m_oSineImage.setImage(ImageFileFormat::loadFrom(File(strPrefix + "sine.png")));
-	m_oSawImage.setImage(ImageFileFormat::loadFrom(File(strPrefix + "saw.png")));
-	m_oSquareImage.setImage(ImageFileFormat::loadFrom(File(strPrefix + "square.png")));
-	m_oTriangleImage.setImage(ImageFileFormat::loadFrom(File(strPrefix + "triangle.png")));
-	m_oLogoImage.setImage(ImageFileFormat::loadFrom(File(strPrefix + "main.png")));
+	m_oSineImage.setImage(		ImageFileFormat::loadFrom(File(strPrefix + "sine.png")));
+	m_oSawImage.setImage(		ImageFileFormat::loadFrom(File(strPrefix + "saw.png")));
+	m_oSquareImage.setImage(	ImageFileFormat::loadFrom(File(strPrefix + "square.png")));
+	m_oTriangleImage.setImage(	ImageFileFormat::loadFrom(File(strPrefix + "triangle.png")));
+	m_oLogoImage.setImage(		ImageFileFormat::loadFrom(File(strPrefix + "main.png")));
 	
 	addAndMakeVisible(m_oSineImage);
 	addAndMakeVisible(m_oSawImage);
@@ -72,6 +76,7 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor(sBMP4AudioProcessor& proces
     // add some labels for the sliders
 	addLabel(&m_oWaveLabel);
 	addLabel(&m_oFilterLabel);
+	addLabel(&m_oLfoLabel);
 	addLabel(&m_oGainLabel);
 	addLabel(&m_oDelayLabel);
 
@@ -80,7 +85,7 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor(sBMP4AudioProcessor& proces
 
     // add the triangular m_pResizer component for the bottom-right of the UI
     addAndMakeVisible (m_pResizer = new ResizableCornerComponent (this, &m_oResizeLimits));
-    m_oResizeLimits.setSizeLimits (20+4*65+25, 150, 800, 300);
+    m_oResizeLimits.setSizeLimits (20+5*65+25, 150, 800, 300);
 
     // set our component's initial size to be the last one that was stored in the filter's settings
     setSize (processor.getDimensions().first, processor.getDimensions().second);
@@ -127,14 +132,17 @@ void sBMP4AudioProcessorEditor::resized() {
 	m_oTriangleImage.setBounds  (x + 7 * w / 10, y - 15, 20, 20);
 	m_oSawImage.setBounds       (x + 8 * w / 10, y + 25, 20, 20);
 
-    m_oFilterSlider.setBounds   (x + w, y,		w, sh);
-	m_oFilterLabel.setBounds	(x + w, y+1.5*wh,	w, wh);
-    
-	m_oGainSlider.setBounds(x + 2 * w, y, w, sh);
-	m_oGainLabel.setBounds(x + 2 * w, y + 1.5*wh, w, wh);
+	m_oLfoSlider.setBounds		(x + w, y, w, sh);
+	m_oLfoLabel.setBounds		(x + w, y + 1.5*wh, w, wh);
 
-	m_oDelaySlider.setBounds(x + 3 * w, y, w, sh);
-	m_oDelayLabel.setBounds(x + 3 * w, y + 1.5*wh, w, wh);
+    m_oFilterSlider.setBounds   (x + 2 * w, y,		w, sh);
+	m_oFilterLabel.setBounds	(x + 2 * w, y+1.5*wh,	w, wh);
+    
+	m_oGainSlider.setBounds		(x + 3 * w, y, w, sh);
+	m_oGainLabel.setBounds		(x + 3 * w, y + 1.5*wh, w, wh);
+
+	m_oDelaySlider.setBounds	(x + 4 * w, y, w, sh);
+	m_oDelayLabel.setBounds		(x + 4 * w, y + 1.5*wh, w, wh);
 
 	const int keyboardHeight = 70;
 
@@ -165,5 +173,8 @@ void sBMP4AudioProcessorEditor::sliderValueChanged (Slider* slider) {
         getProcessor().setParameterNotifyingHost (paramWave, (float) m_oWaveSlider.getValue());
 	} else if(slider == &m_oFilterSlider) {
 		getProcessor().setParameterNotifyingHost(paramFilterFr, (float)m_oFilterSlider.getValue());
+	} else if (slider == &m_oLfoSlider) {
+		getProcessor().setParameterNotifyingHost(paramLfoFr, (float)m_oLfoSlider.getValue());
 	}
+
 }

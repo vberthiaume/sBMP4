@@ -40,7 +40,6 @@ public:
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
-	//bool setPreferredBusArrangement(bool isInputBus, int busIndex, const AudioChannelSet& preferred) override;
     void updateSimpleFilter(double sampleRate);
 
     void releaseResources() override;
@@ -60,6 +59,8 @@ public:
     void setParameter (int index, float newValue) override;
     const String getParameterName (int index) override;
     const String getParameterText (int index) override;
+
+	float getLfoFr() { return m_fLfoFr*20; }
 
     const String getInputChannelName (int channelIndex) const override;
     const String getOutputChannelName (int channelIndex) const override;
@@ -92,7 +93,7 @@ private:
 
     void simplestLP(float* p_pfSamples, int p_iTotalSamples, std::vector<float> &p_fLookBackVec);
 
-    float m_fGain, m_fDelay, m_fWave, m_fFilterFr;
+    float m_fGain, m_fDelay, m_fWave, m_fFilterFr, m_fLfoFr;
 
     void setWaveType(float p_fWave);
 

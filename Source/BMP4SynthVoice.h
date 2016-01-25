@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "constants.h"
+#include "PluginProcessor.h"
 
 //==============================================================================
 //Synth sounds
@@ -86,6 +87,8 @@ public:
     virtual float getSample(double dTail);
 
     float getSampleWaveTable(double dTail);
+	
+	void setProcessor(sBMP4AudioProcessor* p_processor);
 
     float getSampleAdditiveSynthesis(double dTail);
 
@@ -111,6 +114,7 @@ protected:
     float fSquareTbl     [kTotalWaveFrames];
     float fTriangleTbl  [kTotalWaveFrames];
     float fSawtoothTbl  [kTotalWaveFrames];
+	sBMP4AudioProcessor* m_processor;
 };
 
 #endif //sBMP4_Sounds_h

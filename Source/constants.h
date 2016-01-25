@@ -38,6 +38,7 @@ enum Parameters{
     ,paramDelay
     ,paramWave
 	,paramFilterFr
+	,paramLfoFr
     ,paramTotalNum
 };
 
