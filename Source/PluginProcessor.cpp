@@ -30,9 +30,15 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+JUCE_COMPILER_WARNING("what is this for and why isn't it activated on windows?")
 #ifdef __WIN32 
     #include <windows.h>
 #endif
+
+//#ifndef USE_LFO
+//#define USE_LFO 1
+//#endif // !USE_LFO
+
 
 AudioProcessor* JUCE_CALLTYPE createPluginFilter();
 
@@ -65,35 +71,33 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 sBMP4AudioProcessor::~sBMP4AudioProcessor() {
 }
 
-void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
-{
+void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages) {
    const int numSamples = buffer.getNumSamples();
    if(s_bUseSimplestLp && m_iBufferSize != numSamples){
 		m_iBufferSize = numSamples;
 		setFilterFr(m_fFilterFr);	//just to update the lookback vector
 	}
 
-    // Now pass any incoming midi messages to our keyboard state object, and let it
-    // add messages to the buffer if the user is clicking on the on-screen keys
+    //Pass any incoming midi messages to our keyboard, which will add messages to the buffer keys are pressed
     m_oKeyboardState.processNextMidiBuffer (midiMessages, 0, numSamples, true);
 
-    // and now get the synth to process these midi events and generate its output.
+    //Process these midi events and generate the output audio
     m_oSynth.renderNextBlock (buffer, midiMessages, 0, numSamples);
 
 	int iDelayPosition = 0;
-	for (int iCurChannel = 0; iCurChannel < getNumOutputChannels(); ++iCurChannel){
-        
-        //-----GAIN/LFO
-        bool bLfoActive = false;
-        if(bLfoActive){
-            double dCurLfoValue = 1.;
-            double dLfoFr = 5;
-            dCurLfoValue = sin(m_dLfoCurAngle);
-            buffer.applyGain(iCurChannel, 0, buffer.getNumSamples(), dCurLfoValue*m_fGain);
-            m_dLfoCurAngle += dLfoFr * 2.0 * double_Pi;
-        } else {
-            buffer.applyGain(iCurChannel, 0, buffer.getNumSamples(), m_fGain);
-        }
+	for (int iCurChannel = 0; iCurChannel < getMainBusNumOutputChannels(); ++iCurChannel){
+
+		//-----GAIN/LFO
+#if USE_LFO
+		double dCurLfoValue = 1.;
+		double dLfoFr = 5;
+		dCurLfoValue = sin(m_dLfoCurAngle);
+		buffer.applyGain(iCurChannel, 0, buffer.getNumSamples(), dCurLfoValue*m_fGain);
+		m_dLfoCurAngle += dLfoFr * 2.0 * double_Pi;
+#else
+		buffer.applyGain(iCurChannel, 0, buffer.getNumSamples(), m_fGain);
+#endif
+
         float* channelData = buffer.getWritePointer (iCurChannel);
         
         //-----DELAY
@@ -110,12 +114,7 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 
         //-----FILTER
         if(s_bUseSimplestLp){
-            //only 2 channels supported for now
-            //for(iCurChannel = 0; iCurChannel < 2 /*getNumInputChannels()*/; ++iCurChannel) {
-                m_iCurChannel = iCurChannel;
-                float* channelData = buffer.getWritePointer(iCurChannel);
-                simplestLP(channelData, numSamples, m_oLookBackVec[iCurChannel]);
-            //}
+			simplestLP(channelData, numSamples, m_oLookBackVec[iCurChannel]);
         } 
     }
     m_iDelayPosition = iDelayPosition;
@@ -156,8 +155,7 @@ void sBMP4AudioProcessor::setFilterFr(float p_fFilterFr){
 }
 
 void sBMP4AudioProcessor::prepareToPlay(double sampleRate, int /*samplesPerBlock*/) {
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need..
+    // Use this method as the place to do any pre-playback initialisation that you need
     m_oSynth.setCurrentPlaybackSampleRate(sampleRate);
     if(!s_bUseSimplestLp){
         updateSimpleFilter(sampleRate);

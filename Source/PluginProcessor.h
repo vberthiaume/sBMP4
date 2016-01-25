@@ -106,7 +106,6 @@ private:
 
     Synthesiser m_oSynth;
     double m_dLfoCurAngle;
-    int m_iCurChannel;
 
     int m_iBufferSize;
     std::vector<float> m_oLookBackVec[2];
