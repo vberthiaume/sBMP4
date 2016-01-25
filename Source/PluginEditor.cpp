@@ -32,7 +32,6 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor(sBMP4AudioProcessor& proces
     , m_oWaveLabel("", "wave")
     , m_oFilterLabel("", "LP filter")
 	, m_oLfoLabel("", "LFO")
-    , m_oInfoLabel(String::empty)
     , m_oGainLabel("", "gain")
     , m_oDelayLabel("", "delay")
     , m_oWaveSlider("wave")
@@ -85,7 +84,8 @@ JUCE_COMPILER_WARNING("path needs to make sense on mac, not be hard-coded")
 
     // add the triangular m_pResizer component for the bottom-right of the UI
     addAndMakeVisible (m_pResizer = new ResizableCornerComponent (this, &m_oResizeLimits));
-    m_oResizeLimits.setSizeLimits (20+5*65+25, 150, 800, 300);
+    m_oResizeLimits.setSizeLimits (processor.getDimensions().first, processor.getDimensions().second, 
+								 2*processor.getDimensions().first, 2*processor.getDimensions().second);
 
     // set our component's initial size to be the last one that was stored in the filter's settings
     setSize (processor.getDimensions().first, processor.getDimensions().second);
@@ -121,8 +121,6 @@ void sBMP4AudioProcessorEditor::paint (Graphics& g)
 }
 
 void sBMP4AudioProcessorEditor::resized() {
-    //m_oInfoLabel.setBounds (10, 4, 400, 25);
-
     int x = 20, y = 25, w = 75, sh = 40, wh = 20;
     m_oWaveSlider.setBounds	    (x, y,		w, sh);
 	m_oWaveLabel.setBounds      (x, y + 1.5*wh, w, wh);
@@ -137,12 +135,12 @@ void sBMP4AudioProcessorEditor::resized() {
 
     m_oFilterSlider.setBounds   (x + 2 * w, y,		w, sh);
 	m_oFilterLabel.setBounds	(x + 2 * w, y+1.5*wh,	w, wh);
-    
-	m_oGainSlider.setBounds		(x + 3 * w, y, w, sh);
-	m_oGainLabel.setBounds		(x + 3 * w, y + 1.5*wh, w, wh);
 
-	m_oDelaySlider.setBounds	(x + 4 * w, y, w, sh);
-	m_oDelayLabel.setBounds		(x + 4 * w, y + 1.5*wh, w, wh);
+	m_oDelaySlider.setBounds(x + 3 * w, y, w, sh);
+	m_oDelayLabel.setBounds(x + 3 * w, y + 1.5*wh, w, wh);
+
+	m_oGainSlider.setBounds		(x + 4 * w, y, w, sh);
+	m_oGainLabel.setBounds		(x + 4 * w, y + 1.5*wh, w, wh);
 
 	const int keyboardHeight = 70;
 
