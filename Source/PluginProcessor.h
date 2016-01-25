@@ -40,7 +40,7 @@ public:
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
-
+	//bool setPreferredBusArrangement(bool isInputBus, int busIndex, const AudioChannelSet& preferred) override;
     void updateSimpleFilter(double sampleRate);
 
     void releaseResources() override;

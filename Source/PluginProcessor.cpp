@@ -51,6 +51,10 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 	,m_iBufferSize(100)	//totally arbitrary value
     ,m_dLfoCurAngle(0.)
 {
+	//add our own audio input, because otherwise there is just a ghost input channel that is always on...
+	busArrangement.inputBuses.clear();
+	busArrangement.inputBuses.add(AudioProcessorBus("Disabled input", AudioChannelSet::mono()));
+
     for(int iCurVox = 0; iCurVox < s_iNumberOfVoices; ++iCurVox){
         m_oSynth.addVoice(new Bmp4SynthVoice());
     }
@@ -146,6 +150,26 @@ void sBMP4AudioProcessor::prepareToPlay(double sampleRate, int /*samplesPerBlock
     m_oKeyboardState.reset();
     m_oDelayBuffer.clear();
 }
+
+//bool sBMP4AudioProcessor::setPreferredBusArrangement(bool isInputBus, int busIndex, const AudioChannelSet& preferred) {
+//	const int numChannels = preferred.size();
+//	const bool isMainBus = (busIndex == 0);
+//
+//	// do not allow disabling the main output bus
+//	if (isMainBus && preferred.isDisabled()) return false;
+//
+//	//disable audio input on main bus
+//	if (isMainBus && isInputBus) {
+//		
+//	}
+//
+//
+//	// only support mono or stereo (or disabling) buses
+//	if (numChannels > 2) return false;
+//
+//	// pass the call on to the base class
+//	return AudioProcessor::setPreferredBusArrangement(isInputBus, busIndex, preferred);
+//}
 
 void sBMP4AudioProcessor::updateSimpleFilter(double sampleRate) {
     float fMultiple = 1;   //the higher this is, the more linear and less curvy the exponential is
