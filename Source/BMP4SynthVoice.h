@@ -105,7 +105,7 @@ public:
 
 protected:
 	double m_dCurrentAngle, m_dOmega, m_dLevel, m_dTailOff;
-    double m_dLfoCurAngle;
+    double m_dLfoCurAngle, m_dLfoOmega;
     int m_iCurSound;
     float fSineTbl      [kTotalWaveFrames];
     float fSquareTbl     [kTotalWaveFrames];

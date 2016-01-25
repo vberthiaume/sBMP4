@@ -35,10 +35,6 @@ JUCE_COMPILER_WARNING("what is this for and why isn't it activated on windows?")
     #include <windows.h>
 #endif
 
-//#ifndef USE_LFO
-//#define USE_LFO 1
-//#endif // !USE_LFO
-
 
 AudioProcessor* JUCE_CALLTYPE createPluginFilter();
 

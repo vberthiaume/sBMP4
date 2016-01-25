@@ -28,9 +28,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Bmp4SynthVoice::Bmp4SynthVoice()
 	: m_dOmega(0.0)
+	, m_dLfoOmega(0.0)
 	, m_dTailOff(0.0)
     , m_iCurSound(soundSine)
-    , m_dLfoCurAngle(0.)
 {
     if (s_bUseWaveTables){
         JUCE_COMPILER_WARNING("use vectors and for range loop here!")
@@ -65,11 +65,17 @@ Bmp4SynthVoice::Bmp4SynthVoice()
 
 void Bmp4SynthVoice::startNote(int midiNoteNumber, float velocity, SynthesiserSound* sound, int /*currentPitchWheelPosition*/)  {
     m_dCurrentAngle = 0.0;
+	m_dLfoCurAngle = 0.0;
     m_dLevel = velocity * 0.15;
     m_dTailOff = 0.0;
     double dFrequency = MidiMessage::getMidiNoteInHertz(midiNoteNumber);
     double dNormalizedFreq = dFrequency / getSampleRate();
     m_dOmega = dNormalizedFreq * 2.0 * double_Pi;
+
+	double dLfoFrequency = 5.0;
+	double dLfoNormalizedFreq = dLfoFrequency / getSampleRate();
+	m_dLfoOmega = dLfoNormalizedFreq * 2.0 * double_Pi;
+
 
     if(dynamic_cast <SineWaveSound*> (getCurrentlyPlayingSound().get())){
         m_iCurSound = soundSine;
@@ -85,6 +91,7 @@ void Bmp4SynthVoice::renderNextBlock(AudioSampleBuffer& p_oOutputBuffer, int p_i
 	if (m_dOmega == 0.0) {
 		return;
 	}
+	//render all p_iTotalSamples
 	for (int iCurSample = 0; iCurSample < p_iTotalSamples; ++iCurSample) {
 		//this will be == 1 if we don't have a tail off or = m_dTailOff if we do
 		double dTailOffCopy = (m_dTailOff > 0) ? m_dTailOff : 1;
@@ -96,32 +103,32 @@ void Bmp4SynthVoice::renderNextBlock(AudioSampleBuffer& p_oOutputBuffer, int p_i
 			p_oOutputBuffer.addSample(i, p_iStartSample, fCurrentSample);
 		}
 		m_dCurrentAngle += m_dOmega;	//m_dOmega here is in radian (as it always is!)
+		m_dLfoCurAngle += m_dLfoOmega;
+
 		++p_iStartSample;
 		if (m_dTailOff > 0) {
 			m_dTailOff *= 0.99;
 			if (m_dTailOff <= 0.005) {
 				clearCurrentNote();
 				m_dOmega = 0.0;
+				m_dLfoOmega = .0;
 				break;
 			}
 		}
 	}
 }
+
 float Bmp4SynthVoice::getSample(double dTail) {
     if(s_bUseWaveTables){
         return getSampleWaveTable(dTail);
     } else {
-        bool bLfoActive = false;
-        if(bLfoActive){
-            double dCurLfoValue = 1.;
-            double dLfoFr = 5;
-            dCurLfoValue = sin(m_dLfoCurAngle);
-            
-            m_dLfoCurAngle += dLfoFr * 2.0 * double_Pi;
-            return dCurLfoValue*getSampleAdditiveSynthesis(dTail);
-        } else {
-			return getSampleAdditiveSynthesis(dTail);
-        }
+
+#if USE_LFO_IN_VOICE
+		double dCurLfoValue = sin(m_dLfoCurAngle);
+		return dCurLfoValue*getSampleAdditiveSynthesis(dTail);
+#else
+		return getSampleAdditiveSynthesis(dTail);
+#endif
     }
 }
 
@@ -203,6 +210,7 @@ void Bmp4SynthVoice::stopNote(float /*velocity*/, bool allowTailOff)  {
 		// we're being told to stop playing immediately, so reset everything..
 		clearCurrentNote();
 		m_dOmega = 0.0;
+		m_dLfoOmega = 0.0;
 	}
 }
 bool Bmp4SynthVoice::canPlaySound(SynthesiserSound* sound)  {

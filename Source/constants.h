@@ -24,6 +24,15 @@
 #ifndef sBMP4_Header_h
 #define sBMP4_Header_h
 
+ //#ifndef USE_LFO
+ //#define USE_LFO 1
+ //#endif
+
+#ifndef USE_LFO_IN_VOICE
+#define USE_LFO_IN_VOICE 1
+#endif
+
+
 enum Parameters{
      paramGain = 0
     ,paramDelay
