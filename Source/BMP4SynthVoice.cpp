@@ -124,16 +124,16 @@ void Bmp4SynthVoice::renderNextBlock(AudioSampleBuffer& p_oOutputBuffer, int p_i
 }
 
 float Bmp4SynthVoice::getSample(double dTail) {
+
+	double dCurLfoValue = 1.0;
+	if (m_processor->getLfoFr() > 0) {
+		dCurLfoValue = sin(m_dLfoCurAngle);
+	}
+
     if(s_bUseWaveTables){
         return getSampleWaveTable(dTail);
     } else {
-
-#if USE_LFO_IN_VOICE
-		double dCurLfoValue = sin(m_dLfoCurAngle);
 		return dCurLfoValue*getSampleAdditiveSynthesis(dTail);
-#else
-		return getSampleAdditiveSynthesis(dTail);
-#endif
     }
 }
 
