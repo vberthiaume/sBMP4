@@ -42,6 +42,7 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 , m_fQ(defaultQ)
 , m_iBufferSize(100)	//totally arbitrary value
 , m_dLfoCurAngle(0.)
+, m_fLfoAngle(0.)
 {
 	//add our own audio input, because otherwise there is just a ghost input channel that is always on...
 	busArrangement.inputBuses.clear();
@@ -95,6 +96,18 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 		//-----GAIN
 		buffer.applyGain(iCurChannel, 0, buffer.getNumSamples(), m_fGain);
 
+		/*double dLfoNormalizedFreq = m_fLfoFr / getSampleRate();
+		float fLfoOmega = dLfoNormalizedFreq * 2.0 * double_Pi;
+*/
+		//-----LFO
+		//float fLfoOmega = 2 * M_PI / (m_fLfoFr / m_oSynth.getSampleRate());
+		//m_fLfoAngle += fLfoOmega;
+		//if(m_fLfoAngle > 2 * M_PI){ 
+		//	m_fLfoAngle -= 2 * M_PI;
+		//}
+
+		
+
         float* channelData = buffer.getWritePointer (iCurChannel);
         
         //-----FILTER
@@ -111,6 +124,7 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 		iDelayPosition = m_iDelayPosition;
 		for (int i = 0; i < numSamples; ++i) {
 			const float in = channelData[i];
+			//channelData[i] *= abs(sin(m_fLfoAngle));
 			channelData[i] += delayData[iDelayPosition];
 			delayData[iDelayPosition] = (delayData[iDelayPosition] + in) * m_fDelay;
 			if (++iDelayPosition >= m_oDelayBuffer.getNumSamples()) {

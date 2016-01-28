@@ -38,7 +38,7 @@ const float defaultGain		= 1.0f;
 const float defaultDelay	= 0.0f;
 const float defaultWave		= 0.0f;
 const float defaultFilterFr = 0.0f;
-const float defaultLfoFr	= 0.0f;
+const float defaultLfoFr	= 2.0f;
 const float defaultQ		= 0.1f;
 const float minQ			= 0.01f;
 
