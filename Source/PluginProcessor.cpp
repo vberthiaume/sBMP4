@@ -154,7 +154,7 @@ void sBMP4AudioProcessor::updateSimpleFilter(double sampleRate) {
     //this is called setup, but really it's just setting some values. 
 	//float q = 5.f;
 #if	WIN32
-    m_simpleFilter.setup(sampleRate, fExpCutoffFr, m_fQ*10);
+	m_simpleFilter.setup(sampleRate, fExpCutoffFr, m_fQ*10);
 #endif
 }
 
@@ -222,9 +222,13 @@ void sBMP4AudioProcessor::setParameter(int index, float newValue)
     case paramGain:		m_fGain = newValue;		break;
     case paramDelay:    m_fDelay = newValue;	break;
     case paramWave:     setWaveType(newValue);  break;
-    case paramFilterFr: setFilterFr(newValue);  break;
-	case paramLfoFr:	m_fLfoFr = newValue;  break;
-	case paramQ:		m_fQ = newValue;  break;
+    case paramFilterFr: setFilterFr(newValue);	break;
+	case paramQ:		
+		m_fQ = newValue;
+		updateSimpleFilter(m_oSynth.getSampleRate());
+		break;
+	case paramLfoFr:	m_fLfoFr = newValue;	break;
+	
     default:            break;
     }
 }
