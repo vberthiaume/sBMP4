@@ -39,12 +39,11 @@ const float defaultDelay	= 0.0f;
 const float defaultWave		= 0.0f;
 const float defaultFilterFr = 0.0f;
 const float defaultLfoFr	= 0.0f;
-const float defaultQ		= 0.5f;
-
+const float defaultQ		= 0.1f;
+const float minQ			= 0.01f;
 
 const int   s_iSimpleFilterLF = 600;
 const int   s_iSimpleFilterHF = 20000;// 12000;
-
 const int   s_iNumberOfVoices = 5;
 
 #if	WIN32

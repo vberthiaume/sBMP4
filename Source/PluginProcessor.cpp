@@ -134,6 +134,14 @@ void sBMP4AudioProcessor::setFilterFr(float p_fFilterFr){
     }
 }
 
+void sBMP4AudioProcessor::setFilterQ(float p_fQ){
+	if(p_fQ < minQ){
+		p_fQ = minQ;
+	}
+	m_fQ = p_fQ;
+	updateSimpleFilter(m_oSynth.getSampleRate());
+}
+
 void sBMP4AudioProcessor::prepareToPlay(double sampleRate, int /*samplesPerBlock*/) {
     // Use this method as the place to do any pre-playback initialisation that you need
     m_oSynth.setCurrentPlaybackSampleRate(sampleRate);
@@ -146,6 +154,9 @@ void sBMP4AudioProcessor::prepareToPlay(double sampleRate, int /*samplesPerBlock
 
 
 void sBMP4AudioProcessor::updateSimpleFilter(double sampleRate) {
+	if (sampleRate == 0){
+		return;
+	}
     float fMultiple = 1;   //the higher this is, the more linear and less curvy the exponential is
     JUCE_COMPILER_WARNING("s_iSimpleFilterLF should be the currently played note... but this is hard" + 
              "to get because as far as I know, we can only access that from the voice, which is buried in m_oSynth")
@@ -162,7 +173,6 @@ JUCE_COMPILER_WARNING("need to put this in my audio library")
 void sBMP4AudioProcessor::simplestLP(float* p_pfSamples, int p_iTotalSamples, std::vector<float> &p_fLookBackVec){
 	int iTotalLookBack = p_fLookBackVec.size();
 	int iTotalAverage = iTotalLookBack+1;
-
 	float* output = new float[p_iTotalSamples]{};
 
 	int iCurSpl;
@@ -208,6 +218,8 @@ float sBMP4AudioProcessor::getParameter(int index)
 	case paramDelay:    return m_fDelay;
 	case paramWave:     return m_fWave;
 	case paramFilterFr: return m_fFilterFr;
+	case paramQ:		return m_fQ;
+	case paramLfoFr:	return m_fLfoFr;
 	default:            return 0.0f;
 	}
 }
@@ -222,13 +234,7 @@ void sBMP4AudioProcessor::setParameter(int index, float newValue)
     case paramDelay:    m_fDelay = newValue;	break;
     case paramWave:     setWaveType(newValue);  break;
     case paramFilterFr: setFilterFr(newValue);	break;
-	case paramQ:
-		if (newValue < .1){
-			newValue = .1;
-		}
-		m_fQ = newValue;
-		updateSimpleFilter(m_oSynth.getSampleRate());
-		break;
+	case paramQ:		setFilterQ(newValue);	break;
 	case paramLfoFr:	m_fLfoFr = newValue;	break;
 	
     default:            break;
@@ -267,6 +273,9 @@ float sBMP4AudioProcessor::getParameterDefaultValue(int index){
     case paramDelay:    return defaultDelay;
     case paramWave:     return defaultWave;
     case paramFilterFr: return defaultFilterFr;
+	case paramQ:		return defaultQ;
+	case paramLfoFr:	return defaultLfoFr;
+		
     default:            break;
     }
 
@@ -278,7 +287,9 @@ const String sBMP4AudioProcessor::getParameterName(int index){
 	case paramGain:     return "gain";
 	case paramDelay:    return "delay";
 	case paramWave:     return "wave";
-    case paramFilterFr: return "filter";
+	case paramFilterFr: return "filter";
+	case paramQ:		return "resonance";
+	case paramLfoFr:	return "lfoFr";
 	default:            break;
 	}
 	return String::empty;
@@ -314,6 +325,8 @@ void sBMP4AudioProcessor::getStateInformation (MemoryBlock& destData){
     xml.setAttribute ("delay", m_fDelay);
     xml.setAttribute ("wave", m_fWave);
     xml.setAttribute ("filter", m_fFilterFr);
+	xml.setAttribute ("m_fLfoFr", m_fLfoFr);
+	xml.setAttribute ("m_fQ", m_fQ);
 
     // then use this helper function to stuff it into the binary blob and return it..
     copyXmlToBinary (xml, destData);
@@ -336,8 +349,10 @@ void sBMP4AudioProcessor::setStateInformation (const void* data, int sizeInBytes
 
             m_fGain     = (float)xmlState->getDoubleAttribute("gain",   m_fGain);
             m_fDelay    = (float)xmlState->getDoubleAttribute("delay",  m_fDelay);
-            setWaveType((float)xmlState->getDoubleAttribute("wave",   m_fWave));
-            setFilterFr((float)xmlState->getDoubleAttribute("filter", m_fFilterFr));
+            setWaveType((float)xmlState->getDoubleAttribute("wave",		m_fWave));
+            setFilterFr((float)xmlState->getDoubleAttribute("filter",	m_fFilterFr));
+			m_fLfoFr = (float)xmlState->getDoubleAttribute("m_fLfoFr",  m_fLfoFr);
+			setFilterQ((float)xmlState->getDoubleAttribute("m_fQ",		m_fQ));
         }
     }
 }

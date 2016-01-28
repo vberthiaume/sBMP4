@@ -60,7 +60,7 @@ private:
         return static_cast<sBMP4AudioProcessor&> (processor);
     }
 
-	void addSlider(Slider* p_pSlider, const float &p_fIncrement);
+	void addSlider(Slider* p_pSlider, const float &p_fIncrement, int p_iLowerBound = 0., int p_iHigherBound = 1.);
 	void addLabel(Label * p_pLabel);
 };
 

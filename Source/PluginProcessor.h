@@ -99,6 +99,8 @@ private:
 
     void setFilterFr(float p_fFilterFr);
 
+	void setFilterQ(float p_fQ);
+
     std::pair<int, int> m_oLastDimensions;
 
     //==============================================================================

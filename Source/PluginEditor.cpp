@@ -46,12 +46,12 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor(sBMP4AudioProcessor& proces
     , m_oTriangleImage("triangle")
     , m_oLogoImage("sBMP4")
 {
-    addSlider(&m_oWaveSlider	, 1.f/3);
-	addSlider(&m_oLfoSlider		, .01);
-	addSlider(&m_oFilterSlider	, .01);
-	addSlider(&m_oQSlider		, .01);
- 	addSlider(&m_oDelaySlider	, .01);
-	addSlider(&m_oGainSlider	, .01);
+    addSlider(&m_oWaveSlider,	1.f/3);
+	addSlider(&m_oLfoSlider,	.01);
+	addSlider(&m_oFilterSlider, .01);
+	addSlider(&m_oQSlider,		.01, minQ);
+ 	addSlider(&m_oDelaySlider,	.01);
+	addSlider(&m_oGainSlider,	.01);
 
 	
 
@@ -102,14 +102,14 @@ sBMP4AudioProcessorEditor::~sBMP4AudioProcessorEditor()
 {
 }
 
-void sBMP4AudioProcessorEditor::addSlider(Slider* p_pSlider, const float &p_fIncrement){
+void sBMP4AudioProcessorEditor::addSlider(Slider* p_pSlider, const float &p_fIncrement, int p_iLowerBound, int p_iHigherBound){
 	addAndMakeVisible(*p_pSlider);
 	p_pSlider->setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
 	p_pSlider->setTextBoxStyle(Slider::NoTextBox, true, 0, 0);
 	p_pSlider->setColour(Slider::ColourIds::rotarySliderFillColourId, Colours::white);
 	p_pSlider->setColour(Slider::ColourIds::rotarySliderOutlineColourId, Colours::yellow);
 	p_pSlider->addListener(this);
-	p_pSlider->setRange(0.0, 1.0, p_fIncrement);
+	p_pSlider->setRange(p_iLowerBound, p_iHigherBound, p_fIncrement);
 }
 
 void sBMP4AudioProcessorEditor::addLabel(Label * p_pLabel){
@@ -176,10 +176,12 @@ void sBMP4AudioProcessorEditor::resized() {
 // This timer periodically checks whether any of the filter's parameters have changed...
 void sBMP4AudioProcessorEditor::timerCallback() {
     sBMP4AudioProcessor& ourProcessor = getProcessor();
-    m_oGainSlider  .setValue(ourProcessor.getParameter(paramGain),      dontSendNotification);
-    m_oDelaySlider .setValue(ourProcessor.getParameter(paramDelay),     dontSendNotification);
-    m_oWaveSlider  .setValue(ourProcessor.getParameter(paramWave),      dontSendNotification); 
-    m_oFilterSlider.setValue(ourProcessor.getParameter(paramFilterFr),  dontSendNotification);
+    m_oGainSlider	.setValue(ourProcessor.getParameter(paramGain),     dontSendNotification);
+    m_oDelaySlider	.setValue(ourProcessor.getParameter(paramDelay),    dontSendNotification);
+    m_oWaveSlider	.setValue(ourProcessor.getParameter(paramWave),     dontSendNotification); 
+    m_oFilterSlider	.setValue(ourProcessor.getParameter(paramFilterFr), dontSendNotification);
+	m_oQSlider		.setValue(ourProcessor.getParameter(paramQ),		dontSendNotification);
+	m_oLfoSlider	.setValue(ourProcessor.getParameter(paramLfoFr),	dontSendNotification);
 }
 
 // This is our Slider::Listener callback, when the user drags a slider.
