@@ -45,6 +45,7 @@ JUCE_COMPILER_WARNING("will need to delete this cur lfo angle")
 , m_dLfoCurAngle(0.)
 , m_fLfoAngle(0.)
 , m_fLfoOmega(0.)
+, m_bTurnLfoOff(false)
 {
 	//add our own audio input, because otherwise there is just a ghost input channel that is always on...
 	busArrangement.inputBuses.clear();
@@ -91,6 +92,7 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
     //Process these midi events and generate the output audio
     m_oSynth.renderNextBlock (buffer, midiMessages, 0, numSamples);
 
+
 	int iDelayPosition = 0;
 	//this loop is useless since we only have 1 output, but leave it for future expansion
 	for (int iCurChannel = 0; iCurChannel < getMainBusNumOutputChannels(); ++iCurChannel){
@@ -115,7 +117,16 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 		for (int i = 0; i < numSamples; ++i) {
 			const float in = channelData[i];
 			//----LFO
-			if (!m_bLfoOff){
+			
+			if(m_bTurnLfoOff && (m_fLfoAngle <= M_PI_2 +.5) && (m_fLfoAngle >= M_PI_2 -.5)){
+				DBG("TURNED OFF");
+				DBG(m_fLfoAngle);
+				bLfoIsOn = false;
+				m_bTurnLfoOff = false;
+				m_fLfoAngle = M_PI_2;
+				m_fLfoOmega = 0;
+			}
+			if (bLfoIsOn){
 				channelData[i] *= (sin(m_fLfoAngle) + 1) / 2;
 				m_fLfoAngle += m_fLfoOmega;
 				if(m_fLfoAngle > 2 * M_PI){
@@ -134,6 +145,17 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
     m_iDelayPosition = iDelayPosition;
 }
 
+void sBMP4AudioProcessor::setLfoFr(float p_fLfoFr){
+	if (p_fLfoFr == 0 && !m_bTurnLfoOff){
+		DBG("TURN IT OFF");
+		m_bTurnLfoOff = true;
+	} else {
+		bLfoIsOn = true;
+		m_fLfoFr = p_fLfoFr*k_dMaxLfoFr;
+		m_fLfoOmega = 2 * M_PI*m_fLfoFr / getSampleRate();		//dividing the frequency by the sample rate essentially gives us the frequency in samples
+	}
+}
+
 void sBMP4AudioProcessor::setFilterFr(float p_fFilterFr){
     m_fFilterFr = p_fFilterFr;
     if(s_bUseSimplestLp){
@@ -147,16 +169,6 @@ void sBMP4AudioProcessor::setFilterFr(float p_fFilterFr){
     }
 }
 
-void sBMP4AudioProcessor::setLfoFr(float p_fLfoFr){
-	if (p_fLfoFr == 0){
-		m_bLfoOff = true;
-	} else {
-		m_bLfoOff = false;
-	}
-	m_fLfoFr = p_fLfoFr*k_dMaxLfoFr;
-	m_fLfoOmega = 2*M_PI*m_fLfoFr/getSampleRate();		//dividing the frequency by the sample rate essentially gives us the frequency in samples
-}
-
 void sBMP4AudioProcessor::setFilterQ(float p_fQ){
 	if(p_fQ < minQ){
 		p_fQ = minQ;
@@ -166,11 +178,12 @@ void sBMP4AudioProcessor::setFilterQ(float p_fQ){
 }
 
 void sBMP4AudioProcessor::prepareToPlay(double sampleRate, int /*samplesPerBlock*/) {
-    // Use this method as the place to do any pre-playback initialisation that you need
     m_oSynth.setCurrentPlaybackSampleRate(sampleRate);
     if(!s_bUseSimplestLp){
         updateSimpleFilter(sampleRate);
     }
+	setLfoFr(m_fLfoFr);
+	setFilterFr(m_fFilterFr);
     m_oKeyboardState.reset();
     m_oDelayBuffer.clear();
 }
@@ -374,7 +387,7 @@ void sBMP4AudioProcessor::setStateInformation (const void* data, int sizeInBytes
             m_fDelay    = (float)xmlState->getDoubleAttribute("delay",  m_fDelay);
             setWaveType((float)xmlState->getDoubleAttribute("wave",		m_fWave));
             setFilterFr((float)xmlState->getDoubleAttribute("filter",	m_fFilterFr));
-			m_fLfoFr = (float)xmlState->getDoubleAttribute("m_fLfoFr",  m_fLfoFr);
+			setLfoFr((float)xmlState->getDoubleAttribute("m_fLfoFr",  m_fLfoFr));
 			setFilterQ((float)xmlState->getDoubleAttribute("m_fQ",		m_fQ));
         }
     }

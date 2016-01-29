@@ -95,7 +95,7 @@ private:
 
     float m_fGain, m_fDelay, m_fWave, m_fFilterFr, m_fLfoFr, m_fQ, m_fLfoAngle, m_fLfoOmega;
 
-	bool m_bLfoOff;
+	bool m_bTurnLfoOff, bLfoIsOn;
 
     void setWaveType(float p_fWave);
 
