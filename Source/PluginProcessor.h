@@ -26,6 +26,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "DspFilters/Dsp.h"
+#include "constants.h"
 
 //==============================================================================
 /**
@@ -60,8 +61,6 @@ public:
     const String getParameterName (int index) override;
     const String getParameterText (int index) override;
 
-	float getLfoFr() { return m_fLfoFr*20; }
-
     const String getInputChannelName (int channelIndex) const override;
     const String getOutputChannelName (int channelIndex) const override;
     bool isInputChannelStereoPair (int index) const override;
@@ -95,7 +94,7 @@ private:
 
     float m_fGain, m_fDelay, m_fWave, m_fFilterFr, m_fLfoFr, m_fQ, m_fLfoAngle, m_fLfoOmega;
 
-	bool m_bTurnLfoOff, m_bLfoIsOn;
+	bool m_bLfoIsOn;
 
     void setWaveType(float p_fWave);
 
@@ -103,7 +102,8 @@ private:
 
 	void setFilterQ(float p_fQ);
 
-	void setLfoFr(float p_fLfoFr);
+	void setLfoFr01(float p_fLfoFr);
+	float getLfoFr01();
 
     std::pair<int, int> m_oLastDimensions;
 
@@ -112,7 +112,6 @@ private:
     int m_iDelayPosition;
 
     Synthesiser m_oSynth;
-    double m_dLfoCurAngle;
 
     int m_iBufferSize;
     std::vector<float> m_oLookBackVec[2];

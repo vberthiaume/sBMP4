@@ -49,6 +49,7 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor(sBMP4AudioProcessor& proces
     addSlider(&m_oWaveSlider,	1.f/3);
 	addSlider(&m_oLfoSlider,	.01);
 	addSlider(&m_oFilterSlider, .01);
+	JUCE_COMPILER_WARNING("we need to use [0,1] inside editor")
 	addSlider(&m_oQSlider,		.01, minQ);
  	addSlider(&m_oDelaySlider,	.01);
 	addSlider(&m_oGainSlider,	.01);
@@ -181,7 +182,7 @@ void sBMP4AudioProcessorEditor::timerCallback() {
     m_oWaveSlider	.setValue(ourProcessor.getParameter(paramWave),     dontSendNotification); 
     m_oFilterSlider	.setValue(ourProcessor.getParameter(paramFilterFr), dontSendNotification);
 	m_oQSlider		.setValue(ourProcessor.getParameter(paramQ),		dontSendNotification);
-	//m_oLfoSlider	.setValue(ourProcessor.getParameter(paramLfoFr),	dontSendNotification);
+	m_oLfoSlider	.setValue(ourProcessor.getParameter(paramLfoFr),	dontSendNotification);
 }
 
 // This is our Slider::Listener callback, when the user drags a slider.

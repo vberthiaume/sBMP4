@@ -38,10 +38,11 @@ const float defaultGain		= 1.0f;
 const float defaultDelay	= 0.0f;
 const float defaultWave		= 0.0f;
 const float defaultFilterFr = 0.0f;
-const float defaultLfoFr	= 2.0f;
 const float defaultQ		= 0.1f;
 const float minQ			= 0.01f;
-const double k_dMaxLfoFr	= 1.;
+const double k_dMaxLfoFr	= 40.;
+const double k_dMinLfoFr	= .5;
+const float defaultLfoFr	= (2 - k_dMinLfoFr) / (k_dMaxLfoFr - k_dMinLfoFr);
 
 const int   s_iSimpleFilterLF = 600;
 const int   s_iSimpleFilterHF = 20000;// 12000;

@@ -28,7 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Bmp4SynthVoice::Bmp4SynthVoice()
 	: m_dOmega(0.0)
-	, m_dLfoOmega(0.0)
 	, m_dTailOff(0.0)
     , m_iCurSound(soundSine)
 {
@@ -69,18 +68,11 @@ void Bmp4SynthVoice::setProcessor(sBMP4AudioProcessor* p_processor) {
 
 void Bmp4SynthVoice::startNote(int midiNoteNumber, float velocity, SynthesiserSound* sound, int /*currentPitchWheelPosition*/)  {
     m_dCurrentAngle = 0.0;
-	m_dLfoCurAngle = 0.0;
     m_dLevel = velocity * 0.15;
     m_dTailOff = 0.0;
     double dFrequency = MidiMessage::getMidiNoteInHertz(midiNoteNumber);
     double dNormalizedFreq = dFrequency / getSampleRate();
     m_dOmega = dNormalizedFreq * 2.0 * double_Pi;
-
-	JUCE_COMPILER_WARNING("this needs to be sommewhere else, to be dynamic");
-	double dLfoFrequency = m_processor->getLfoFr();
-	double dLfoNormalizedFreq = dLfoFrequency / getSampleRate();
-	m_dLfoOmega = dLfoNormalizedFreq * 2.0 * double_Pi;
-
 
     if(dynamic_cast <SineWaveSound*> (getCurrentlyPlayingSound().get())){
         m_iCurSound = soundSine;
@@ -108,15 +100,12 @@ void Bmp4SynthVoice::renderNextBlock(AudioSampleBuffer& p_oOutputBuffer, int p_i
 			p_oOutputBuffer.addSample(i, p_iStartSample, fCurrentSample);
 		}
 		m_dCurrentAngle += m_dOmega;	//m_dOmega here is in radian (as it always is!)
-		m_dLfoCurAngle += m_dLfoOmega;
-
 		++p_iStartSample;
 		if (m_dTailOff > 0) {
 			m_dTailOff *= 0.99;
 			if (m_dTailOff <= 0.005) {
 				clearCurrentNote();
 				m_dOmega = 0.0;
-				m_dLfoOmega = .0;
 				break;
 			}
 		}
@@ -124,16 +113,10 @@ void Bmp4SynthVoice::renderNextBlock(AudioSampleBuffer& p_oOutputBuffer, int p_i
 }
 
 float Bmp4SynthVoice::getSample(double dTail) {
-
-	double dCurLfoValue = 1.0;
-	if (m_processor->getLfoFr() > 0) {
-		dCurLfoValue = sin(m_dLfoCurAngle);
-	}
-
     if(s_bUseWaveTables){
         return getSampleWaveTable(dTail);
     } else {
-		return getSampleAdditiveSynthesis(dTail);	//dCurLfoValue*getSampleAdditiveSynthesis(dTail);
+		return getSampleAdditiveSynthesis(dTail);
     }
 }
 
@@ -215,7 +198,6 @@ void Bmp4SynthVoice::stopNote(float /*velocity*/, bool allowTailOff)  {
 		// we're being told to stop playing immediately, so reset everything..
 		clearCurrentNote();
 		m_dOmega = 0.0;
-		m_dLfoOmega = 0.0;
 	}
 }
 bool Bmp4SynthVoice::canPlaySound(SynthesiserSound* sound)  {
