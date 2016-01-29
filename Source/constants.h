@@ -31,6 +31,7 @@ enum Parameters{
 	,paramFilterFr
 	,paramLfoFr
 	,paramQ
+	,paramLfoOn
     ,paramTotalNum
 };
 
@@ -43,6 +44,7 @@ const float minQ			= 0.01f;
 const double k_dMaxLfoFr	= 40.;
 const double k_dMinLfoFr	= .5;
 const float defaultLfoFr	= (2 - k_dMinLfoFr) / (k_dMaxLfoFr - k_dMinLfoFr);
+const float defaultLfoOn	= 0.;
 
 const int   s_iSimpleFilterLF = 600;
 const int   s_iSimpleFilterHF = 20000;// 12000;

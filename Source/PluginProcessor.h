@@ -79,7 +79,9 @@ public:
     void changeProgramName (int /*index*/, const String& /*newName*/) override  {}
     std::pair<int, int> getDimensions()                                         {return m_oLastDimensions;}
     void setDimensions(std::pair<int, int> p_oNewDimensions)                    {m_oLastDimensions = p_oNewDimensions;}
-
+	void setLfoOn(bool p_bLfoIsOn){	m_bLfoIsOn = p_bLfoIsOn;}
+	void setLfoOn(float p_fLfoIsOn){ (p_fLfoIsOn == 1.) ? m_bLfoIsOn = true : m_bLfoIsOn = false;}
+	bool getLfoOn() { return m_bLfoIsOn;}
     //==============================================================================
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;

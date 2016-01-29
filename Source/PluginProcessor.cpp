@@ -247,6 +247,7 @@ float sBMP4AudioProcessor::getParameter(int index)
 	case paramFilterFr: return m_fFilterFr;
 	case paramQ:		return m_fQ;
 	case paramLfoFr:	return getLfoFr01();
+	case paramLfoOn:	return getLfoOn();
 	default:            return 0.0f;
 	}
 }
@@ -263,6 +264,7 @@ void sBMP4AudioProcessor::setParameter(int index, float newValue)
     case paramFilterFr: setFilterFr(newValue);	break;
 	case paramQ:		setFilterQ(newValue);	break;
 	case paramLfoFr:	setLfoFr01(newValue);	break;
+	case paramLfoOn:	setLfoOn(newValue);	break;
 	
     default:            break;
     }
@@ -302,7 +304,7 @@ float sBMP4AudioProcessor::getParameterDefaultValue(int index){
     case paramFilterFr: return defaultFilterFr;
 	case paramQ:		return defaultQ;
 	case paramLfoFr:	return defaultLfoFr;
-		
+	case paramLfoOn:	return defaultLfoOn;
     default:            break;
     }
 
@@ -316,7 +318,8 @@ const String sBMP4AudioProcessor::getParameterName(int index){
 	case paramWave:     return "wave";
 	case paramFilterFr: return "filter";
 	case paramQ:		return "resonance";
-	case paramLfoFr:	return "lfoFr";
+	case paramLfoFr:	return "lfo_Fr";
+	case paramLfoOn:	return "lfo_On";
 	default:            break;
 	}
 	return String::empty;
@@ -354,6 +357,7 @@ void sBMP4AudioProcessor::getStateInformation (MemoryBlock& destData){
     xml.setAttribute ("filter", m_fFilterFr);
 	xml.setAttribute ("m_fLfoFr", getLfoFr01());
 	xml.setAttribute ("m_fQ", m_fQ);
+	xml.setAttribute ("m_bLfoIsOn", m_bLfoIsOn);
 
     // then use this helper function to stuff it into the binary blob and return it..
     copyXmlToBinary (xml, destData);
@@ -380,6 +384,7 @@ void sBMP4AudioProcessor::setStateInformation (const void* data, int sizeInBytes
             setFilterFr((float)xmlState->getDoubleAttribute("filter",	m_fFilterFr));
 			setLfoFr01((float)xmlState->getDoubleAttribute("m_fLfoFr",  getLfoFr01()));
 			setFilterQ((float)xmlState->getDoubleAttribute("m_fQ",		m_fQ));
+			setLfoOn(xmlState->getBoolAttribute("m_bLfoIsOn",			m_bLfoIsOn));
         }
     }
 }

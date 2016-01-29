@@ -31,9 +31,11 @@
 //==============================================================================
 /** This is the editor component that our filter will display.
 */
-class sBMP4AudioProcessorEditor  : public AudioProcessorEditor,
-                                            public SliderListener,
-                                            public Timer
+class sBMP4AudioProcessorEditor
+	: public AudioProcessorEditor
+	, public SliderListener
+	, public ButtonListener
+	, public Timer
 {
 public:
     sBMP4AudioProcessorEditor (sBMP4AudioProcessor&);
@@ -44,11 +46,13 @@ public:
     void paint (Graphics&) override;
     void resized() override;
     void sliderValueChanged (Slider*) override;
+	void buttonClicked(Button*) override;
 
 private:
     MidiKeyboardComponent m_oMidiKeyboard;
 	Label m_oWaveLabel, m_oFilterLabel, m_oGainLabel, m_oDelayLabel, m_oLfoLabel, m_oQLabel;
 	Slider m_oWaveSlider, m_oFilterSlider, m_oGainSlider, m_oDelaySlider, m_oLfoSlider, m_oQSlider;
+	ToggleButton m_oLfoTogBut;
 	ImageComponent m_oSineImage, m_oSawImage, m_oSquareImage, m_oTriangleImage, m_oLogoImage;
     ScopedPointer<ResizableCornerComponent> m_pResizer;
     ComponentBoundsConstrainer m_oResizeLimits;
@@ -62,6 +66,7 @@ private:
 
 	void addSlider(Slider* p_pSlider, const float &p_fIncrement, int p_iLowerBound = 0., int p_iHigherBound = 1.);
 	void addLabel(Label * p_pLabel);
+	void addToggleButton(ToggleButton* p_pTogButton);
 };
 
 

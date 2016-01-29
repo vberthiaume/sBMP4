@@ -54,7 +54,7 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor(sBMP4AudioProcessor& proces
  	addSlider(&m_oDelaySlider,	.01);
 	addSlider(&m_oGainSlider,	.01);
 
-	
+	addToggleButton(&m_oLfoTogBut); 
 
 JUCE_COMPILER_WARNING("path needs to make sense on mac, not be hard-coded")
 		String strPrefix;
@@ -85,7 +85,6 @@ JUCE_COMPILER_WARNING("path needs to make sense on mac, not be hard-coded")
 	addLabel(&m_oGainLabel);
 	addLabel(&m_oDelayLabel);
 
-    // add the midi keyboard component..
     addAndMakeVisible (m_oMidiKeyboard);
 
     // add the triangular m_pResizer component for the bottom-right of the UI
@@ -103,6 +102,7 @@ sBMP4AudioProcessorEditor::~sBMP4AudioProcessorEditor()
 {
 }
 
+JUCE_COMPILER_WARNING("will need to remove last 2 args here when no longer needed")
 void sBMP4AudioProcessorEditor::addSlider(Slider* p_pSlider, const float &p_fIncrement, int p_iLowerBound, int p_iHigherBound){
 	addAndMakeVisible(*p_pSlider);
 	p_pSlider->setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
@@ -120,6 +120,12 @@ void sBMP4AudioProcessorEditor::addLabel(Label * p_pLabel){
 	addAndMakeVisible(p_pLabel);
 }
 
+void sBMP4AudioProcessorEditor::addToggleButton(ToggleButton* p_pTogButton){
+	p_pTogButton->setColour(Label::textColourId, Colours::yellow);
+	p_pTogButton->addListener(this);
+	addAndMakeVisible(p_pTogButton);
+}
+
 //==============================================================================
 void sBMP4AudioProcessorEditor::paint (Graphics& g)
 {
@@ -128,6 +134,7 @@ void sBMP4AudioProcessorEditor::paint (Graphics& g)
 
 void sBMP4AudioProcessorEditor::resized() {
     int x = s_iXMargin, y = s_iYMargin, iCurCol = 0, iCurRow = 0;
+	int iTogButSize = 25;
 
     m_oWaveSlider.setBounds	    (x, y,		s_iSliderWidth, s_iSliderHeight);
 	m_oWaveLabel.setBounds      (x, y + 1.5*s_iLabelHeight, s_iSliderWidth, s_iLabelHeight);
@@ -141,7 +148,7 @@ void sBMP4AudioProcessorEditor::resized() {
 
 	m_oLfoSlider.setBounds		(x + iCurCol * s_iSliderWidth, y + iCurRow * (s_iSliderHeight + s_iLabelHeight), s_iSliderWidth, s_iSliderHeight);
 	m_oLfoLabel.setBounds		(x + iCurCol * s_iSliderWidth, y + iCurRow * (s_iSliderHeight + 2.5*s_iLabelHeight), s_iSliderWidth, s_iLabelHeight);
-
+	m_oLfoTogBut.setBounds		(x, y + iCurRow * (s_iSliderHeight + s_iLabelHeight) + iTogButSize, iTogButSize, iTogButSize);
 	--iCurRow;
 	++iCurCol;
 
@@ -183,6 +190,7 @@ void sBMP4AudioProcessorEditor::timerCallback() {
     m_oFilterSlider	.setValue(ourProcessor.getParameter(paramFilterFr), dontSendNotification);
 	m_oQSlider		.setValue(ourProcessor.getParameter(paramQ),		dontSendNotification);
 	m_oLfoSlider	.setValue(ourProcessor.getParameter(paramLfoFr),	dontSendNotification);
+	m_oLfoTogBut	.setToggleState(ourProcessor.getParameter(paramLfoOn), dontSendNotification);
 }
 
 // This is our Slider::Listener callback, when the user drags a slider.
@@ -201,4 +209,9 @@ void sBMP4AudioProcessorEditor::sliderValueChanged (Slider* slider) {
 		getProcessor().setParameterNotifyingHost(paramQ, (float)m_oQSlider.getValue());
 	}
 
+}
+void sBMP4AudioProcessorEditor::buttonClicked(Button* p_pButtonClicked){
+	if (p_pButtonClicked == &m_oLfoTogBut){
+		getProcessor().setParameterNotifyingHost(paramLfoFr, m_oLfoTogBut.getToggleState());
+	}
 }
