@@ -115,10 +115,12 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 		for (int i = 0; i < numSamples; ++i) {
 			const float in = channelData[i];
 			//----LFO
-			channelData[i] *= (sin(m_fLfoAngle)+1) / 2;
-			m_fLfoAngle += m_fLfoOmega;
-			if(m_fLfoAngle > 2 * M_PI){
-				m_fLfoAngle -= 2 * M_PI;
+			if (!m_bLfoOff){
+				channelData[i] *= (sin(m_fLfoAngle) + 1) / 2;
+				m_fLfoAngle += m_fLfoOmega;
+				if(m_fLfoAngle > 2 * M_PI){
+					m_fLfoAngle -= 2 * M_PI;
+				}
 			}
 			
 			//----DELAY
@@ -146,6 +148,11 @@ void sBMP4AudioProcessor::setFilterFr(float p_fFilterFr){
 }
 
 void sBMP4AudioProcessor::setLfoFr(float p_fLfoFr){
+	if (p_fLfoFr == 0){
+		m_bLfoOff = true;
+	} else {
+		m_bLfoOff = false;
+	}
 	m_fLfoFr = p_fLfoFr*k_dMaxLfoFr;
 	m_fLfoOmega = 2*M_PI*m_fLfoFr/getSampleRate();		//dividing the frequency by the sample rate essentially gives us the frequency in samples
 }

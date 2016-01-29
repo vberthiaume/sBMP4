@@ -95,6 +95,8 @@ private:
 
     float m_fGain, m_fDelay, m_fWave, m_fFilterFr, m_fLfoFr, m_fQ, m_fLfoAngle, m_fLfoOmega;
 
+	bool m_bLfoOff;
+
     void setWaveType(float p_fWave);
 
     void setFilterFr(float p_fFilterFr);
