@@ -147,7 +147,7 @@ void sBMP4AudioProcessorEditor::resized() {
 	++iCurRow;
 
 	m_oLfoSlider.setBounds		(x + iCurCol * s_iSliderWidth, y + iCurRow * (s_iSliderHeight + s_iLabelHeight), s_iSliderWidth, s_iSliderHeight);
-	m_oLfoLabel.setBounds		(x + iCurCol * s_iSliderWidth, y + iCurRow * (s_iSliderHeight + 2.5*s_iLabelHeight), s_iSliderWidth, s_iLabelHeight);
+	m_oLfoLabel.setBounds		(x + iCurCol * s_iSliderWidth+iTogButSize, y + iCurRow * (s_iSliderHeight + 2.5*s_iLabelHeight), s_iSliderWidth-(2*iTogButSize), s_iLabelHeight);
 	m_oLfoTogBut.setBounds		(x, y + iCurRow * (s_iSliderHeight + s_iLabelHeight) + iTogButSize, iTogButSize, iTogButSize);
 	--iCurRow;
 	++iCurCol;
