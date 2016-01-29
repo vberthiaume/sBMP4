@@ -46,6 +46,7 @@ JUCE_COMPILER_WARNING("will need to delete this cur lfo angle")
 , m_fLfoAngle(0.)
 , m_fLfoOmega(0.)
 , m_bTurnLfoOff(false)
+, m_bLfoIsOn(false)
 {
 	//add our own audio input, because otherwise there is just a ghost input channel that is always on...
 	busArrangement.inputBuses.clear();
@@ -118,20 +119,22 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 			const float in = channelData[i];
 			//----LFO
 			
-			if(m_bTurnLfoOff && (m_fLfoAngle <= M_PI_2 +.5) && (m_fLfoAngle >= M_PI_2 -.5)){
+			if(m_bTurnLfoOff && (m_fLfoAngle <= M_PI_2 +.001) && (m_fLfoAngle >= M_PI_2 -.001)){
 				DBG("TURNED OFF");
 				DBG(m_fLfoAngle);
-				bLfoIsOn = false;
+				m_bLfoIsOn = false;
 				m_bTurnLfoOff = false;
+				m_fLfoFr = 0;
 				m_fLfoAngle = M_PI_2;
 				m_fLfoOmega = 0;
 			}
-			if (bLfoIsOn){
+			if (m_bLfoIsOn){
 				channelData[i] *= (sin(m_fLfoAngle) + 1) / 2;
-				m_fLfoAngle += m_fLfoOmega;
-				if(m_fLfoAngle > 2 * M_PI){
-					m_fLfoAngle -= 2 * M_PI;
-				}
+			}
+			JUCE_COMPILER_WARNING("on the first note on after all notes are off, this angle should be reset to 0")
+			m_fLfoAngle += m_fLfoOmega;
+			if(m_fLfoAngle > 2 * M_PI){
+				m_fLfoAngle -= 2 * M_PI;
 			}
 			
 			//----DELAY
@@ -146,14 +149,16 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 }
 
 void sBMP4AudioProcessor::setLfoFr(float p_fLfoFr){
+	MessageManagerLock lock;	//to prevent editor from refreshing and thus changing this again
 	if (p_fLfoFr == 0 && !m_bTurnLfoOff){
 		DBG("TURN IT OFF");
 		m_bTurnLfoOff = true;
+		p_fLfoFr = 5;
 	} else {
-		bLfoIsOn = true;
-		m_fLfoFr = p_fLfoFr*k_dMaxLfoFr;
-		m_fLfoOmega = 2 * M_PI*m_fLfoFr / getSampleRate();		//dividing the frequency by the sample rate essentially gives us the frequency in samples
+		m_bLfoIsOn = true;	//initialized to false in constructor, but likely to be set to true here, from a call in prepare to play
 	}
+	m_fLfoFr = p_fLfoFr*k_dMaxLfoFr;
+	m_fLfoOmega = 2 * M_PI*m_fLfoFr / getSampleRate();		//dividing the frequency by the sample rate essentially gives us the frequency in samples
 }
 
 void sBMP4AudioProcessor::setFilterFr(float p_fFilterFr){

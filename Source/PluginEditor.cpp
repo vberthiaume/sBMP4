@@ -181,7 +181,7 @@ void sBMP4AudioProcessorEditor::timerCallback() {
     m_oWaveSlider	.setValue(ourProcessor.getParameter(paramWave),     dontSendNotification); 
     m_oFilterSlider	.setValue(ourProcessor.getParameter(paramFilterFr), dontSendNotification);
 	m_oQSlider		.setValue(ourProcessor.getParameter(paramQ),		dontSendNotification);
-	m_oLfoSlider	.setValue(ourProcessor.getParameter(paramLfoFr),	dontSendNotification);
+	//m_oLfoSlider	.setValue(ourProcessor.getParameter(paramLfoFr),	dontSendNotification);
 }
 
 // This is our Slider::Listener callback, when the user drags a slider.
