@@ -235,7 +235,7 @@ float sBMP4AudioProcessor::getParameter(int index)
 	case paramWave:     return m_fWave;
 	case paramFilterFr: return m_fFilterFr;
 	case paramQ:		return m_fQ;
-	case paramLfoFr:	return m_fLfoFr;
+	case paramLfoFr:	return m_fLfoFr/k_dMaxLfoFr;
 	default:            return 0.0f;
 	}
 }
