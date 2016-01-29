@@ -133,7 +133,7 @@ float Bmp4SynthVoice::getSample(double dTail) {
     if(s_bUseWaveTables){
         return getSampleWaveTable(dTail);
     } else {
-		return dCurLfoValue*getSampleAdditiveSynthesis(dTail);
+		return getSampleAdditiveSynthesis(dTail);	//dCurLfoValue*getSampleAdditiveSynthesis(dTail);
     }
 }
 
