@@ -146,7 +146,7 @@ void sBMP4AudioProcessor::setFilterFr(float p_fFilterFr){
 }
 
 void sBMP4AudioProcessor::setLfoFr(float p_fLfoFr){
-	m_fLfoFr = p_fLfoFr;
+	m_fLfoFr = p_fLfoFr*k_dMaxLfoFr;
 	m_fLfoOmega = 2*M_PI*m_fLfoFr/getSampleRate();		//dividing the frequency by the sample rate essentially gives us the frequency in samples
 }
 
