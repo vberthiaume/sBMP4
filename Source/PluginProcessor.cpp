@@ -60,7 +60,7 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 
     setWaveType(defaultWave);
 	setFilterFr(defaultFilterFr);
-	setLfoFr01(defaultLfoFr);
+	setLfoFr01(k_fDefaultLfoFr01);
     if(s_bUseSimplestLp){
         for(int iCurChannel = 0; iCurChannel < 2; ++iCurChannel){
             m_oLookBackVec[iCurChannel] = std::vector<float>(100, 0.f);
@@ -136,15 +136,15 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 }
 
 //the argument to this will be [0, 1], which we need to convert to [kmin, kmax]
-void sBMP4AudioProcessor::setLfoFr01(float p_fLfoFr){
-	m_fLfoFr = p_fLfoFr*(k_dMaxLfoFr - k_dMinLfoFr) + k_dMinLfoFr; ;
-	m_fLfoOmega = 2 * M_PI*m_fLfoFr / getSampleRate();		//dividing the frequency by the sample rate essentially gives us the frequency in samples
+void sBMP4AudioProcessor::setLfoFr01(float p_fLfoFr01){
+	m_fLfoFrHr = convert01ToHr(p_fLfoFr01, k_fMinLfoFr, k_fMaxLfoFr);
+	m_fLfoOmega = 2 * M_PI*m_fLfoFrHr / getSampleRate();		//dividing the frequency by the sample rate essentially gives us the frequency in samples
 }
 
 
-//m_fLfoFr is stored internally as [kmin, kmax], and we need here to return something [0, 1]
+//m_fLfoFrHr is stored internally as [kmin, kmax], and we need here to return something [0, 1]
 float sBMP4AudioProcessor::getLfoFr01() {
-	return (m_fLfoFr - k_dMinLfoFr) / (k_dMaxLfoFr - k_dMinLfoFr);
+	return convertHrTo01(m_fLfoFrHr, k_fMinLfoFr, k_fMaxLfoFr);
 }
 
 void sBMP4AudioProcessor::setFilterFr(float p_fFilterFr){
@@ -264,7 +264,7 @@ void sBMP4AudioProcessor::setParameter(int index, float newValue)
     case paramFilterFr: setFilterFr(newValue);	break;
 	case paramQ:		setFilterQ(newValue);	break;
 	case paramLfoFr:	setLfoFr01(newValue);	break;
-	case paramLfoOn:	setLfoOn(newValue);	break;
+	case paramLfoOn:	setLfoOn(newValue);		break;
 	
     default:            break;
     }
@@ -297,30 +297,30 @@ void sBMP4AudioProcessor::setWaveType(float p_fWave){
 }
 
 float sBMP4AudioProcessor::getParameterDefaultValue(int index){
-    switch(index){
-    case paramGain:     return defaultGain;
-    case paramDelay:    return defaultDelay;
-    case paramWave:     return defaultWave;
-    case paramFilterFr: return defaultFilterFr;
-	case paramQ:		return defaultQ;
-	case paramLfoFr:	return defaultLfoFr;
-	case paramLfoOn:	return defaultLfoOn;
-    default:            break;
-    }
+	switch(index){
+		case paramGain:     return defaultGain;
+		case paramDelay:    return defaultDelay;
+		case paramWave:     return defaultWave;
+		case paramFilterFr: return defaultFilterFr;
+		case paramQ:		return defaultQ;
+		case paramLfoFr:	return k_fDefaultLfoFr01;
+		case paramLfoOn:	return k_fDefaultLfoOn;
+		default:            break;
+	}
 
     return 0.0f;
 }
 
 const String sBMP4AudioProcessor::getParameterName(int index){
 	switch(index){
-	case paramGain:     return "gain";
-	case paramDelay:    return "delay";
-	case paramWave:     return "wave";
-	case paramFilterFr: return "filter";
-	case paramQ:		return "resonance";
-	case paramLfoFr:	return "lfo_Fr";
-	case paramLfoOn:	return "lfo_On";
-	default:            break;
+		case paramGain:     return "gain";
+		case paramDelay:    return "delay";
+		case paramWave:     return "wave";
+		case paramFilterFr: return "filter";
+		case paramQ:		return "resonance";
+		case paramLfoFr:	return "lfo_Fr";
+		case paramLfoOn:	return "lfo_On";
+		default:            break;
 	}
 	return String::empty;
 }
@@ -355,7 +355,7 @@ void sBMP4AudioProcessor::getStateInformation (MemoryBlock& destData){
     xml.setAttribute ("delay", m_fDelay);
     xml.setAttribute ("wave", m_fWave);
     xml.setAttribute ("filter", m_fFilterFr);
-	xml.setAttribute ("m_fLfoFr", getLfoFr01());
+	xml.setAttribute ("m_fLfoFrHr", getLfoFr01());
 	xml.setAttribute ("m_fQ", m_fQ);
 	xml.setAttribute ("m_bLfoIsOn", m_bLfoIsOn);
 
@@ -382,7 +382,7 @@ void sBMP4AudioProcessor::setStateInformation (const void* data, int sizeInBytes
             m_fDelay    = (float)xmlState->getDoubleAttribute("delay",  m_fDelay);
             setWaveType((float)xmlState->getDoubleAttribute("wave",		m_fWave));
             setFilterFr((float)xmlState->getDoubleAttribute("filter",	m_fFilterFr));
-			setLfoFr01((float)xmlState->getDoubleAttribute("m_fLfoFr",  getLfoFr01()));
+			setLfoFr01((float)xmlState->getDoubleAttribute("m_fLfoFrHr",  getLfoFr01()));
 			setFilterQ((float)xmlState->getDoubleAttribute("m_fQ",		m_fQ));
 			setLfoOn(xmlState->getBoolAttribute("m_bLfoIsOn",			m_bLfoIsOn));
         }

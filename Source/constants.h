@@ -24,11 +24,18 @@
 #ifndef sBMP4_Header_h
 #define sBMP4_Header_h
 
-//convert p_tValue01 from range [0,1] to human-readable range [p_tMinHR, p_tMaxHR]
+//convert p_tValue01 from range [0,1] to human-readable range [p_tMinHr, p_tMaxHr]
 template <typename T>
-static T convert01toHR (T const& p_tValue01, T const& p_tMinHR, T const& p_tMaxHR) { 
-    return ; 
+static T const& convert01ToHr (T const& p_tValue01, T const& p_tMinHr, T const& p_tMaxHr) { 
+    return p_tValue01*(p_tMaxHr-p_tMinHr) + p_tMinHr; 
 } 
+
+//convert p_tValue01 from human-readable range [p_tMinHr, p_tMaxHr] to range [0,1] 
+template <typename T>
+static T const& convertHrTo01 (T const& p_tValueHr, T const& p_tMinHr, T const& p_tMaxHr) { 
+    return (p_tValueHr - p_tMinHr) / (p_tMaxHr-p_tMinHr); 
+} 
+
 
 enum Parameters{
      paramGain = 0
@@ -41,22 +48,23 @@ enum Parameters{
     ,paramTotalNum
 };
 
-const float defaultGain		= 1.0f;
-const float defaultDelay	= 0.0f;
-const float defaultWave		= 0.0f;
+const float defaultGain			= 1.0f;
+const float defaultDelay		= 0.0f;
+const float defaultWave			= 0.0f;
 
 //----FILTER FR
-const float defaultFilterFr = 0.0f;
+const float defaultFilterFr		= 0.0f;
 
 //----FILTER Q
-const float defaultQ		= 0.1f;
-const float minQ			= 0.01f;
+const float defaultQ			= 0.1f;
+const float minQ				= 0.01f;
 
 //----LFO
-const double k_dMaxLfoFr	= 40.;
-const double k_dMinLfoFr	= .5;
-const float defaultLfoFr	= (2 - k_dMinLfoFr) / (k_dMaxLfoFr - k_dMinLfoFr);
-const float defaultLfoOn	= 0.;
+const float k_fMaxLfoFr			= 40.f;
+const float k_fMinLfoFr			= 0.5f;
+const float k_fDefaultLfoFrHr	= 2.;
+const float k_fDefaultLfoFr01	= convertHrTo01(k_fDefaultLfoFrHr, k_fMinLfoFr, k_fMaxLfoFr);
+const float k_fDefaultLfoOn		= 0.;
 
 const int   s_iSimpleFilterLF = 600;
 const int   s_iSimpleFilterHF = 20000;// 12000;
