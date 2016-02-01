@@ -31,35 +31,42 @@ Bmp4SynthVoice::Bmp4SynthVoice()
 	, m_dTailOff(0.0)
     , m_iCurSound(soundSine)
 {
-    if (s_bUseWaveTables){
-        JUCE_COMPILER_WARNING("use vectors and for range loop here!")
-        for(size_t iCurFrame = 0; iCurFrame < kTotalWaveFrames; ++iCurFrame) {
-            //formula for sine is sin(2 * PI * f/fs * t)
-            fSineTbl[iCurFrame] = static_cast<float>(sin(2. * M_PI * iCurFrame / kTotalWaveFrames));
-            
-            JUCE_COMPILER_WARNING("could use lambdas for those?")
-            //square:
-            double dCurrentSample = 0.0;
-            for(int iCurK = 0; iCurK < 50; ++iCurK){
-                dCurrentSample += sin(m_dCurrentAngle * (2 * iCurK + 1)) / (2 * iCurK + 1);
-            }
-            fSquareTbl[iCurFrame] = static_cast<float> (dCurrentSample * .75);  //this .75 factor is to make this wave appear as loud at the other ones
+	if(s_bUseWaveTables){
+		double dCurAngle = 0.;
+		JUCE_COMPILER_WARNING("SAMPLERATE CANNOT BE HARDCODED");
+		double dOmega = 2. * M_PI * k_fWavTableFr / k_fSampleRate;
+		for(size_t iCurFrame = 0; iCurFrame < k_iTotalWaveFrames; ++iCurFrame){
 
-            //triangle
-            dCurrentSample = 0.0;
-            for(int iCurK = 0; iCurK < 5; ++iCurK){
-                dCurrentSample += sin(M_PI*(2 * iCurK + 1) / 2) * (sin(m_dCurrentAngle * (2 * iCurK + 1)) / pow((2 * iCurK + 1), 2));
-            }
-            fTriangleTbl[iCurFrame] = static_cast<float> ((8 / pow(M_PI, 2)) * dCurrentSample);
-
-            //sawtooth
-            dCurrentSample = 0.0;
-            for(int iCurK = 1; iCurK < 50; ++iCurK){
-                dCurrentSample += sin((2. * M_PI * iCurFrame / kTotalWaveFrames) * iCurK) / iCurK;
-            }
-            fSawtoothTbl[iCurFrame] = static_cast<float>(1/2 - (1 / M_PI) * dCurrentSample);
-        }
-    }
+			//formula for sine is sin(2 * PI * f/fs * t)
+			m_dSineTbl[iCurFrame] = sin(dCurAngle);
+			//square
+			{
+				double dCurSample = 0.0;
+				for(int iCurK = 0; iCurK < 100; ++iCurK){
+					dCurSample += sin(dCurAngle * (2 * iCurK + 1)) / (2 * iCurK + 1);
+				}
+				m_dSquareTbl[iCurFrame] = dCurSample * .75;  //this .75 factor is to make this wave appear as loud at the other ones
+			}
+			//triangle
+			{
+				double dCurSample = 0.0;
+				for(int iCurK = 0; iCurK < 100; ++iCurK){
+					dCurSample += sin(M_PI*(2 * iCurK + 1) / 2) * (sin(dCurAngle * (2 * iCurK + 1)) / pow((2 * iCurK + 1), 2));
+				}
+				m_dTriangleTbl[iCurFrame] = (8 / pow(M_PI, 2)) * dCurSample;
+			}
+			//sawtooth
+			{
+				double dCurSample = 0.0;
+				for(int iCurK = 1; iCurK < 100; ++iCurK){
+					dCurSample += sin(dCurAngle * iCurK) / iCurK;
+				}
+				m_dSawtoothTbl[iCurFrame] = 1 / 2 - (1 / M_PI) * dCurSample;
+				DBG(m_dSawtoothTbl[iCurFrame]);
+			}
+			dCurAngle += dOmega;
+		}
+	}
 }
 
 void Bmp4SynthVoice::setProcessor(sBMP4AudioProcessor* p_processor) {
@@ -124,7 +131,7 @@ float Bmp4SynthVoice::getSampleWaveTable(double dTail) {
     switch(m_iCurSound) {
     case soundSine:
     default:
-        JUCE_COMPILER_WARNING("FOR NOW, THIS FUNCTION IS EXACTLY LIKE ADDITIVE SYNTHESIS. ok, so the problem here is converting this m_dCurrentAngle into some kind of index for fSineTbl")
+        JUCE_COMPILER_WARNING("FOR NOW, THIS FUNCTION IS EXACTLY LIKE ADDITIVE SYNTHESIS. ok, so the problem here is converting this m_dCurrentAngle into some kind of index for m_dSineTbl")
             return (float)(sin(m_dCurrentAngle) * m_dLevel * dTail);
         break;
     case soundSquare:{
@@ -155,38 +162,38 @@ float Bmp4SynthVoice::getSampleWaveTable(double dTail) {
     }
 }
 
-float Bmp4SynthVoice::getSampleAdditiveSynthesis(double dTail) {
-    switch(m_iCurSound) {
-    case soundSine:
-    default:
-        return (float)(sin(m_dCurrentAngle) * m_dLevel * dTail);
-        break;
-    case soundSquare:{
-        double dCurrentSample = 0.0;
-        for(int iCurK = 0; iCurK < 25; ++iCurK){
-            dCurrentSample += sin(m_dCurrentAngle * (2 * iCurK + 1)) / (2 * iCurK + 1);
-        }
-        double dReducingFactor = .75; //this is to make this wave appear as loud at the other ones
-        return static_cast<float> (dCurrentSample * m_dLevel * dTail * dReducingFactor);
-        break;
-    }
-    case soundTriangle:{
-        float fCurrentSample = 0.0;
-        for(int iCurK = 0; iCurK < 5; ++iCurK){
-            fCurrentSample += static_cast<float> (sin(M_PI*(2 * iCurK + 1) / 2) * (sin(m_dCurrentAngle * (2 * iCurK + 1)) / pow((2 * iCurK + 1), 2)));
-        }
-        return (8 / pow(M_PI, 2)) * fCurrentSample * m_dLevel * dTail;
-        break;
-    }
-    case soundSawtooth:{
-        float fCurrentSample = 0.0;
-        for(int iCurK = 1; iCurK < 20; ++iCurK){
-            fCurrentSample += static_cast<float> (sin(m_dCurrentAngle * iCurK) / iCurK);
-        }
-        return 1/2 - (1 / M_PI) * fCurrentSample * m_dLevel * dTail;
-        break;
-    }
-    }
+float Bmp4SynthVoice::getSampleAdditiveSynthesis(double dTail){
+	switch(m_iCurSound){
+		case soundSine:
+		default:
+			return (float)(sin(m_dCurrentAngle) * m_dLevel * dTail);
+			break;
+		case soundSquare:{
+			double dCurrentSample = 0.0;
+			for(int iCurK = 0; iCurK < 25; ++iCurK){
+				dCurrentSample += sin(m_dCurrentAngle * (2 * iCurK + 1)) / (2 * iCurK + 1);
+			}
+			double dReducingFactor = .75; //this is to make this wave appear as loud at the other ones
+			return static_cast<float> (dCurrentSample * m_dLevel * dTail * dReducingFactor);
+			break;
+		}
+		case soundTriangle:{
+			float fCurrentSample = 0.0;
+			for(int iCurK = 0; iCurK < 5; ++iCurK){
+				fCurrentSample += static_cast<float> (sin(M_PI*(2 * iCurK + 1) / 2) * (sin(m_dCurrentAngle * (2 * iCurK + 1)) / pow((2 * iCurK + 1), 2)));
+			}
+			return (8 / pow(M_PI, 2)) * fCurrentSample * m_dLevel * dTail;
+			break;
+		}
+		case soundSawtooth:{
+			float fCurrentSample = 0.0;
+			for(int iCurK = 1; iCurK < 20; ++iCurK){
+				fCurrentSample += static_cast<float> (sin(m_dCurrentAngle * iCurK) / iCurK);
+			}
+			return 1 / 2 - (1 / M_PI) * fCurrentSample * m_dLevel * dTail;
+			break;
+		}
+	}
 }
 void Bmp4SynthVoice::stopNote(float /*velocity*/, bool allowTailOff)  {
 

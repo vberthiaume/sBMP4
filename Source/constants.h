@@ -36,7 +36,6 @@ static T const& convertHrTo01 (T const& p_tValueHr, T const& p_tMinHr, T const& 
     return (p_tValueHr - p_tMinHr) / (p_tMaxHr-p_tMinHr); 
 } 
 
-
 enum Parameters{
      paramGain = 0
     ,paramDelay
@@ -84,8 +83,15 @@ static bool areSame(double a, double b){
 }
 
 //-------stuff related to wavetables
-const bool  s_bUseWaveTables = false;
-const int   kTotalWaveFrames = 4096;		// samples (must be power of 2 here)
+const bool  s_bUseWaveTables = true;
+
+JUCE_COMPILER_WARNING("Reasoning for finding k_iTotalWaveFrames. THIS CANNOT BE HARDCODED");
+float k_fWavTableFr = 100.f;	//frequency of wave stored in wave table
+
+//float fT = 1/fFr;	//period
+float k_fSampleRate = 44100;	
+//k_iTotalWaveFrames = k_fSampleRate * fT = 441;
+const int   k_iTotalWaveFrames = 441;
 
 //-------stuff related to size of things
 const int s_iXMargin		= 20;
