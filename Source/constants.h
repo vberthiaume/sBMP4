@@ -24,6 +24,12 @@
 #ifndef sBMP4_Header_h
 #define sBMP4_Header_h
 
+//convert p_tValue01 from range [0,1] to human-readable range [p_tMinHR, p_tMaxHR]
+template <typename T>
+static T convert01toHR (T const& p_tValue01, T const& p_tMinHR, T const& p_tMaxHR) { 
+    return ; 
+} 
+
 enum Parameters{
      paramGain = 0
     ,paramDelay
@@ -38,9 +44,15 @@ enum Parameters{
 const float defaultGain		= 1.0f;
 const float defaultDelay	= 0.0f;
 const float defaultWave		= 0.0f;
+
+//----FILTER FR
 const float defaultFilterFr = 0.0f;
+
+//----FILTER Q
 const float defaultQ		= 0.1f;
 const float minQ			= 0.01f;
+
+//----LFO
 const double k_dMaxLfoFr	= 40.;
 const double k_dMinLfoFr	= .5;
 const float defaultLfoFr	= (2 - k_dMinLfoFr) / (k_dMaxLfoFr - k_dMinLfoFr);
