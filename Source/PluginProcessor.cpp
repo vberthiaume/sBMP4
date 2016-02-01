@@ -38,7 +38,7 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 , m_oDelayBuffer(2, 12000)
 , m_fGain(defaultGain)
 , m_fDelay(defaultDelay)
-, m_fQ(defaultQ)
+, m_fQHr(k_fDefaultQHr)
 , m_iBufferSize(100)	//totally arbitrary value
 , m_fLfoAngle(0.)
 , m_fLfoOmega(0.)
@@ -160,12 +160,12 @@ void sBMP4AudioProcessor::setFilterFr(float p_fFilterFr){
     }
 }
 
-void sBMP4AudioProcessor::setFilterQ(float p_fQ){
-	if(p_fQ < minQ){
-		p_fQ = minQ;
-	}
-	m_fQ = p_fQ;
-	updateSimpleFilter(m_oSynth.getSampleRate());
+float sBMP4AudioProcessor::getFilterQ01(){
+	return convertHrTo01(m_fQHr, k_fMinQHr, k_fMaxQHr);
+}
+
+void sBMP4AudioProcessor::setFilterQ01(float p_fQ01){
+	m_fQHr = convert01ToHr(p_fQ01, k_fMinQHr, k_fMaxQHr);
 }
 
 void sBMP4AudioProcessor::prepareToPlay(double sampleRate, int /*samplesPerBlock*/) {
@@ -189,9 +189,9 @@ void sBMP4AudioProcessor::updateSimpleFilter(double sampleRate) {
              "to get because as far as I know, we can only access that from the voice, which is buried in m_oSynth")
     float fExpCutoffFr = fMultiple * exp(log(s_iSimpleFilterHF * m_fFilterFr/fMultiple)) + s_iSimpleFilterLF;
     
-    //this is called setup, but really it's just setting some values. 
 #if	WIN32
-	m_simpleFilter.setup(sampleRate, fExpCutoffFr, m_fQ*15);
+	//this is called setup, but really it's just setting some values. 
+	m_simpleFilter.setup(sampleRate, fExpCutoffFr, m_fQHr);
 #endif
 }
 
@@ -245,7 +245,7 @@ float sBMP4AudioProcessor::getParameter(int index)
 	case paramDelay:    return m_fDelay;
 	case paramWave:     return m_fWave;
 	case paramFilterFr: return m_fFilterFr;
-	case paramQ:		return m_fQ;
+	case paramQ:		return getFilterQ01();
 	case paramLfoFr:	return getLfoFr01();
 	case paramLfoOn:	return getLfoOn();
 	default:            return 0.0f;
@@ -262,7 +262,7 @@ void sBMP4AudioProcessor::setParameter(int index, float newValue)
     case paramDelay:    m_fDelay = newValue;	break;
     case paramWave:     setWaveType(newValue);  break;
     case paramFilterFr: setFilterFr(newValue);	break;
-	case paramQ:		setFilterQ(newValue);	break;
+	case paramQ:		setFilterQ01(newValue);	break;
 	case paramLfoFr:	setLfoFr01(newValue);	break;
 	case paramLfoOn:	setLfoOn(newValue);		break;
 	
@@ -302,7 +302,7 @@ float sBMP4AudioProcessor::getParameterDefaultValue(int index){
 		case paramDelay:    return defaultDelay;
 		case paramWave:     return defaultWave;
 		case paramFilterFr: return defaultFilterFr;
-		case paramQ:		return defaultQ;
+		case paramQ:		return k_fDefaultQ01;
 		case paramLfoFr:	return k_fDefaultLfoFr01;
 		case paramLfoOn:	return k_fDefaultLfoOn;
 		default:            break;
@@ -348,43 +348,32 @@ void sBMP4AudioProcessor::reset(){
 //==============================================================================
 void sBMP4AudioProcessor::getStateInformation (MemoryBlock& destData){
     XmlElement xml ("SBMP4SETTINGS");
-
-    xml.setAttribute ("uiWidth", m_oLastDimensions.first);
-    xml.setAttribute ("uiHeight", m_oLastDimensions.second);
-    xml.setAttribute ("gain", m_fGain);
-    xml.setAttribute ("delay", m_fDelay);
-    xml.setAttribute ("wave", m_fWave);
-    xml.setAttribute ("filter", m_fFilterFr);
+    xml.setAttribute ("uiWidth",	m_oLastDimensions.first);
+    xml.setAttribute ("uiHeight",	m_oLastDimensions.second);
+    xml.setAttribute ("gain",		m_fGain);
+    xml.setAttribute ("delay",		m_fDelay);
+    xml.setAttribute ("wave",		m_fWave);
+    xml.setAttribute ("filter",		m_fFilterFr);
 	xml.setAttribute ("m_fLfoFrHr", getLfoFr01());
-	xml.setAttribute ("m_fQ", m_fQ);
+	xml.setAttribute ("m_fQHr",		getFilterQ01());
 	xml.setAttribute ("m_bLfoIsOn", m_bLfoIsOn);
 
-    // then use this helper function to stuff it into the binary blob and return it..
     copyXmlToBinary (xml, destData);
 }
 
-void sBMP4AudioProcessor::setStateInformation (const void* data, int sizeInBytes)
-{
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
-
-    // This getXmlFromBinary() helper function retrieves our XML from the binary blob..
+void sBMP4AudioProcessor::setStateInformation (const void* data, int sizeInBytes){
     ScopedPointer<XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
-
     if (xmlState != nullptr) {
-        // make sure that it's actually our type of XML object..
         if (xmlState->hasTagName ("SBMP4SETTINGS")) {
-            // ok, now pull out our parameters..
-            m_oLastDimensions.first  = xmlState->getIntAttribute ("uiWidth", m_oLastDimensions.first);
-            m_oLastDimensions.second = xmlState->getIntAttribute ("uiHeight", m_oLastDimensions.second);
-
-            m_fGain     = (float)xmlState->getDoubleAttribute("gain",   m_fGain);
-            m_fDelay    = (float)xmlState->getDoubleAttribute("delay",  m_fDelay);
-            setWaveType((float)xmlState->getDoubleAttribute("wave",		m_fWave));
-            setFilterFr((float)xmlState->getDoubleAttribute("filter",	m_fFilterFr));
-			setLfoFr01((float)xmlState->getDoubleAttribute("m_fLfoFrHr",  getLfoFr01()));
-			setFilterQ((float)xmlState->getDoubleAttribute("m_fQ",		m_fQ));
-			setLfoOn(xmlState->getBoolAttribute("m_bLfoIsOn",			m_bLfoIsOn));
+            m_oLastDimensions.first  =	xmlState->getIntAttribute(		"uiWidth",		m_oLastDimensions.first);
+            m_oLastDimensions.second =	xmlState->getIntAttribute(		"uiHeight",		m_oLastDimensions.second);
+            m_fGain = (float)			xmlState->getDoubleAttribute(	"gain",			m_fGain);
+            m_fDelay = (float)			xmlState->getDoubleAttribute(	"delay",		m_fDelay);
+            setWaveType((float)			xmlState->getDoubleAttribute(	"wave",			m_fWave));
+            setFilterFr((float)			xmlState->getDoubleAttribute(	"filter",		m_fFilterFr));
+			setLfoFr01((float)			xmlState->getDoubleAttribute(	"m_fLfoFrHr",	getLfoFr01()));
+			setFilterQ01((float)		xmlState->getDoubleAttribute(	"m_fQHr",		getFilterQ01()));
+			setLfoOn(					xmlState->getBoolAttribute(		"m_bLfoIsOn",	m_bLfoIsOn));
         }
     }
 }

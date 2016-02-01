@@ -59,12 +59,11 @@ private:
 
     AudioPlayHead::CurrentPositionInfo m_oLastDisplayedPosition;
 
-    sBMP4AudioProcessor& getProcessor() const
-    {
+    sBMP4AudioProcessor& getProcessor() const{
         return static_cast<sBMP4AudioProcessor&> (processor);
     }
 
-	void addSlider(Slider* p_pSlider, const float &p_fIncrement, int p_iLowerBound = 0., int p_iHigherBound = 1.);
+	void addSlider(Slider* p_pSlider, const float &p_fIncrement);
 	void addLabel(Label * p_pLabel);
 	void addToggleButton(ToggleButton* p_pTogButton);
 };

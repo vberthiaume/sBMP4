@@ -94,7 +94,7 @@ private:
 
     void simplestLP(float* p_pfSamples, int p_iTotalSamples, std::vector<float> &p_fLookBackVec);
 
-    float m_fGain, m_fDelay, m_fWave, m_fFilterFr, m_fLfoFrHr, m_fQ, m_fLfoAngle, m_fLfoOmega;
+    float m_fGain, m_fDelay, m_fWave, m_fFilterFr, m_fLfoFrHr, m_fQHr, m_fLfoAngle, m_fLfoOmega;
 
 	bool m_bLfoIsOn;
 
@@ -102,7 +102,8 @@ private:
 
     void setFilterFr(float p_fFilterFr);
 
-	void setFilterQ(float p_fQ);
+	void setFilterQ01(float p_fQ);
+	float getFilterQ01();
 
 	void setLfoFr01(float p_fLfoFr);
 	float getLfoFr01();

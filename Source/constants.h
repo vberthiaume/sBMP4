@@ -56,14 +56,17 @@ const float defaultWave			= 0.0f;
 const float defaultFilterFr		= 0.0f;
 
 //----FILTER Q
-const float defaultQ			= 0.1f;
-const float minQ				= 0.01f;
+const float k_fMinQHr			= 0.01f;
+const float k_fMaxQHr			= 20.f;
+const float k_fDefaultQHr		= 5.f;
+const float k_fDefaultQ01		= convertHrTo01(k_fDefaultQHr, k_fMinQHr, k_fMaxQHr);
 
 //----LFO
-const float k_fMaxLfoFr			= 40.f;
 const float k_fMinLfoFr			= 0.5f;
+const float k_fMaxLfoFr			= 40.f;
 const float k_fDefaultLfoFrHr	= 2.;
 const float k_fDefaultLfoFr01	= convertHrTo01(k_fDefaultLfoFrHr, k_fMinLfoFr, k_fMaxLfoFr);
+
 const float k_fDefaultLfoOn		= 0.;
 
 const int   s_iSimpleFilterLF = 600;

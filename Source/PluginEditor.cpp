@@ -50,7 +50,7 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor(sBMP4AudioProcessor& proces
 	addSlider(&m_oLfoSlider,	.01);
 	addSlider(&m_oFilterSlider, .01);
 	JUCE_COMPILER_WARNING("we need to use [0,1] inside editor")
-	addSlider(&m_oQSlider,		.01, minQ);
+	addSlider(&m_oQSlider,		.01);
  	addSlider(&m_oDelaySlider,	.01);
 	addSlider(&m_oGainSlider,	.01);
 
@@ -103,14 +103,14 @@ sBMP4AudioProcessorEditor::~sBMP4AudioProcessorEditor()
 }
 
 JUCE_COMPILER_WARNING("will need to remove last 2 args here when no longer needed")
-void sBMP4AudioProcessorEditor::addSlider(Slider* p_pSlider, const float &p_fIncrement, int p_iLowerBound, int p_iHigherBound){
+void sBMP4AudioProcessorEditor::addSlider(Slider* p_pSlider, const float &p_fIncrement){
 	addAndMakeVisible(*p_pSlider);
 	p_pSlider->setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
 	p_pSlider->setTextBoxStyle(Slider::NoTextBox, true, 0, 0);
 	p_pSlider->setColour(Slider::ColourIds::rotarySliderFillColourId, Colours::white);
 	p_pSlider->setColour(Slider::ColourIds::rotarySliderOutlineColourId, Colours::yellow);
 	p_pSlider->addListener(this);
-	p_pSlider->setRange(p_iLowerBound, p_iHigherBound, p_fIncrement);
+	p_pSlider->setRange(0., 1., p_fIncrement);
 }
 
 void sBMP4AudioProcessorEditor::addLabel(Label * p_pLabel){
