@@ -111,9 +111,11 @@
         <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
                        isDebug="1" optimisation="1" targetName="sBMP4_Win32" libraryPath="C:\Users\barth\Documents\git\sBMP4\lib\Win32Debug"/>
         <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="0" optimisation="3" targetName="sBMP4_Win32" libraryPath="C:\Users\barth\Documents\git\sBMP4\lib\Win32Release"/>
+                       isDebug="0" optimisation="3" targetName="sBMP4_Win32" libraryPath="C:\Users\barth\Documents\git\sBMP4\lib\Win32Release"
+                       useRuntimeLibDLL="0"/>
         <CONFIGURATION name="Release_x64" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
-                       targetName="sBMP4_Win64" optimisation="3" libraryPath="C:\Users\barth\Documents\git\sBMP4\lib\x64Release"/>
+                       targetName="sBMP4_Win64" optimisation="3" libraryPath="C:\Users\barth\Documents\git\sBMP4\lib\x64Release"
+                       useRuntimeLibDLL="0"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_video" path="../../juce"/>
