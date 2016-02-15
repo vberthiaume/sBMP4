@@ -49,13 +49,13 @@
   </PropertyGroup>
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">sBMP4_Win32</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">sBMP4</TargetName>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</GenerateManifest>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(LibraryPath);C:\Users\barth\Documents\git\sBMP4\lib\Win32Debug</LibraryPath>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">sBMP4_Win32</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">sBMP4</TargetName>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</GenerateManifest>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(LibraryPath);C:\Users\barth\Documents\git\sBMP4\lib\Win32Release</LibraryPath>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release_x64|x64'">sBMP4_Win64</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release_x64|x64'">sBMP4</TargetName>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release_x64|x64'">true</GenerateManifest>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release_x64|x64'">$(LibraryPath);C:\Users\barth\Documents\git\sBMP4\lib\x64Release</LibraryPath>
     <PlatformToolset>v140</PlatformToolset>
@@ -87,11 +87,11 @@
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
-      <OutputFile>$(OutDir)\sBMP4_Win32.dll</OutputFile>
+      <OutputFile>$(OutDir)\sBMP4.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreSpecificDefaultLibraries>libcmt.lib; msvcrt.lib;;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>$(IntDir)\sBMP4_Win32.pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>$(IntDir)\sBMP4.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
@@ -102,7 +102,7 @@
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <OutputFile>$(IntDir)\sBMP4_Win32.bsc</OutputFile>
+      <OutputFile>$(IntDir)\sBMP4.bsc</OutputFile>
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -131,11 +131,11 @@
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
-      <OutputFile>$(OutDir)\sBMP4_Win32.dll</OutputFile>
+      <OutputFile>$(OutDir)\sBMP4.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>false</GenerateDebugInformation>
-      <ProgramDatabaseFile>$(IntDir)\sBMP4_Win32.pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>$(IntDir)\sBMP4.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
       <OptimizeReferences>true</OptimizeReferences>
@@ -147,7 +147,7 @@
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <OutputFile>$(IntDir)\sBMP4_Win32.bsc</OutputFile>
+      <OutputFile>$(IntDir)\sBMP4.bsc</OutputFile>
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_x64|x64'">
@@ -176,11 +176,11 @@
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
-      <OutputFile>$(OutDir)\sBMP4_Win64.dll</OutputFile>
+      <OutputFile>$(OutDir)\sBMP4.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>false</GenerateDebugInformation>
-      <ProgramDatabaseFile>$(IntDir)\sBMP4_Win64.pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>$(IntDir)\sBMP4.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -191,7 +191,7 @@
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <OutputFile>$(IntDir)\sBMP4_Win64.bsc</OutputFile>
+      <OutputFile>$(IntDir)\sBMP4.bsc</OutputFile>
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>

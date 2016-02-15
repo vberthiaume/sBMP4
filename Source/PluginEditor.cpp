@@ -216,4 +216,5 @@ void sBMP4AudioProcessorEditor::buttonClicked(Button* p_pButtonClicked){
 		//getProcessor().setParameterNotifyingHost(paramLfoFr, m_oLfoTogBut.getToggleState());
 		getProcessor().setLfoOn(m_oLfoTogBut.getToggleState());
 	}
+	m_oMidiKeyboard.grabKeyboardFocus();
 }
