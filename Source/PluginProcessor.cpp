@@ -166,6 +166,7 @@ float sBMP4AudioProcessor::getFilterQ01(){
 
 void sBMP4AudioProcessor::setFilterQ01(float p_fQ01){
 	m_fQHr = convert01ToHr(p_fQ01, k_fMinQHr, k_fMaxQHr);
+	updateSimpleFilter(m_oSynth.getSampleRate());
 }
 
 void sBMP4AudioProcessor::prepareToPlay(double sampleRate, int /*samplesPerBlock*/) {

@@ -205,7 +205,6 @@ void sBMP4AudioProcessorEditor::sliderValueChanged (Slider* slider) {
 }
 void sBMP4AudioProcessorEditor::buttonClicked(Button* p_pButtonClicked){
 	if (p_pButtonClicked == &m_oLfoTogBut){
-		//getProcessor().setParameterNotifyingHost(paramLfoFr, m_oLfoTogBut.getToggleState());
 		getProcessor().setLfoOn(m_oLfoTogBut.getToggleState());
 	}
 	m_oMidiKeyboard.grabKeyboardFocus();
