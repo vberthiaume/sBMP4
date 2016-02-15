@@ -11,6 +11,14 @@
               pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="4.1.0"
               companyName="BMP4" pluginIsMidiEffectPlugin="0">
   <MAINGROUP id="L2BB6f" name="sBMP4">
+    <GROUP id="{94C3447F-085C-F828-0CBA-6DD6B83F439C}" name="icons">
+      <FILE id="zF9tTG" name="noise.png" compile="0" resource="1" file="icons/noise.png"/>
+      <FILE id="Jyf6HM" name="saw.png" compile="0" resource="1" file="icons/saw.png"/>
+      <FILE id="vHAsJZ" name="sine.png" compile="0" resource="1" file="icons/sine.png"/>
+      <FILE id="velvOC" name="square.png" compile="0" resource="1" file="icons/square.png"/>
+      <FILE id="fW129u" name="triangle.png" compile="0" resource="1" file="icons/triangle.png"/>
+      <FILE id="NHWqXt" name="main.png" compile="0" resource="1" file="icons/main.png"/>
+    </GROUP>
     <GROUP id="{39E19610-035A-894F-49C7-807C24EA4071}" name="Source">
       <GROUP id="{F37C226D-BAD0-2B33-3039-51C452AA40C4}" name="DspFilters">
         <FILE id="n5KYwY" name="Bessel.h" compile="0" resource="0" file="Source/DspFilters/Bessel.h"/>

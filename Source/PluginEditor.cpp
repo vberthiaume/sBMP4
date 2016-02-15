@@ -56,20 +56,12 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor(sBMP4AudioProcessor& proces
 
 	addToggleButton(&m_oLfoTogBut); 
 
-JUCE_COMPILER_WARNING("path needs to make sense on mac, not be hard-coded")
-		String strPrefix;
-#ifdef JUCE_LINUX
-        strPrefix = "/home/vberthiaume/Documents/git/sBMP4/Source/DspFilters";
-#elif JUCE_MAC
-
-#elif JUCE_WINDOWS
-	strPrefix = "C:\\Users\\barth\\Documents\\git\\sBMP4\\icons\\";
-#endif
-	m_oSineImage.setImage(		ImageFileFormat::loadFrom(File(strPrefix + "sine.png")));
-	m_oSawImage.setImage(		ImageFileFormat::loadFrom(File(strPrefix + "saw.png")));
-	m_oSquareImage.setImage(	ImageFileFormat::loadFrom(File(strPrefix + "square.png")));
-	m_oTriangleImage.setImage(	ImageFileFormat::loadFrom(File(strPrefix + "triangle.png")));
-	m_oLogoImage.setImage(		ImageFileFormat::loadFrom(File(strPrefix + "main.png")));
+	m_oSineImage.setImage(ImageFileFormat::loadFrom (BinaryData::sine_png, (size_t) BinaryData::sine_pngSize));
+	m_oSawImage.setImage(ImageFileFormat::loadFrom (BinaryData::saw_png, (size_t) BinaryData::saw_pngSize));
+	m_oSquareImage.setImage(ImageFileFormat::loadFrom (BinaryData::square_png, (size_t) BinaryData::square_pngSize));
+	m_oTriangleImage.setImage(ImageFileFormat::loadFrom (BinaryData::triangle_png, (size_t) BinaryData::triangle_pngSize));
+	m_oLogoImage.setImage(ImageFileFormat::loadFrom (BinaryData::main_png, (size_t) BinaryData::main_pngSize));
+	
 	
 	addAndMakeVisible(m_oSineImage);
 	addAndMakeVisible(m_oSawImage);

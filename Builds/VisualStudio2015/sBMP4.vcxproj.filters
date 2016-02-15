@@ -5,6 +5,9 @@
     <Filter Include="sBMP4">
       <UniqueIdentifier>{785B8CD3-1861-9D4B-5714-43F9E0DE93E9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sBMP4\icons">
+      <UniqueIdentifier>{C7AACAA6-9A2C-65A4-2B64-B14493F8CC4D}</UniqueIdentifier>
+    </Filter>
     <Filter Include="sBMP4\Source">
       <UniqueIdentifier>{7B5539AB-B5F2-334B-F39C-4B6C0064855F}</UniqueIdentifier>
     </Filter>
@@ -1581,6 +1584,9 @@
     </ClCompile>
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_video\native\juce_win32_QuickTimeMovieComponent.cpp">
       <Filter>Juce Modules\juce_video\native</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\JuceLibraryCode\BinaryData.cpp">
+      <Filter>Juce Library Code</Filter>
     </ClCompile>
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_audio_plugin_client\AAX\juce_AAX_Wrapper.cpp">
       <Filter>Juce Library Code</Filter>
@@ -3171,11 +3177,32 @@
     <ClInclude Include="..\..\JuceLibraryCode\AppConfig.h">
       <Filter>Juce Library Code</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\JuceLibraryCode\BinaryData.h">
+      <Filter>Juce Library Code</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h">
       <Filter>Juce Library Code</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\icons\noise.png">
+      <Filter>sBMP4\icons</Filter>
+    </None>
+    <None Include="..\..\icons\saw.png">
+      <Filter>sBMP4\icons</Filter>
+    </None>
+    <None Include="..\..\icons\sine.png">
+      <Filter>sBMP4\icons</Filter>
+    </None>
+    <None Include="..\..\icons\square.png">
+      <Filter>sBMP4\icons</Filter>
+    </None>
+    <None Include="..\..\icons\triangle.png">
+      <Filter>sBMP4\icons</Filter>
+    </None>
+    <None Include="..\..\icons\main.png">
+      <Filter>sBMP4\icons</Filter>
+    </None>
     <None Include="..\..\JuceLibraryCode\modules\juce_audio_basics\juce_module_info">
       <Filter>Juce Modules\juce_audio_basics</Filter>
     </None>
