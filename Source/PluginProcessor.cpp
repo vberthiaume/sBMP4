@@ -36,8 +36,8 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter();
 sBMP4AudioProcessor::sBMP4AudioProcessor()
 : m_oLastDimensions()
 , m_oDelayBuffer(2, 12000)
-, m_fGain(defaultGain)
-, m_fDelay(defaultDelay)
+, m_fGain(k_fDefaultGain)
+, m_fDelay(k_fDefaultDelay)
 , m_fQHr(k_fDefaultQHr)
 , m_iBufferSize(100)	//totally arbitrary value
 , m_fLfoAngle(0.)
@@ -58,8 +58,8 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
         m_oSynth.addVoice(voice);
     }
 
-    setWaveType(defaultWave);
-	setFilterFr(defaultFilterFr);
+    setWaveType(k_fDefaultWave);
+	setFilterFr(k_fDefaultFilterFr);
 	setLfoFr01(k_fDefaultLfoFr01);
     if(s_bUseSimplestLp){
         for(int iCurChannel = 0; iCurChannel < 2; ++iCurChannel){
@@ -77,22 +77,29 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 sBMP4AudioProcessor::~sBMP4AudioProcessor() {
 }
 
+void sBMP4AudioProcessor::prepareToPlay(double sampleRate, int /*samplesPerBlock*/) {
+    m_oSynth.setCurrentPlaybackSampleRate(sampleRate);
+    if(!s_bUseSimplestLp){
+        updateSimpleFilter(sampleRate);
+    }
+	setLfoFr01(getLfoFr01());
+	setFilterFr(m_fFilterFr);
+    m_oKeyboardState.reset();
+    m_oDelayBuffer.clear();
+}
+
 void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages) {
    const int numSamples = buffer.getNumSamples();
    if(s_bUseSimplestLp && m_iBufferSize != numSamples){
 		m_iBufferSize = numSamples;
 		setFilterFr(m_fFilterFr);	//just to update the lookback vector
 	}
-
     //Pass any incoming midi messages to our keyboard, which will add messages to the buffer keys are pressed
     m_oKeyboardState.processNextMidiBuffer (midiMessages, 0, numSamples, true);
-
     //Process these midi events and generate the output audio
     m_oSynth.renderNextBlock (buffer, midiMessages, 0, numSamples);
-
-
-	int iDelayPosition = 0;
 	//this loop is useless since we only have 1 output, but leave it for future expansion
+	int iDelayPosition = 0;
 	for (int iCurChannel = 0; iCurChannel < getMainBusNumOutputChannels(); ++iCurChannel){
 
 		//-----GAIN
@@ -169,16 +176,7 @@ void sBMP4AudioProcessor::setFilterQ01(float p_fQ01){
 	updateSimpleFilter(m_oSynth.getSampleRate());
 }
 
-void sBMP4AudioProcessor::prepareToPlay(double sampleRate, int /*samplesPerBlock*/) {
-    m_oSynth.setCurrentPlaybackSampleRate(sampleRate);
-    if(!s_bUseSimplestLp){
-        updateSimpleFilter(sampleRate);
-    }
-	setLfoFr01(getLfoFr01());
-	setFilterFr(m_fFilterFr);
-    m_oKeyboardState.reset();
-    m_oDelayBuffer.clear();
-}
+
 
 
 void sBMP4AudioProcessor::updateSimpleFilter(double sampleRate) {
@@ -299,10 +297,10 @@ void sBMP4AudioProcessor::setWaveType(float p_fWave){
 
 float sBMP4AudioProcessor::getParameterDefaultValue(int index){
 	switch(index){
-		case paramGain:     return defaultGain;
-		case paramDelay:    return defaultDelay;
-		case paramWave:     return defaultWave;
-		case paramFilterFr: return defaultFilterFr;
+		case paramGain:     return k_fDefaultGain;
+		case paramDelay:    return k_fDefaultDelay;
+		case paramWave:     return k_fDefaultWave;
+		case paramFilterFr: return k_fDefaultFilterFr;
 		case paramQ:		return k_fDefaultQ01;
 		case paramLfoFr:	return k_fDefaultLfoFr01;
 		case paramLfoOn:	return k_fDefaultLfoOn;

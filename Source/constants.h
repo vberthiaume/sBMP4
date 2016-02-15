@@ -47,12 +47,12 @@ enum Parameters{
     ,paramTotalNum
 };
 
-const float defaultGain			= 1.0f;
-const float defaultDelay		= 0.0f;
-const float defaultWave			= 0.0f;
+const float k_fDefaultGain		= 1.0f;
+const float k_fDefaultDelay		= 0.0f;
+const float k_fDefaultWave		= 0.0f;
 
 //----FILTER FR
-const float defaultFilterFr		= 0.0f;
+const float k_fDefaultFilterFr	= 0.0f;
 
 //----FILTER Q
 const float k_fMinQHr			= 0.01f;
