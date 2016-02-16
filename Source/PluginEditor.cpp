@@ -145,7 +145,7 @@ void sBMP4AudioProcessorEditor::resized() {
 	++iCurCol;
 
     m_oFilterSlider.setBounds   (x + iCurCol * k_iSliderWidth, y,		k_iSliderWidth, k_iSliderHeight);
-	m_oFilterLabel.setBounds	(x + iCurCol *  k_iSliderWidth, y + 1.5*k_iLabelHeight,	k_iSliderWidth, k_iLabelHeight);
+	m_oFilterLabel.setBounds	(x + iCurCol * k_iSliderWidth, y + 1.5*k_iLabelHeight,	k_iSliderWidth, k_iLabelHeight);
 
 	++iCurRow;
 

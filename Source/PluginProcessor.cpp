@@ -176,9 +176,6 @@ void sBMP4AudioProcessor::setFilterQ01(float p_fQ01){
 	updateSimpleFilter(m_oSynth.getSampleRate());
 }
 
-
-
-
 void sBMP4AudioProcessor::updateSimpleFilter(double sampleRate) {
 	if (sampleRate == 0){
 		return;
