@@ -128,46 +128,46 @@ void sBMP4AudioProcessorEditor::resized() {
     int x = k_iXMargin, y = k_iYMargin, iCurCol = 0, iCurRow = 0;
 	int iTogButSize = 25;
 
-    m_oWaveSlider.setBounds	    (x, y,		s_iSliderWidth, s_iSliderHeight);
-	m_oWaveLabel.setBounds      (x, y + 1.5*s_iLabelHeight, s_iSliderWidth, s_iLabelHeight);
+    m_oWaveSlider.setBounds	    (x, y,		k_iSliderWidth, k_iSliderHeight);
+	m_oWaveLabel.setBounds      (x, y + 1.5*k_iLabelHeight, k_iSliderWidth, k_iLabelHeight);
 
 	m_oSineImage.setBounds      (x - 5, y + 25, 20, 20);
 	m_oSquareImage.setBounds    (x + 0, y - 15, 20, 20);
-	m_oTriangleImage.setBounds  (x + 7 * s_iSliderWidth / 10, y - 15, 20, 20);
-	m_oSawImage.setBounds       (x + 8 * s_iSliderWidth / 10, y + 25, 20, 20);
+	m_oTriangleImage.setBounds  (x + 7 * k_iSliderWidth / 10, y - 15, 20, 20);
+	m_oSawImage.setBounds       (x + 8 * k_iSliderWidth / 10, y + 25, 20, 20);
 
 	++iCurRow;
 
-	m_oLfoSlider.setBounds		(x + iCurCol * s_iSliderWidth, y + iCurRow * (s_iSliderHeight + s_iLabelHeight), s_iSliderWidth, s_iSliderHeight);
-	m_oLfoLabel.setBounds		(x + iCurCol * s_iSliderWidth+iTogButSize, y + iCurRow * (s_iSliderHeight + 2.5*s_iLabelHeight), s_iSliderWidth-(2*iTogButSize), s_iLabelHeight);
-	m_oLfoTogBut.setBounds		(x, y + iCurRow * (s_iSliderHeight + s_iLabelHeight) + iTogButSize, iTogButSize, iTogButSize);
+	m_oLfoSlider.setBounds		(x + iCurCol * k_iSliderWidth, y + iCurRow * (k_iSliderHeight + k_iLabelHeight), k_iSliderWidth, k_iSliderHeight);
+	m_oLfoLabel.setBounds		(x + iCurCol * k_iSliderWidth+iTogButSize, y + iCurRow * (k_iSliderHeight + 2.5*k_iLabelHeight), k_iSliderWidth-(2*iTogButSize), k_iLabelHeight);
+	m_oLfoTogBut.setBounds		(x, y + iCurRow * (k_iSliderHeight + k_iLabelHeight) + iTogButSize, iTogButSize, iTogButSize);
 	--iCurRow;
 	++iCurCol;
 
-    m_oFilterSlider.setBounds   (x + iCurCol * s_iSliderWidth, y,		s_iSliderWidth, s_iSliderHeight);
-	m_oFilterLabel.setBounds	(x + iCurCol *  s_iSliderWidth, y + 1.5*s_iLabelHeight,	s_iSliderWidth, s_iLabelHeight);
+    m_oFilterSlider.setBounds   (x + iCurCol * k_iSliderWidth, y,		k_iSliderWidth, k_iSliderHeight);
+	m_oFilterLabel.setBounds	(x + iCurCol *  k_iSliderWidth, y + 1.5*k_iLabelHeight,	k_iSliderWidth, k_iLabelHeight);
 
 	++iCurRow;
 
-	m_oQSlider.setBounds		(x + iCurCol * s_iSliderWidth, y + iCurRow * (s_iSliderHeight + s_iLabelHeight), s_iSliderWidth, s_iSliderHeight);
-	m_oQLabel.setBounds			(x + iCurCol * s_iSliderWidth, y + iCurRow * (s_iSliderHeight + 2.5*s_iLabelHeight), s_iSliderWidth, s_iLabelHeight);
+	m_oQSlider.setBounds		(x + iCurCol * k_iSliderWidth, y + iCurRow * (k_iSliderHeight + k_iLabelHeight), k_iSliderWidth, k_iSliderHeight);
+	m_oQLabel.setBounds			(x + iCurCol * k_iSliderWidth, y + iCurRow * (k_iSliderHeight + 2.5*k_iLabelHeight), k_iSliderWidth, k_iLabelHeight);
 
 	--iCurRow;
 	++iCurCol;
 
-	m_oDelaySlider.setBounds	(x + iCurCol *  s_iSliderWidth, y, s_iSliderWidth, s_iSliderHeight);
-	m_oDelayLabel.setBounds		(x + iCurCol *  s_iSliderWidth, y + 1.5*s_iLabelHeight, s_iSliderWidth, s_iLabelHeight);
+	m_oDelaySlider.setBounds	(x + iCurCol *  k_iSliderWidth, y, k_iSliderWidth, k_iSliderHeight);
+	m_oDelayLabel.setBounds		(x + iCurCol *  k_iSliderWidth, y + 1.5*k_iLabelHeight, k_iSliderWidth, k_iLabelHeight);
 
 	++iCurCol;
 
-	m_oGainSlider.setBounds		(x + iCurCol *  s_iSliderWidth, y, s_iSliderWidth, s_iSliderHeight);
-	m_oGainLabel.setBounds		(x + iCurCol *  s_iSliderWidth, y + 1.5*s_iLabelHeight, s_iSliderWidth, s_iLabelHeight);
+	m_oGainSlider.setBounds		(x + iCurCol *  k_iSliderWidth, y, k_iSliderWidth, k_iSliderHeight);
+	m_oGainLabel.setBounds		(x + iCurCol *  k_iSliderWidth, y + 1.5*k_iLabelHeight, k_iSliderWidth, k_iLabelHeight);
 
 
 
 	
-	m_oLogoImage.setBounds(getWidth() - s_iLogoW, 5, s_iLogoW, s_iLogoH);
-    m_oMidiKeyboard.setBounds (4, getHeight() - s_iKeyboardHeight - 4, getWidth() - 8, s_iKeyboardHeight);
+	m_oLogoImage.setBounds(getWidth() - k_iLogoW, 5, k_iLogoW, k_iLogoH);
+    m_oMidiKeyboard.setBounds (4, getHeight() - k_iKeyboardHeight - 4, getWidth() - 8, k_iKeyboardHeight);
     m_pResizer->setBounds (getWidth() - 16, getHeight() - 16, 16, 16);
     getProcessor().setDimensions(std::make_pair(getWidth(), getHeight()));
 }

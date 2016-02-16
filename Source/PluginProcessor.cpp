@@ -68,9 +68,9 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
     }
 
 	//width of 265 is 20 (x buffer on left) + 3*75 (3 sliders) + 20 (buffer on right)
-    /*m_oLastDimensions = std::make_pair(20+5*70+25, s_iKeyboardHeight + 80 + 60);*/
-	m_oLastDimensions = std::make_pair(2*k_iXMargin + s_iNumberOfHorizontalSliders*s_iSliderWidth, 
-									   k_iYMargin   + s_iNumberOfVerticaltalSliders * (s_iSliderHeight + s_iLabelHeight) + s_iKeyboardHeight);
+    /*m_oLastDimensions = std::make_pair(20+5*70+25, k_iKeyboardHeight + 80 + 60);*/
+	m_oLastDimensions = std::make_pair(2*k_iXMargin + k_iNumberOfHorizontalSliders*k_iSliderWidth, 
+									   k_iYMargin   + k_iNumberOfVerticaltalSliders * (k_iSliderHeight + k_iLabelHeight) + k_iKeyboardHeight);
     m_iDelayPosition = 0;
 }
 
