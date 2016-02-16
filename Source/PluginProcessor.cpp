@@ -51,7 +51,7 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 	busArrangement.outputBuses.clear();
 	busArrangement.outputBuses.add(AudioProcessorBus("Mono output", AudioChannelSet::mono()));
 
-    for(int iCurVox = 0; iCurVox < s_iNumberOfVoices; ++iCurVox){
+    for(int iCurVox = 0; iCurVox < k_iNumberOfVoices; ++iCurVox){
 		Bmp4SynthVoice* voice = new Bmp4SynthVoice();
 		JUCE_COMPILER_WARNING("this is terrible")
 		voice->setProcessor(this);
@@ -61,7 +61,7 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
     setWaveType(k_fDefaultWave);
 	setFilterFr(k_fDefaultFilterFr);
 	setLfoFr01(k_fDefaultLfoFr01);
-    if(s_bUseSimplestLp){
+    if(k_bUseSimplestLp){
         for(int iCurChannel = 0; iCurChannel < 2; ++iCurChannel){
             m_oLookBackVec[iCurChannel] = std::vector<float>(100, 0.f);
         }
@@ -69,8 +69,8 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 
 	//width of 265 is 20 (x buffer on left) + 3*75 (3 sliders) + 20 (buffer on right)
     /*m_oLastDimensions = std::make_pair(20+5*70+25, s_iKeyboardHeight + 80 + 60);*/
-	m_oLastDimensions = std::make_pair(2*s_iXMargin + s_iNumberOfHorizontalSliders*s_iSliderWidth, 
-									   s_iYMargin   + s_iNumberOfVerticaltalSliders * (s_iSliderHeight + s_iLabelHeight) + s_iKeyboardHeight);
+	m_oLastDimensions = std::make_pair(2*k_iXMargin + s_iNumberOfHorizontalSliders*s_iSliderWidth, 
+									   k_iYMargin   + s_iNumberOfVerticaltalSliders * (s_iSliderHeight + s_iLabelHeight) + s_iKeyboardHeight);
     m_iDelayPosition = 0;
 }
 
@@ -79,7 +79,7 @@ sBMP4AudioProcessor::~sBMP4AudioProcessor() {
 
 void sBMP4AudioProcessor::prepareToPlay(double sampleRate, int /*samplesPerBlock*/) {
     m_oSynth.setCurrentPlaybackSampleRate(sampleRate);
-    if(!s_bUseSimplestLp){
+    if(!k_bUseSimplestLp){
         updateSimpleFilter(sampleRate);
     }
 	setLfoFr01(getLfoFr01());
@@ -90,7 +90,7 @@ void sBMP4AudioProcessor::prepareToPlay(double sampleRate, int /*samplesPerBlock
 
 void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages) {
    const int numSamples = buffer.getNumSamples();
-   if(s_bUseSimplestLp && m_iBufferSize != numSamples){
+   if(k_bUseSimplestLp && m_iBufferSize != numSamples){
 		m_iBufferSize = numSamples;
 		setFilterFr(m_fFilterFr);	//just to update the lookback vector
 	}
@@ -108,7 +108,7 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 		float* channelData = buffer.getWritePointer (iCurChannel);
         
         //-----FILTER
-        if(s_bUseSimplestLp){
+        if(k_bUseSimplestLp){
 			simplestLP(channelData, numSamples, m_oLookBackVec[iCurChannel]);
 		} else {
 			float* channelData[1];
@@ -156,7 +156,7 @@ float sBMP4AudioProcessor::getLfoFr01() {
 
 void sBMP4AudioProcessor::setFilterFr(float p_fFilterFr){
     m_fFilterFr = p_fFilterFr;
-    if(s_bUseSimplestLp){
+    if(k_bUseSimplestLp){
         suspendProcessing(true);
         int i = static_cast<int>(m_fFilterFr*m_iBufferSize/10);
         m_oLookBackVec[0].resize(i);
@@ -184,9 +184,9 @@ void sBMP4AudioProcessor::updateSimpleFilter(double sampleRate) {
 		return;
 	}
     float fMultiple = 1;   //the higher this is, the more linear and less curvy the exponential is
-    JUCE_COMPILER_WARNING("s_iSimpleFilterLF should be the currently played note... but this is hard" + 
+    JUCE_COMPILER_WARNING("k_iSimpleFilterLF should be the currently played note... but this is hard" + 
              "to get because as far as I know, we can only access that from the voice, which is buried in m_oSynth")
-    float fExpCutoffFr = fMultiple * exp(log(s_iSimpleFilterHF * m_fFilterFr/fMultiple)) + s_iSimpleFilterLF;
+    float fExpCutoffFr = fMultiple * exp(log(k_iSimpleFilterHF * m_fFilterFr/fMultiple)) + k_iSimpleFilterLF;
     
 #if	WIN32
 	//this is called setup, but really it's just setting some values. 

@@ -125,7 +125,7 @@ void sBMP4AudioProcessorEditor::paint (Graphics& g)
 }
 
 void sBMP4AudioProcessorEditor::resized() {
-    int x = s_iXMargin, y = s_iYMargin, iCurCol = 0, iCurRow = 0;
+    int x = k_iXMargin, y = k_iYMargin, iCurCol = 0, iCurRow = 0;
 	int iTogButSize = 25;
 
     m_oWaveSlider.setBounds	    (x, y,		s_iSliderWidth, s_iSliderHeight);

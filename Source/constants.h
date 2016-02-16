@@ -36,6 +36,10 @@ static T const& convertHrTo01 (T const& p_tValueHr, T const& p_tMinHr, T const& 
     return (p_tValueHr - p_tMinHr) / (p_tMaxHr-p_tMinHr); 
 } 
 
+static bool areSame(double a, double b){
+    return fabs(a - b) < .0001;//std::numeric_limits<double>::epsilon();
+}
+
 enum Parameters{
      paramGain = 0
     ,paramDelay
@@ -68,22 +72,18 @@ const float k_fDefaultLfoFr01	= convertHrTo01(k_fDefaultLfoFrHr, k_fMinLfoFr, k_
 
 const float k_fDefaultLfoOn		= 0.;
 
-const int   s_iSimpleFilterLF = 600;
-const int   s_iSimpleFilterHF = 20000;// 12000;
-const int   s_iNumberOfVoices = 5;
+const int   k_iSimpleFilterLF = 600;
+const int   k_iSimpleFilterHF = 20000;// 12000;
+const int   k_iNumberOfVoices = 5;
 
 #if	WIN32
-const bool  s_bUseSimplestLp = false;
+const bool  k_bUseSimplestLp = false;
 #else
-const bool  s_bUseSimplestLp = true;
+const bool  k_bUseSimplestLp = true;
 #endif
 
-static bool areSame(double a, double b){
-    return fabs(a - b) < .0001;//std::numeric_limits<double>::epsilon();
-}
-
 //-------stuff related to wavetables
-const bool  s_bUseWaveTables = true;
+const bool  k_bUseWaveTables = true;
 
 JUCE_COMPILER_WARNING("Reasoning for finding k_iTotalWaveFrames. THIS CANNOT BE HARDCODED");
 float k_fWavTableFr = 100.f;	//frequency of wave stored in wave table
@@ -94,16 +94,16 @@ float k_fSampleRate = 44100;
 const int   k_iTotalWaveFrames = 441;
 
 //-------stuff related to size of things
-const int s_iXMargin		= 20;
-const int s_iYMargin		= 25;
-const int s_iKeyboardHeight	= 70;
-const int s_iSliderWidth	= 75;
-const int s_iSliderHeight	= 40;
-const int s_iLabelHeight	= 20;
-const int s_iLogoW			= 75;
-const int s_iLogoH			= 30;
+const int k_iXMargin		= 20;
+const int k_iYMargin		= 25;
+const int k_iKeyboardHeight	= 70;
+const int k_iSliderWidth	= 75;
+const int k_iSliderHeight	= 40;
+const int k_iLabelHeight	= 20;
+const int k_iLogoW			= 75;
+const int k_iLogoH			= 30;
 
-const int s_iNumberOfHorizontalSliders	= 4;
-const int s_iNumberOfVerticaltalSliders = 2;
+const int k_iNumberOfHorizontalSliders	= 4;
+const int k_iNumberOfVerticaltalSliders = 2;
 
 #endif

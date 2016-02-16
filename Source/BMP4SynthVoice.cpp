@@ -31,7 +31,7 @@ Bmp4SynthVoice::Bmp4SynthVoice()
 	, m_dTailOff(0.0)
     , m_iCurSound(soundSine)
 {
-	if(s_bUseWaveTables){
+	if(k_bUseWaveTables){
 		double dCurAngle = 0.;
 		JUCE_COMPILER_WARNING("SAMPLERATE CANNOT BE HARDCODED");
 		double dOmega = 2. * M_PI * k_fWavTableFr / k_fSampleRate;
@@ -120,7 +120,7 @@ void Bmp4SynthVoice::renderNextBlock(AudioSampleBuffer& p_oOutputBuffer, int p_i
 }
 
 float Bmp4SynthVoice::getSample(double dTail) {
-    if(s_bUseWaveTables){
+    if(k_bUseWaveTables){
         return getSampleWaveTable(dTail);
     } else {
 		return getSampleAdditiveSynthesis(dTail);
