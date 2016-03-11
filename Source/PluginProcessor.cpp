@@ -23,7 +23,6 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
-
 #include "BMP4SynthVoice.h"
 #include <algorithm>
 
@@ -96,6 +95,21 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 	}
     //Pass any incoming midi messages to our keyboard, which will add messages to the buffer keys are pressed
     m_oKeyboardState.processNextMidiBuffer (midiMessages, 0, numSamples, true);
+	bool m_bUseSubOsc = true;
+	if (m_bUseSubOsc) {
+		MidiBuffer::Iterator it(midiMessages);
+		MidiMessage msg;
+		MidiBuffer allSubOscMessages;
+		int iPosition;
+		while(it.getNextEvent(msg, iPosition)){
+			if (msg.isNoteOn() || msg.isNoteOff()){
+				MidiMessage curSubOscMsg(msg);
+				curSubOscMsg.setNoteNumber(curSubOscMsg.getNoteNumber()-8);
+				allSubOscMessages.addEvent(curSubOscMsg, iPosition);
+			}
+		}
+		midiMessages.addEvents(allSubOscMessages,0,-1,0);
+	}
     //Process these midi events and generate the output audio
     m_oSynth.renderNextBlock (buffer, midiMessages, 0, numSamples);
 	//this loop is useless since we only have 1 output, but leave it for future expansion

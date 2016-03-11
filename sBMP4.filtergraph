@@ -1,41 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <FILTERGRAPH>
-  <FILTER uid="1" x="0.5" y="0.1" uiLastX="0" uiLastY="0">
+  <FILTER uid="1" x="0.5" y="0.10000000000000000555">
     <PLUGIN name="Audio Input" descriptiveName="" format="Internal" category="I/O devices"
-            manufacturer="Raw Material Software" version="1.0" file="" uid="246006c0"
-            isInstrument="0" fileTime="0" numInputs="0" numOutputs="2" isShell="0"/>
-    <STATE>0.</STATE>
-  </FILTER>
-  <FILTER uid="2" x="0.25" y="0.1" uiLastX="0" uiLastY="0">
-    <PLUGIN name="Midi Input" descriptiveName="" format="Internal" category="I/O devices"
-            manufacturer="Raw Material Software" version="1.0" file="" uid="cb5fde0b"
-            isInstrument="0" fileTime="0" numInputs="0" numOutputs="0" isShell="0"/>
-    <STATE>0.</STATE>
-  </FILTER>
-  <FILTER uid="3" x="0.412281" y="0.792254" uiLastX="0" uiLastY="0">
-    <PLUGIN name="Audio Output" descriptiveName="" format="Internal" category="I/O devices"
-            manufacturer="Raw Material Software" version="1.0" file="" uid="724248cb"
-            isInstrument="0" fileTime="0" numInputs="2" numOutputs="0" isShell="0"/>
-    <STATE>0.</STATE>
-  </FILTER>
-  <FILTER uid="4" x="0.302057" y="0.386076" uiLastX="1739" uiLastY="-141">
-    <PLUGIN name="sBMP4" format="VST" category="Synth" manufacturer="BMP4"
-            version="V1.0.0" file="C:\Users\Vincent\Documents\git\sBMP4\Builds\VisualStudio2013\Debug\sBMP4.dll"
-            uid="73424d50" isInstrument="1" fileTime="14fe16c18d0" numInputs="2"
+            manufacturer="ROLI Ltd." version="1.0" file="" uid="246006c0"
+            isInstrument="0" fileTime="0" infoUpdateTime="0" numInputs="0"
             numOutputs="2" isShell="0"/>
-    <STATE>307.CMlaKA....fQBMDZ....ALmPMAE....Y....A...............................................................................................................................................................................SZ0PxDhh....7LkPMAEMSUDUTkjSGMEH0k1UoQFcn0iHy.SMh.RcogTYocFZz0iHwTCLh.xYgkla8HBLtPSM4jSN4jyM3TCMxLiL2fCNh.BYkwVX40iHv3BMwjSN4jSN3XCN3XSN2fSL0HBH2Elck0iHwHBHlkFazUlb8HBLtTiL4jSN4jyMwLCN4byMvTSLh7hO..</STATE>
+    <STATE>0.</STATE>
   </FILTER>
-  <FILTER uid="5" x="0.597744" y="0.378521" uiLastX="0" uiLastY="0">
-    <PLUGIN name="JuceDemoPlugin" descriptiveName="Juce Demo Plugin" format="VST"
-            category="Effect" manufacturer="Raw Material Software" version="V1.0.0"
-            file="C:\Users\Vincent\Documents\git\JUCE\examples\audio plugin demo\Builds\VisualStudio2010\Debug\JuceDemoPlugin.dll"
-            uid="4a63646d" isInstrument="0" fileTime="14d4930ec35" numInputs="8"
-            numOutputs="8" isShell="0"/>
-    <STATE>238.CMlaKA....fQBMDZ....AnzXj0F....Y....A...............................................................................................................................................................................NY0PxDRQ....7zTVPwTUGkjSSUDUTkjSGMEH0k1UoQFcn0iHz.CLh.RcogTYocFZz0iHx.CLh.xYgkla8HRLh.BYkwVX40iHv3RMh7hO..</STATE>
+  <FILTER uid="2" x="0.25" y="0.10000000000000000555">
+    <PLUGIN name="Midi Input" descriptiveName="" format="Internal" category="I/O devices"
+            manufacturer="ROLI Ltd." version="1.0" file="" uid="cb5fde0b"
+            isInstrument="0" fileTime="0" infoUpdateTime="0" numInputs="0"
+            numOutputs="0" isShell="0"/>
+    <STATE>0.</STATE>
   </FILTER>
-  <CONNECTION srcFilter="4" srcChannel="0" dstFilter="3" dstChannel="0"/>
-  <CONNECTION srcFilter="4" srcChannel="1" dstFilter="3" dstChannel="1"/>
-  <CONNECTION srcFilter="5" srcChannel="0" dstFilter="3" dstChannel="0"/>
-  <CONNECTION srcFilter="5" srcChannel="1" dstFilter="3" dstChannel="1"/>
+  <FILTER uid="3" x="0.46780551905387646183" y="0.77640845070422537244">
+    <PLUGIN name="Audio Output" descriptiveName="" format="Internal" category="I/O devices"
+            manufacturer="ROLI Ltd." version="1.0" file="" uid="724248cb"
+            isInstrument="0" fileTime="0" infoUpdateTime="0" numInputs="2"
+            numOutputs="0" isShell="0"/>
+    <STATE>0.</STATE>
+  </FILTER>
+  <FILTER uid="9" x="0.44678055190538762398" y="0.45246478873239437402"
+          uiLastX_Normal="883" uiLastY_Normal="264" uiopen_Normal="0">
+    <PLUGIN name="sBMP4" format="VST" category="Synth" manufacturer="BMP4"
+            version="V1.0.0" file="C:\Users\barth\Documents\git\sBMP4\Builds\VisualStudio2015\Debug\sBMP4.dll"
+            uid="73424d50" isInstrument="1" fileTime="152ea31b680" infoUpdateTime="153671a5320"
+            numInputs="1" numOutputs="1" isShell="0"/>
+    <STATE>357.CMlaKA....fQBMDZ....ALmPMAE....Y....A...............................................................................................................................................................................Ea0PxDBu....7LkPMAEMSUDUTkjSGMEH0k1UoQFcn0iHyPCLh.RcogTYocFZz0iHxDSMh.xYgkla8HRLh.BYkwVX40iHv3RM2jSN4jSN3LyLw.iM4jCM1HCN4HBH2Elck0iHwHBHlkFazUlb8HBLtbCL4jSN4jyM3TCMxLiL2fCNvfiMh.RaeYFSl8lQxgjb8HBLh.RaeYVTHIWOh.iKzHSN4jSN4byMyTCLxLCM4fSMyTiHfz1WhwjYukzbO4VOhDiHu3C.</STATE>
+  </FILTER>
+  <CONNECTION srcFilter="1" srcChannel="0" dstFilter="9" dstChannel="0"/>
+  <CONNECTION srcFilter="9" srcChannel="0" dstFilter="3" dstChannel="0"/>
+  <CONNECTION srcFilter="9" srcChannel="0" dstFilter="3" dstChannel="1"/>
 </FILTERGRAPH>
