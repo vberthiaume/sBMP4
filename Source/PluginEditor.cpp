@@ -137,24 +137,11 @@ void sBMP4AudioProcessorEditor::resized() {
 	m_oTriangleImage.setBounds  (x + 7 * k_iSliderWidth / 10, y - 15, 20, 20);
 	m_oSawImage.setBounds       (x + 8 * k_iSliderWidth / 10, y + 25, 20, 20);
 
-	++iCurRow;
-
-	m_oLfoSlider.setBounds		(x + iCurCol * k_iSliderWidth, y + iCurRow * (k_iSliderHeight + k_iLabelHeight), k_iSliderWidth, k_iSliderHeight);
-	m_oLfoLabel.setBounds		(x + iCurCol * k_iSliderWidth+iTogButSize, y + iCurRow * (k_iSliderHeight + 2.5*k_iLabelHeight), k_iSliderWidth-(2*iTogButSize), k_iLabelHeight);
-	m_oLfoTogBut.setBounds		(x, y + iCurRow * (k_iSliderHeight + k_iLabelHeight) + iTogButSize, iTogButSize, iTogButSize);
-	
-	--iCurRow;
 	++iCurCol;
 
     m_oFilterSlider.setBounds   (x + iCurCol * k_iSliderWidth, y,		k_iSliderWidth, k_iSliderHeight);
 	m_oFilterLabel.setBounds	(x + iCurCol * k_iSliderWidth, y + 1.5*k_iLabelHeight,	k_iSliderWidth, k_iLabelHeight);
 
-	++iCurRow;
-
-	m_oQSlider.setBounds		(x + iCurCol * k_iSliderWidth, y + iCurRow * (k_iSliderHeight + k_iLabelHeight), k_iSliderWidth, k_iSliderHeight);
-	m_oQLabel.setBounds			(x + iCurCol * k_iSliderWidth, y + iCurRow * (k_iSliderHeight + 2.5*k_iLabelHeight), k_iSliderWidth, k_iLabelHeight);
-
-	--iCurRow;
 	++iCurCol;
 
 	m_oDelaySlider.setBounds	(x + iCurCol *  k_iSliderWidth, y, k_iSliderWidth, k_iSliderHeight);
@@ -164,6 +151,21 @@ void sBMP4AudioProcessorEditor::resized() {
 
 	m_oGainSlider.setBounds		(x + iCurCol *  k_iSliderWidth, y, k_iSliderWidth, k_iSliderHeight);
 	m_oGainLabel.setBounds		(x + iCurCol *  k_iSliderWidth, y + 1.5*k_iLabelHeight, k_iSliderWidth, k_iLabelHeight);
+
+	iCurRow = 1;
+	iCurCol = 0;
+
+	m_oLfoSlider.setBounds		(x + iCurCol * k_iSliderWidth, y + iCurRow * (k_iSliderHeight + k_iLabelHeight), k_iSliderWidth, k_iSliderHeight);
+	m_oLfoLabel.setBounds		(x + iCurCol * k_iSliderWidth+iTogButSize, y + iCurRow * (k_iSliderHeight + 2.5*k_iLabelHeight), k_iSliderWidth-(2*iTogButSize), k_iLabelHeight);
+	m_oLfoTogBut.setBounds		(x, y + iCurRow * (k_iSliderHeight + k_iLabelHeight) + iTogButSize, iTogButSize, iTogButSize);
+
+	++iCurCol;
+
+	m_oQSlider.setBounds		(x + iCurCol * k_iSliderWidth, y + iCurRow * (k_iSliderHeight + k_iLabelHeight), k_iSliderWidth, k_iSliderHeight);
+	m_oQLabel.setBounds			(x + iCurCol * k_iSliderWidth, y + iCurRow * (k_iSliderHeight + 2.5*k_iLabelHeight), k_iSliderWidth, k_iLabelHeight);
+	
+
+	
 
 
 
