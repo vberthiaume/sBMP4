@@ -82,6 +82,9 @@ public:
 	void setLfoOn(bool p_bLfoIsOn){	m_bLfoIsOn = p_bLfoIsOn;}
 	void setLfoOn(float p_fLfoIsOn){ (p_fLfoIsOn == 1.) ? m_bLfoIsOn = true : m_bLfoIsOn = false;}
 	bool getLfoOn() { return m_bLfoIsOn;}
+	void setSubOscOn(bool p_bSubOscIsOn){	m_bSubOscIsOn = p_bSubOscIsOn;}
+	void setSubOscOn(float p_fSubOscIsOn){ (p_fSubOscIsOn == 1.) ? m_bSubOscIsOn = true : m_bSubOscIsOn = false;}
+	bool getSubOscOn() { return m_bSubOscIsOn;}
     //==============================================================================
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
@@ -97,6 +100,7 @@ private:
     float m_fGain, m_fDelay, m_fWave, m_fFilterFr, m_fLfoFrHr, m_fQHr, m_fLfoAngle, m_fLfoOmega;
 
 	bool m_bLfoIsOn;
+	bool m_bSubOscIsOn;
 
     void setWaveType(float p_fWave);
 

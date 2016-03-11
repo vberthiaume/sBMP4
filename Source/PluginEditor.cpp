@@ -55,6 +55,7 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor(sBMP4AudioProcessor& proces
 	addSlider(&m_oGainSlider,	.01);
 
 	addToggleButton(&m_oLfoTogBut); 
+	addToggleButton(&m_oSubOscTogBut); 
 
 	m_oSineImage.setImage(ImageFileFormat::loadFrom (BinaryData::sine_png, (size_t) BinaryData::sine_pngSize));
 	m_oSawImage.setImage(ImageFileFormat::loadFrom (BinaryData::saw_png, (size_t) BinaryData::saw_pngSize));
@@ -141,6 +142,7 @@ void sBMP4AudioProcessorEditor::resized() {
 	m_oLfoSlider.setBounds		(x + iCurCol * k_iSliderWidth, y + iCurRow * (k_iSliderHeight + k_iLabelHeight), k_iSliderWidth, k_iSliderHeight);
 	m_oLfoLabel.setBounds		(x + iCurCol * k_iSliderWidth+iTogButSize, y + iCurRow * (k_iSliderHeight + 2.5*k_iLabelHeight), k_iSliderWidth-(2*iTogButSize), k_iLabelHeight);
 	m_oLfoTogBut.setBounds		(x, y + iCurRow * (k_iSliderHeight + k_iLabelHeight) + iTogButSize, iTogButSize, iTogButSize);
+	
 	--iCurRow;
 	++iCurCol;
 
@@ -182,8 +184,9 @@ void sBMP4AudioProcessorEditor::timerCallback() {
     m_oFilterSlider	.setValue(ourProcessor.getParameter(paramFilterFr), dontSendNotification);
 	m_oQSlider		.setValue(ourProcessor.getParameter(paramQ),		dontSendNotification);
 	m_oLfoSlider	.setValue(ourProcessor.getParameter(paramLfoFr),	dontSendNotification);
-	//m_oLfoTogBut	.setToggleState(ourProcessor.getParameter(paramLfoOn), dontSendNotification);
 	m_oLfoTogBut	.setToggleState(ourProcessor.getLfoOn(), dontSendNotification);
+	m_oSubOscTogBut	.setToggleState(ourProcessor.getSubOscOn(), dontSendNotification);
+	m_oSubOscTogBut	.setToggleState(ourProcessor.getSubOscOn(), dontSendNotification);
 }
 
 // This is our Slider::Listener callback, when the user drags a slider.
@@ -206,6 +209,8 @@ void sBMP4AudioProcessorEditor::sliderValueChanged (Slider* slider) {
 void sBMP4AudioProcessorEditor::buttonClicked(Button* p_pButtonClicked){
 	if (p_pButtonClicked == &m_oLfoTogBut){
 		getProcessor().setLfoOn(m_oLfoTogBut.getToggleState());
+	} else if (p_pButtonClicked == &m_oSubOscTogBut){
+		getProcessor().setSubOscOn(m_oSubOscTogBut.getToggleState());
 	}
 	m_oMidiKeyboard.grabKeyboardFocus();
 }

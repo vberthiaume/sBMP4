@@ -42,6 +42,7 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 , m_fLfoAngle(0.)
 , m_fLfoOmega(0.)
 , m_bLfoIsOn(true)
+, m_bSubOscIsOn(true)
 {
 	//add our own audio input, because otherwise there is just a ghost input channel that is always on...
 	busArrangement.inputBuses.clear();
@@ -95,8 +96,7 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 	}
     //Pass any incoming midi messages to our keyboard, which will add messages to the buffer keys are pressed
     m_oKeyboardState.processNextMidiBuffer (midiMessages, 0, numSamples, true);
-	bool m_bUseSubOsc = true;
-	if (m_bUseSubOsc) {
+	if (m_bSubOscIsOn) {
 		MidiBuffer::Iterator it(midiMessages);
 		MidiMessage msg;
 		MidiBuffer allSubOscMessages;
@@ -258,6 +258,7 @@ float sBMP4AudioProcessor::getParameter(int index)
 	case paramQ:		return getFilterQ01();
 	case paramLfoFr:	return getLfoFr01();
 	case paramLfoOn:	return getLfoOn();
+	case paramSubOscOn:	return getSubOscOn();
 	default:            return 0.0f;
 	}
 }
@@ -275,7 +276,8 @@ void sBMP4AudioProcessor::setParameter(int index, float newValue)
 	case paramQ:		setFilterQ01(newValue);	break;
 	case paramLfoFr:	setLfoFr01(newValue);	break;
 	case paramLfoOn:	setLfoOn(newValue);		break;
-	
+	case paramSubOscOn:	setSubOscOn(newValue);	break;
+
     default:            break;
     }
 }
@@ -358,15 +360,16 @@ void sBMP4AudioProcessor::reset(){
 //==============================================================================
 void sBMP4AudioProcessor::getStateInformation (MemoryBlock& destData){
     XmlElement xml ("SBMP4SETTINGS");
-    xml.setAttribute ("uiWidth",	m_oLastDimensions.first);
-    xml.setAttribute ("uiHeight",	m_oLastDimensions.second);
-    xml.setAttribute ("gain",		m_fGain);
-    xml.setAttribute ("delay",		m_fDelay);
-    xml.setAttribute ("wave",		m_fWave);
-    xml.setAttribute ("filter",		m_fFilterFr);
-	xml.setAttribute ("m_fLfoFrHr", getLfoFr01());
-	xml.setAttribute ("m_fQHr",		getFilterQ01());
-	xml.setAttribute ("m_bLfoIsOn", m_bLfoIsOn);
+    xml.setAttribute ("uiWidth",		m_oLastDimensions.first);
+    xml.setAttribute ("uiHeight",		m_oLastDimensions.second);
+    xml.setAttribute ("gain",			m_fGain);
+    xml.setAttribute ("delay",			m_fDelay);
+    xml.setAttribute ("wave",			m_fWave);
+    xml.setAttribute ("filter",			m_fFilterFr);
+	xml.setAttribute ("m_fLfoFrHr",		getLfoFr01());
+	xml.setAttribute ("m_fQHr",			getFilterQ01());
+	xml.setAttribute ("m_bLfoIsOn",		m_bLfoIsOn);
+	xml.setAttribute ("m_bSubOscIsOn",	m_bSubOscIsOn);
 
     copyXmlToBinary (xml, destData);
 }
@@ -384,6 +387,7 @@ void sBMP4AudioProcessor::setStateInformation (const void* data, int sizeInBytes
 			setLfoFr01((float)			xmlState->getDoubleAttribute(	"m_fLfoFrHr",	getLfoFr01()));
 			setFilterQ01((float)		xmlState->getDoubleAttribute(	"m_fQHr",		getFilterQ01()));
 			setLfoOn(					xmlState->getBoolAttribute(		"m_bLfoIsOn",	m_bLfoIsOn));
+			setSubOscOn(				xmlState->getBoolAttribute(		"m_bSubOscIsOn",m_bSubOscIsOn));
         }
     }
 }

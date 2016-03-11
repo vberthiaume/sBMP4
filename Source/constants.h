@@ -48,6 +48,7 @@ enum Parameters{
 	,paramLfoFr
 	,paramQ
 	,paramLfoOn
+	,paramSubOscOn
     ,paramTotalNum
 };
 
