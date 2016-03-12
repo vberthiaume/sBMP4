@@ -37,6 +37,7 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor(sBMP4AudioProcessor& proces
     , m_oQLabel("", "Resonance")
 	, m_oLfoSlider("LFO")
 	, m_oLfoLabel("", "LFO")
+	, m_oSubOscLabel("", "Sub Osc")
 	, m_oDelaySlider("delay")
     , m_oDelayLabel("", "delay")
     , m_oGainSlider("gain")
@@ -77,6 +78,8 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor(sBMP4AudioProcessor& proces
 	addLabel(&m_oQLabel);
 	addLabel(&m_oGainLabel);
 	addLabel(&m_oDelayLabel);
+	addLabel(&m_oSubOscLabel);
+	m_oSubOscLabel.setJustificationType(Justification::left);
 
     addAndMakeVisible (m_oMidiKeyboard);
 
@@ -138,9 +141,11 @@ void sBMP4AudioProcessorEditor::resized() {
 
 	++iCurCol;
 
-	//m_oSubOscSlider.setBounds	(x + iCurCol * k_iSliderWidth, y + iCurRow * (k_iSliderHeight + k_iLabelHeight), k_iSliderWidth, k_iSliderHeight);
-	//m_oSubOscLabel.setBounds	(x + iCurCol * k_iSliderWidth+iTogButSize, y + iCurRow * (k_iSliderHeight + 2.5*k_iLabelHeight), k_iSliderWidth-(2*iTogButSize), k_iLabelHeight);
-	m_oSubOscTogBut.setBounds	(x + iCurCol * k_iSliderWidth, y + iCurRow * (k_iSliderHeight + k_iLabelHeight) + iTogButSize, iTogButSize, iTogButSize);
+	//m_oSubOscSlider.setBounds	(x + iCurCol * k_iSliderWidth,						y + iCurRow * (k_iSliderHeight + k_iLabelHeight),					k_iSliderWidth,		k_iSliderHeight);
+	m_oSubOscTogBut.setBounds	(x + iCurCol * k_iSliderWidth + 5,					y + iCurRow * (k_iSliderHeight + k_iLabelHeight) + iTogButSize,		iTogButSize,		iTogButSize);
+	m_oSubOscLabel.setBounds	(x + iCurCol * k_iSliderWidth + iTogButSize,	y + iCurRow * (k_iSliderHeight + k_iLabelHeight) + iTogButSize+2,	k_iSliderWidth,		k_iLabelHeight);
+	
+	
 
 	++iCurCol;
 
