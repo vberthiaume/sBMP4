@@ -131,7 +131,6 @@ void sBMP4AudioProcessorEditor::resized() {
 
     m_oWaveSlider.setBounds	    (x, y,		k_iSliderWidth, k_iSliderHeight);
 	m_oWaveLabel.setBounds      (x, y + 1.5*k_iLabelHeight, k_iSliderWidth, k_iLabelHeight);
-
 	m_oSineImage.setBounds      (x - 5, y + 25, 20, 20);
 	m_oSquareImage.setBounds    (x + 0, y - 15, 20, 20);
 	m_oTriangleImage.setBounds  (x + 7 * k_iSliderWidth / 10, y - 15, 20, 20);
@@ -139,13 +138,14 @@ void sBMP4AudioProcessorEditor::resized() {
 
 	++iCurCol;
 
-    m_oFilterSlider.setBounds   (x + iCurCol * k_iSliderWidth, y,		k_iSliderWidth, k_iSliderHeight);
-	m_oFilterLabel.setBounds	(x + iCurCol * k_iSliderWidth, y + 1.5*k_iLabelHeight,	k_iSliderWidth, k_iLabelHeight);
+	//m_oSubOscSlider.setBounds	(x + iCurCol * k_iSliderWidth, y + iCurRow * (k_iSliderHeight + k_iLabelHeight), k_iSliderWidth, k_iSliderHeight);
+	//m_oSubOscLabel.setBounds	(x + iCurCol * k_iSliderWidth+iTogButSize, y + iCurRow * (k_iSliderHeight + 2.5*k_iLabelHeight), k_iSliderWidth-(2*iTogButSize), k_iLabelHeight);
+	m_oSubOscTogBut.setBounds	(x + iCurCol * k_iSliderWidth, y + iCurRow * (k_iSliderHeight + k_iLabelHeight) + iTogButSize, iTogButSize, iTogButSize);
 
 	++iCurCol;
 
-	m_oDelaySlider.setBounds	(x + iCurCol *  k_iSliderWidth, y, k_iSliderWidth, k_iSliderHeight);
-	m_oDelayLabel.setBounds		(x + iCurCol *  k_iSliderWidth, y + 1.5*k_iLabelHeight, k_iSliderWidth, k_iLabelHeight);
+	m_oDelaySlider.setBounds	(x + iCurCol *  k_iSliderWidth,  y + iCurRow * (k_iSliderHeight + k_iLabelHeight), k_iSliderWidth, k_iSliderHeight);
+	m_oDelayLabel.setBounds		(x + iCurCol *  k_iSliderWidth,  y + iCurRow * (k_iSliderHeight + k_iLabelHeight) + 1.5*k_iLabelHeight, k_iSliderWidth, k_iLabelHeight);
 
 	++iCurCol;
 
@@ -161,14 +161,13 @@ void sBMP4AudioProcessorEditor::resized() {
 
 	++iCurCol;
 
+	m_oFilterSlider.setBounds   (x + iCurCol * k_iSliderWidth, y + iCurRow * (k_iSliderHeight + k_iLabelHeight),		k_iSliderWidth, k_iSliderHeight);
+	m_oFilterLabel.setBounds	(x + iCurCol * k_iSliderWidth, y + iCurRow * (k_iSliderHeight + k_iLabelHeight) + 1.5*k_iLabelHeight,	k_iSliderWidth, k_iLabelHeight);
+
+	++iCurCol;
+
 	m_oQSlider.setBounds		(x + iCurCol * k_iSliderWidth, y + iCurRow * (k_iSliderHeight + k_iLabelHeight), k_iSliderWidth, k_iSliderHeight);
 	m_oQLabel.setBounds			(x + iCurCol * k_iSliderWidth, y + iCurRow * (k_iSliderHeight + 2.5*k_iLabelHeight), k_iSliderWidth, k_iLabelHeight);
-	
-
-	
-
-
-
 	
 	m_oLogoImage.setBounds(getWidth() - k_iLogoW, 5, k_iLogoW, k_iLogoH);
     m_oMidiKeyboard.setBounds (4, getHeight() - k_iKeyboardHeight - 4, getWidth() - 8, k_iKeyboardHeight);
