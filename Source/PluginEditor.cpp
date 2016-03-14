@@ -37,7 +37,6 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor(sBMP4AudioProcessor& proces
     , m_oQLabel("", "Resonance")
 	, m_oLfoSlider("LFO")
 	, m_oLfoLabel("", "LFO")
-	, m_oSubOscLabel("", "Sub Osc")
 	, m_oDelaySlider("delay")
     , m_oDelayLabel("", "delay")
     , m_oGainSlider("gain")
@@ -57,6 +56,7 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor(sBMP4AudioProcessor& proces
 
 	addToggleButton(&m_oLfoTogBut); 
 	addToggleButton(&m_oSubOscTogBut); 
+	m_oSubOscTogBut.setButtonText("Sub Osc");
 
 	m_oSineImage.setImage(ImageFileFormat::loadFrom (BinaryData::sine_png, (size_t) BinaryData::sine_pngSize));
 	m_oSawImage.setImage(ImageFileFormat::loadFrom (BinaryData::saw_png, (size_t) BinaryData::saw_pngSize));
@@ -78,8 +78,6 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor(sBMP4AudioProcessor& proces
 	addLabel(&m_oQLabel);
 	addLabel(&m_oGainLabel);
 	addLabel(&m_oDelayLabel);
-	addLabel(&m_oSubOscLabel);
-	m_oSubOscLabel.setJustificationType(Justification::left);
 
     addAndMakeVisible (m_oMidiKeyboard);
 
@@ -117,7 +115,7 @@ void sBMP4AudioProcessorEditor::addLabel(Label * p_pLabel){
 }
 
 void sBMP4AudioProcessorEditor::addToggleButton(ToggleButton* p_pTogButton){
-	p_pTogButton->setColour(Label::textColourId, Colours::yellow);
+	p_pTogButton->setColour(ToggleButton::textColourId, Colours::white);
 	p_pTogButton->addListener(this);
 	addAndMakeVisible(p_pTogButton);
 }
@@ -142,11 +140,8 @@ void sBMP4AudioProcessorEditor::resized() {
 	++iCurCol;
 
 	//m_oSubOscSlider.setBounds	(x + iCurCol * k_iSliderWidth,						y + iCurRow * (k_iSliderHeight + k_iLabelHeight),					k_iSliderWidth,		k_iSliderHeight);
-	m_oSubOscTogBut.setBounds	(x + iCurCol * k_iSliderWidth + 5,					y + iCurRow * (k_iSliderHeight + k_iLabelHeight) + iTogButSize,		iTogButSize,		iTogButSize);
-	m_oSubOscLabel.setBounds	(x + iCurCol * k_iSliderWidth + iTogButSize,	y + iCurRow * (k_iSliderHeight + k_iLabelHeight) + iTogButSize+2,	k_iSliderWidth,		k_iLabelHeight);
+	m_oSubOscTogBut.setBounds	(x + iCurCol * k_iSliderWidth + 5,					y + iCurRow * (k_iSliderHeight + k_iLabelHeight) + iTogButSize,		k_iSliderWidth,		iTogButSize);
 	
-	
-
 	++iCurCol;
 
 	m_oDelaySlider.setBounds	(x + iCurCol *  k_iSliderWidth,  y + iCurRow * (k_iSliderHeight + k_iLabelHeight), k_iSliderWidth, k_iSliderHeight);
