@@ -26,7 +26,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
-
+#include "sBmp4LookAndFeel.h"
 
 //==============================================================================
 /** This is the editor component that our filter will display.
@@ -66,6 +66,7 @@ private:
 	void addSlider(Slider* p_pSlider, const float &p_fIncrement);
 	void addLabel(Label * p_pLabel);
 	void addToggleButton(ToggleButton* p_pTogButton);
+	sBmp4LookAndFeel mLookAndFeel;
 };
 
 
