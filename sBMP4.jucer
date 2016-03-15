@@ -11,6 +11,14 @@
               pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="4.1.0"
               companyName="BMP4" pluginIsMidiEffectPlugin="0">
   <MAINGROUP id="L2BB6f" name="sBMP4">
+    <GROUP id="{EBA27209-31FE-6CC8-AD9A-C63CF5B68A92}" name="fonts">
+      <FILE id="jJECcI" name="After_Shok.ttf" compile="0" resource="1" file="fonts/After_Shok.ttf"/>
+      <FILE id="YZavyA" name="2Dumb.ttf" compile="0" resource="1" file="fonts/2Dumb.ttf"/>
+      <FILE id="RMiePM" name="3Dumb.ttf" compile="0" resource="1" file="fonts/3Dumb.ttf"/>
+      <FILE id="VvC81Q" name="Amatic-Bold.ttf" compile="0" resource="1" file="fonts/Amatic-Bold.ttf"/>
+      <FILE id="bDYZwZ" name="ANUDI___.ttf" compile="0" resource="1" file="fonts/ANUDI___.ttf"/>
+      <FILE id="qhw17O" name="ANUDRG__.ttf" compile="0" resource="1" file="fonts/ANUDRG__.ttf"/>
+    </GROUP>
     <GROUP id="{94C3447F-085C-F828-0CBA-6DD6B83F439C}" name="icons">
       <FILE id="zF9tTG" name="noise.png" compile="0" resource="1" file="icons/noise.png"/>
       <FILE id="Jyf6HM" name="saw.png" compile="0" resource="1" file="icons/saw.png"/>
@@ -47,6 +55,8 @@
         <FILE id="m8YT29" name="Types.h" compile="0" resource="0" file="Source/DspFilters/Types.h"/>
         <FILE id="eITljP" name="Utilities.h" compile="0" resource="0" file="Source/DspFilters/Utilities.h"/>
       </GROUP>
+      <FILE id="xOWnKL" name="sBmp4LookAndFeel.h" compile="0" resource="0"
+            file="Source/sBmp4LookAndFeel.h"/>
       <FILE id="xEkEE0" name="BMP4SynthVoice.cpp" compile="1" resource="0"
             file="Source/BMP4SynthVoice.cpp"/>
       <FILE id="LmU6qQ" name="BMP4SynthVoice.h" compile="0" resource="0"

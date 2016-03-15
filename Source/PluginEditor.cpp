@@ -25,6 +25,7 @@
 #include "PluginEditor.h"
 #include "constants.h"
 
+
 //==============================================================================
 sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor(sBMP4AudioProcessor& processor)
     : AudioProcessorEditor(processor)
@@ -108,21 +109,22 @@ void sBMP4AudioProcessorEditor::addSlider(Slider* p_pSlider, const float &p_fInc
 }
 
 void sBMP4AudioProcessorEditor::addLabel(Label * p_pLabel){
-	p_pLabel->setFont(Font(11.0f));
-	p_pLabel->setColour(Label::textColourId, Colours::white);
+	//p_pLabel->setFont(Font(11.0f));
+	//p_pLabel->setColour(Label::textColourId, Colours::white);
+	p_pLabel->setLookAndFeel(mLookAndFeel);
 	p_pLabel->setJustificationType(Justification::centred);
 	addAndMakeVisible(p_pLabel);
 }
 
 void sBMP4AudioProcessorEditor::addToggleButton(ToggleButton* p_pTogButton){
 	p_pTogButton->setColour(ToggleButton::textColourId, Colours::white);
+	p_pTogButton->setFont
 	p_pTogButton->addListener(this);
 	addAndMakeVisible(p_pTogButton);
 }
 
 //==============================================================================
-void sBMP4AudioProcessorEditor::paint (Graphics& g)
-{
+void sBMP4AudioProcessorEditor::paint (Graphics& g) {
     g.fillAll(Colour::greyLevel(0.20f));
 }
 
