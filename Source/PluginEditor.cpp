@@ -118,7 +118,7 @@ void sBMP4AudioProcessorEditor::addLabel(Label * p_pLabel){
 
 void sBMP4AudioProcessorEditor::addToggleButton(ToggleButton* p_pTogButton){
 	p_pTogButton->setColour(ToggleButton::textColourId, Colours::white);
-	p_pTogButton->setFont
+	p_pTogButton->setLookAndFeel(mLookAndFeel);
 	p_pTogButton->addListener(this);
 	addAndMakeVisible(p_pTogButton);
 }
