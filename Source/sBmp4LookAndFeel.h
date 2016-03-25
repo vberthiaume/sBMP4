@@ -75,7 +75,7 @@ public:
     
     Colour getFontColour(){
         //        return Colours::azure;
-        return Colours::whitesmoke;
+        return Colours::yellow;
     }
     
     Colour getSliderColour(){

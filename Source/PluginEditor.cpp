@@ -50,7 +50,6 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor(sBMP4AudioProcessor& proces
     addSlider(&m_oWaveSlider,	1.f/3);
 	addSlider(&m_oLfoSlider,	.01);
 	addSlider(&m_oFilterSlider, .01);
-	JUCE_COMPILER_WARNING("we need to use [0,1] inside editor")
 	addSlider(&m_oQSlider,		.01);
  	addSlider(&m_oDelaySlider,	.01);
 	addSlider(&m_oGainSlider,	.01);
@@ -75,6 +74,7 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor(sBMP4AudioProcessor& proces
     // add some labels for the sliders
 	addLabel(&m_oWaveLabel);
 	addLabel(&m_oLfoLabel);
+	m_oLfoLabel.setJustificationType(Justification::left);
 	addLabel(&m_oFilterLabel);
 	addLabel(&m_oQLabel);
 	addLabel(&m_oGainLabel);
@@ -97,11 +97,12 @@ sBMP4AudioProcessorEditor::~sBMP4AudioProcessorEditor()
 {
 }
 
-JUCE_COMPILER_WARNING("will need to remove last 2 args here when no longer needed")
 void sBMP4AudioProcessorEditor::addSlider(Slider* p_pSlider, const float &p_fIncrement){
 	addAndMakeVisible(*p_pSlider);
 	p_pSlider->setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
 	p_pSlider->setTextBoxStyle(Slider::NoTextBox, true, 0, 0);
+	p_pSlider->setLookAndFeel(&mLookAndFeel);
+	JUCE_COMPILER_WARNING("make look and feel methods")
 	p_pSlider->setColour(Slider::ColourIds::rotarySliderFillColourId, Colours::white);
 	p_pSlider->setColour(Slider::ColourIds::rotarySliderOutlineColourId, Colours::yellow);
 	p_pSlider->addListener(this);
@@ -110,14 +111,14 @@ void sBMP4AudioProcessorEditor::addSlider(Slider* p_pSlider, const float &p_fInc
 
 void sBMP4AudioProcessorEditor::addLabel(Label * p_pLabel){
 	//p_pLabel->setFont(Font(11.0f));
-	//p_pLabel->setColour(Label::textColourId, Colours::white);
 	p_pLabel->setLookAndFeel(&mLookAndFeel);
+	p_pLabel->setColour(Label::textColourId, mLookAndFeel.getFontColour());
 	p_pLabel->setJustificationType(Justification::centred);
 	addAndMakeVisible(p_pLabel);
 }
 
 void sBMP4AudioProcessorEditor::addToggleButton(ToggleButton* p_pTogButton){
-	p_pTogButton->setColour(ToggleButton::textColourId, Colours::white);
+	p_pTogButton->setColour(ToggleButton::textColourId,  mLookAndFeel.getFontColour());
 	p_pTogButton->setLookAndFeel(&mLookAndFeel);
 	p_pTogButton->addListener(this);
 	addAndMakeVisible(p_pTogButton);
@@ -158,7 +159,7 @@ void sBMP4AudioProcessorEditor::resized() {
 	iCurCol = 0;
 
 	m_oLfoSlider.setBounds		(x + iCurCol * k_iSliderWidth, y + iCurRow * (k_iSliderHeight + k_iLabelHeight), k_iSliderWidth, k_iSliderHeight);
-	m_oLfoLabel.setBounds		(x + iCurCol * k_iSliderWidth+iTogButSize, y + iCurRow * (k_iSliderHeight + 2.5*k_iLabelHeight), k_iSliderWidth-(2*iTogButSize), k_iLabelHeight);
+	m_oLfoLabel.setBounds		(x + iCurCol * k_iSliderWidth+iTogButSize, y + iCurRow * (k_iSliderHeight + 2.5*k_iLabelHeight), k_iSliderWidth-(iTogButSize), k_iLabelHeight);
 	m_oLfoTogBut.setBounds		(x, y + iCurRow * (k_iSliderHeight + k_iLabelHeight) + iTogButSize, iTogButSize, iTogButSize);
 
 	++iCurCol;
