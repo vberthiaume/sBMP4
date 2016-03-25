@@ -111,14 +111,14 @@ void sBMP4AudioProcessorEditor::addSlider(Slider* p_pSlider, const float &p_fInc
 void sBMP4AudioProcessorEditor::addLabel(Label * p_pLabel){
 	//p_pLabel->setFont(Font(11.0f));
 	//p_pLabel->setColour(Label::textColourId, Colours::white);
-	p_pLabel->setLookAndFeel(mLookAndFeel);
+	p_pLabel->setLookAndFeel(&mLookAndFeel);
 	p_pLabel->setJustificationType(Justification::centred);
 	addAndMakeVisible(p_pLabel);
 }
 
 void sBMP4AudioProcessorEditor::addToggleButton(ToggleButton* p_pTogButton){
 	p_pTogButton->setColour(ToggleButton::textColourId, Colours::white);
-	p_pTogButton->setLookAndFeel(mLookAndFeel);
+	p_pTogButton->setLookAndFeel(&mLookAndFeel);
 	p_pTogButton->addListener(this);
 	addAndMakeVisible(p_pTogButton);
 }
