@@ -55,6 +55,7 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor(sBMP4AudioProcessor& proces
 	addSlider(&m_oGainSlider,	.01);
 
 	addToggleButton(&m_oLfoTogBut); 
+	m_oLfoTogBut.setButtonText(" LFO");
 	addToggleButton(&m_oSubOscTogBut); 
 	m_oSubOscTogBut.setButtonText("Sub Osc");
 
@@ -159,8 +160,8 @@ void sBMP4AudioProcessorEditor::resized() {
 	iCurCol = 0;
 
 	m_oLfoSlider.setBounds		(x + iCurCol * k_iSliderWidth, y + iCurRow * (k_iSliderHeight + k_iLabelHeight), k_iSliderWidth, k_iSliderHeight);
-	m_oLfoLabel.setBounds		(x + iCurCol * k_iSliderWidth+iTogButSize, y + iCurRow * (k_iSliderHeight + 2.5*k_iLabelHeight), k_iSliderWidth-(iTogButSize), k_iLabelHeight);
-	m_oLfoTogBut.setBounds		(x, y + iCurRow * (k_iSliderHeight + k_iLabelHeight) + iTogButSize, iTogButSize, iTogButSize);
+	//m_oLfoLabel.setBounds		(x + iCurCol * k_iSliderWidth+iTogButSize, y + iCurRow * (k_iSliderHeight + 2.5*k_iLabelHeight), k_iSliderWidth-(iTogButSize), k_iLabelHeight);
+	m_oLfoTogBut.setBounds		(x, y + iCurRow * (k_iSliderHeight + k_iLabelHeight) + iTogButSize+5, k_iSliderWidth, iTogButSize);
 
 	++iCurCol;
 
