@@ -37,7 +37,6 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor(sBMP4AudioProcessor& proces
 	, m_oQSlider("Resonance")
     , m_oQLabel("", "Resonance")
 	, m_oLfoSlider("LFO")
-	, m_oLfoLabel("", "LFO")
 	, m_oDelaySlider("delay")
     , m_oDelayLabel("", "delay")
     , m_oGainSlider("gain")
@@ -74,8 +73,6 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor(sBMP4AudioProcessor& proces
 
     // add some labels for the sliders
 	addLabel(&m_oWaveLabel);
-	addLabel(&m_oLfoLabel);
-	//m_oLfoLabel.setJustificationType(Justification::left);
 	addLabel(&m_oFilterLabel);
 	addLabel(&m_oQLabel);
 	addLabel(&m_oGainLabel);
@@ -160,7 +157,6 @@ void sBMP4AudioProcessorEditor::resized() {
 	iCurCol = 0;
 
 	m_oLfoSlider.setBounds		(x + iCurCol * k_iSliderWidth, y + iCurRow * (k_iSliderHeight + k_iLabelHeight), k_iSliderWidth, k_iSliderHeight);
-	//m_oLfoLabel.setBounds		(x + iCurCol * k_iSliderWidth+iTogButSize, y + iCurRow * (k_iSliderHeight + 2.5*k_iLabelHeight), k_iSliderWidth-(iTogButSize), k_iLabelHeight);
 	m_oLfoTogBut.setBounds		(x+4, y + iCurRow * (k_iSliderHeight + k_iLabelHeight) + iTogButSize+3, k_iSliderWidth, iTogButSize);
 
 	++iCurCol;

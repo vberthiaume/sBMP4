@@ -50,7 +50,7 @@ public:
 
 private:
     MidiKeyboardComponent m_oMidiKeyboard;
-	Label m_oWaveLabel, m_oFilterLabel, m_oGainLabel, m_oDelayLabel, m_oLfoLabel, m_oQLabel;
+	Label m_oWaveLabel, m_oFilterLabel, m_oGainLabel, m_oDelayLabel, m_oQLabel;
 	Slider m_oWaveSlider, m_oFilterSlider, m_oGainSlider, m_oDelaySlider, m_oLfoSlider, m_oQSlider;
 	ToggleButton m_oLfoTogBut, m_oSubOscTogBut;
 	ImageComponent m_oSineImage, m_oSawImage, m_oSquareImage, m_oTriangleImage, m_oLogoImage;
