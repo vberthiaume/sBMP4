@@ -15,7 +15,7 @@
             numOutputs="0" isShell="0"/>
     <STATE>0.</STATE>
   </FILTER>
-  <FILTER uid="3" x="0.46780551905387646183" y="0.77640845070422537244">
+  <FILTER uid="3" x="0.46780551905387646183" y="0.77640845070422548346">
     <PLUGIN name="Audio Output" descriptiveName="" format="Internal" category="I/O devices"
             manufacturer="ROLI Ltd." version="1.0" file="" uid="724248cb"
             isInstrument="0" fileTime="0" infoUpdateTime="0" numInputs="2"
@@ -23,12 +23,12 @@
     <STATE>0.</STATE>
   </FILTER>
   <FILTER uid="9" x="0.44678055190538762398" y="0.45246478873239437402"
-          uiLastX_Normal="883" uiLastY_Normal="264" uiopen_Normal="0">
+          uiLastX_Normal="883" uiLastY_Normal="264" uiopen_Normal="1">
     <PLUGIN name="sBMP4" format="VST" category="Synth" manufacturer="BMP4"
             version="V1.0.0" file="C:\Users\barth\Documents\git\sBMP4\Builds\VisualStudio2015\Debug\sBMP4.dll"
-            uid="73424d50" isInstrument="1" fileTime="152ea31b680" infoUpdateTime="153671a5320"
+            uid="73424d50" isInstrument="1" fileTime="153ce7c3eb0" infoUpdateTime="153ce7c8e96"
             numInputs="1" numOutputs="1" isShell="0"/>
-    <STATE>357.CMlaKA....fQBMDZ....ALmPMAE....Y....A...............................................................................................................................................................................Ea0PxDBu....7LkPMAEMSUDUTkjSGMEH0k1UoQFcn0iHyPCLh.RcogTYocFZz0iHxDSMh.xYgkla8HRLh.BYkwVX40iHv3RM2jSN4jSN3LyLw.iM4jCM1HCN4HBH2Elck0iHwHBHlkFazUlb8HBLtbCL4jSN4jyM3TCMxLiL2fCNvfiMh.RaeYFSl8lQxgjb8HBLh.RaeYVTHIWOh.iKzHSN4jSN4byMyTCLxLCM4fSMyTiHfz1WhwjYukzbO4VOhDiHu3C.</STATE>
+    <STATE>395.CMlaKA....fQBMDZ....ALmPMAE....Y....A...............................................................................................................................................................................qa0PxDh3....7LkPMAEMSUDUTkjSGMEH0k1UoQFcn0iHyPCLh.RcogTYocFZz0iHxDSMh.xYgkla8HRLh.BYkwVX40iHv3RM2jSN4jSN3LyLw.iM4jCM1HCN4HBH2Elck0iHv3hM1XiM1XiM3XSMyPCN3DSM4DCNh.hYowFckIWOh.iK2.SN4jSN4bCN0PiLyHyM3fCL3XiHfz1WlwjYuYjbHIWOh.iHfz1WlEERx0iHv3BMxjSN4jSN2byL0.iLyPSN3TyL0HBHs8kXLY1aIM2St0iHwHBHs8kXSUmXOM2XIM2St0iHwHxK9..</STATE>
   </FILTER>
   <CONNECTION srcFilter="1" srcChannel="0" dstFilter="9" dstChannel="0"/>
   <CONNECTION srcFilter="9" srcChannel="0" dstFilter="3" dstChannel="0"/>

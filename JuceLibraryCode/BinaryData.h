@@ -9,6 +9,9 @@
 
 namespace BinaryData
 {
+    extern const char*   Microbrute_raw_waves_stems_sBMP4__triangle_wav;
+    const int            Microbrute_raw_waves_stems_sBMP4__triangle_wavSize = 1059136;
+
     extern const char*   After_Shok_ttf;
     const int            After_Shok_ttfSize = 59436;
 
@@ -49,7 +52,7 @@ namespace BinaryData
     extern const char* namedResourceList[];
 
     // Number of elements in the namedResourceList array.
-    const int namedResourceListSize = 12;
+    const int namedResourceListSize = 13;
 
     // If you provide the name of one of the binary resource variables above, this function will
     // return the corresponding data and its size (or a null pointer if the name isn't found).

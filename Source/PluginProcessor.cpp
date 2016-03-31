@@ -43,6 +43,7 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 , m_fLfoOmega(0.)
 , m_bLfoIsOn(true)
 , m_bSubOscIsOn(true)
+, m_bUseSampledSound(true)
 {
 	//add our own audio input, because otherwise there is just a ghost input channel that is always on...
 	busArrangement.inputBuses.clear();
@@ -56,6 +57,7 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 		JUCE_COMPILER_WARNING("this is terrible")
 		voice->setProcessor(this);
         m_oSynth.addVoice(voice);
+		m_oSynth.addVoice (new SamplerVoice());    // and these ones play the sampled sounds
     }
 
     setWaveType(k_fDefaultWave);
@@ -287,21 +289,42 @@ void sBMP4AudioProcessor::setWaveType(float p_fWave){
 	JUCE_COMPILER_WARNING("probably the sounds should be loaded by the voices...")
 	m_oSynth.clearSounds();
 	//m_oSynth.clearVoices();
+	if(!m_bUseSampledSound){
+		if(m_fWave == 0){
+			m_oSynth.addSound(new SineWaveSound());
+		} else if(areSame(m_fWave, 1.f / 3)){
+			m_oSynth.addSound(new SquareWaveSound());
+		} else if(areSame(m_fWave, 2.f / 3)){
+			m_oSynth.addSound(new TriangleWaveSound());
+		} else if(m_fWave == 1){
+			m_oSynth.addSound(new SawtoothWaveSound());
+		}
+	} else{
+		if(m_fWave == 0){
+			m_oSynth.addSound(new SineWaveSound());
+		} else if(areSame(m_fWave, 1.f / 3)){
+			m_oSynth.addSound(new SquareWaveSound());
+		} else if(areSame(m_fWave, 2.f / 3)){
+			WavAudioFormat wavFormat;
+			ScopedPointer<AudioFormatReader> audioReader(wavFormat.createReaderFor(new MemoryInputStream(BinaryData::Microbrute_raw_waves_stems_sBMP4__triangle_wav, BinaryData::Microbrute_raw_waves_stems_sBMP4__triangle_wavSize, false), true));
+			BigInteger allNotes;
+			allNotes.setRange(0, 128, true);
 
-    if(m_fWave == 0){
-		m_oSynth.addSound(new SineWaveSound());
-	} 
-    else if(areSame(m_fWave, 1.f/3)){
-		m_oSynth.addSound(new SquareWaveSound());
-	} 
-    else if(areSame(m_fWave, 2.f / 3)){
-		m_oSynth.addSound(new TriangleWaveSound());
-	} 
-    else if(m_fWave == 1){
-		m_oSynth.addSound(new SawtoothWaveSound());
+			//m_oSynth.clearSounds();
+			m_oSynth.addSound(new SamplerSound("microbrute triangle",
+						   *audioReader,
+						   allNotes,
+						   74,   // root midi note
+						   0.1,  // attack time
+						   0.1,  // release time
+						   10.0  // maximum sample length
+						   ));
+		} else if(m_fWave == 1){
+			m_oSynth.addSound(new SawtoothWaveSound());
+		}
 	}
 
-	//HAVING A MONOPHONIC SYNTH MAKES CLICKS BETWEEN NOTES BECAUSE NO TAILING OFF BETWEEN NOTES
+	//HAVING A MONOPHONIC SYNTH MAKES CLICKS BETWEEN NOTES BECAUSE NO TAILING OFF BETWEEN NOTES. could use an adsr or 
 	//to have a polyphonic synth, need to load several voices, like this
 	//for (int i = 4; --i >= 0;){
 	//	m_oSynth.addVoice(new SineWaveVoice());   // These voices will play our custom sine-wave sounds..

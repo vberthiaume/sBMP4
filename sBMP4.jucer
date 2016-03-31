@@ -11,6 +11,10 @@
               pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="4.1.0"
               companyName="BMP4" pluginIsMidiEffectPlugin="0">
   <MAINGROUP id="L2BB6f" name="sBMP4">
+    <GROUP id="{48129460-6FB5-CA6A-9F4B-402BDB97EE6D}" name="sounds">
+      <FILE id="Pwzu5U" name="Microbrute raw waves_stems_sBMP4  triangle.wav"
+            compile="0" resource="1" file="../../../Dropbox/Projects/sBMP4/Microbrute reaper/Microbrute raw waves_stems_sBMP4  triangle.wav"/>
+    </GROUP>
     <GROUP id="{EBA27209-31FE-6CC8-AD9A-C63CF5B68A92}" name="fonts">
       <FILE id="jJECcI" name="After_Shok.ttf" compile="0" resource="1" file="fonts/After_Shok.ttf"/>
       <FILE id="YZavyA" name="2Dumb.ttf" compile="0" resource="1" file="fonts/2Dumb.ttf"/>
