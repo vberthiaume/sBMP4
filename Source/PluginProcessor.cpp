@@ -303,14 +303,23 @@ void sBMP4AudioProcessor::setWaveType(float p_fWave){
 		if(m_fWave == 0){
 			m_oSynth.addSound(new SineWaveSound());
 		} else if(areSame(m_fWave, 1.f / 3)){
-			m_oSynth.addSound(new SquareWaveSound());
+			WavAudioFormat wavFormat;
+			ScopedPointer<AudioFormatReader> audioReader(wavFormat.createReaderFor(new MemoryInputStream(BinaryData::Microbrute_raw_waves_stems_sBMP4__pulse_wav, BinaryData::Microbrute_raw_waves_stems_sBMP4__pulse_wavSize, false), true));
+			BigInteger allNotes;
+			allNotes.setRange(0, 128, true);
+			m_oSynth.addSound(new SamplerSound("microbrute pulse",
+						   *audioReader,
+						   allNotes,
+						   74,   // root midi note
+						   0.1,  // attack time
+						   0.1,  // release time
+						   10.0  // maximum sample length
+						   ));
 		} else if(areSame(m_fWave, 2.f / 3)){
 			WavAudioFormat wavFormat;
 			ScopedPointer<AudioFormatReader> audioReader(wavFormat.createReaderFor(new MemoryInputStream(BinaryData::Microbrute_raw_waves_stems_sBMP4__triangle_wav, BinaryData::Microbrute_raw_waves_stems_sBMP4__triangle_wavSize, false), true));
 			BigInteger allNotes;
 			allNotes.setRange(0, 128, true);
-
-			//m_oSynth.clearSounds();
 			m_oSynth.addSound(new SamplerSound("microbrute triangle",
 						   *audioReader,
 						   allNotes,
@@ -320,7 +329,18 @@ void sBMP4AudioProcessor::setWaveType(float p_fWave){
 						   10.0  // maximum sample length
 						   ));
 		} else if(m_fWave == 1){
-			m_oSynth.addSound(new SawtoothWaveSound());
+			WavAudioFormat wavFormat;
+			ScopedPointer<AudioFormatReader> audioReader(wavFormat.createReaderFor(new MemoryInputStream(BinaryData::Microbrute_raw_waves_stems_sBMP4__sawtooth_wav, BinaryData::Microbrute_raw_waves_stems_sBMP4__sawtooth_wavSize, false), true));
+			BigInteger allNotes;
+			allNotes.setRange(0, 128, true);
+			m_oSynth.addSound(new SamplerSound("microbrute sawtooth",
+						   *audioReader,
+						   allNotes,
+						   74,   // root midi note
+						   0.1,  // attack time
+						   0.1,  // release time
+						   10.0  // maximum sample length
+						   ));
 		}
 	}
 

@@ -12,6 +12,10 @@
               companyName="BMP4" pluginIsMidiEffectPlugin="0">
   <MAINGROUP id="L2BB6f" name="sBMP4">
     <GROUP id="{48129460-6FB5-CA6A-9F4B-402BDB97EE6D}" name="sounds">
+      <FILE id="j6V4q1" name="Microbrute raw waves_stems_sBMP4  pulse.wav"
+            compile="0" resource="1" file="../../../Dropbox/Projects/sBMP4/Microbrute reaper/Microbrute raw waves_stems_sBMP4  pulse.wav"/>
+      <FILE id="kUgfeE" name="Microbrute raw waves_stems_sBMP4  sawtooth.wav"
+            compile="0" resource="1" file="../../../Dropbox/Projects/sBMP4/Microbrute reaper/Microbrute raw waves_stems_sBMP4  sawtooth.wav"/>
       <FILE id="Pwzu5U" name="Microbrute raw waves_stems_sBMP4  triangle.wav"
             compile="0" resource="1" file="../../../Dropbox/Projects/sBMP4/Microbrute reaper/Microbrute raw waves_stems_sBMP4  triangle.wav"/>
     </GROUP>

@@ -1348,6 +1348,7 @@
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\JuceLibraryCode\BinaryData.cpp"/>
+    <ClCompile Include="..\..\JuceLibraryCode\BinaryData2.cpp"/>
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_audio_plugin_client\AAX\juce_AAX_Wrapper.cpp"/>
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_audio_basics\juce_audio_basics.cpp"/>
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_audio_devices\juce_audio_devices.cpp"/>
@@ -1894,6 +1895,8 @@
     <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h"/>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\..\..\Dropbox\Projects\sBMP4\Microbrute reaper\Microbrute raw waves_stems_sBMP4  pulse.wav"/>
+    <None Include="..\..\..\..\..\Dropbox\Projects\sBMP4\Microbrute reaper\Microbrute raw waves_stems_sBMP4  sawtooth.wav"/>
     <None Include="..\..\..\..\..\Dropbox\Projects\sBMP4\Microbrute reaper\Microbrute raw waves_stems_sBMP4  triangle.wav"/>
     <None Include="..\..\fonts\After_Shok.ttf"/>
     <None Include="..\..\fonts\2Dumb.ttf"/>
