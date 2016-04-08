@@ -100,7 +100,7 @@ WaveTableOsc::WaveTableOsc(void) {
     for (int idx = 0; idx < numWaveTableSlots; idx++) {
         waveTables[idx].topFreq = 0;
         waveTables[idx].waveTableLen = 0;
-        waveTables[idx].waveTable = 0;
+        //waveTables[idx].waveTable = 0;
     }
 }
 
@@ -219,11 +219,11 @@ void WaveTableOsc::defineSawtooth(int len, int numHarmonics, vector<double> &ar,
 }
 
 WaveTableOsc::~WaveTableOsc(void) {
-    for (int idx = 0; idx < numWaveTableSlots; idx++) {
-        float *temp = waveTables[idx].waveTable;
-        if (temp != NULL)
-            delete [] temp;
-    }
+    //for (int idx = 0; idx < numWaveTableSlots; idx++) {
+    //    float *temp = waveTables[idx].waveTable;
+    //    if (temp != NULL)
+    //        delete [] temp;
+    //}
 }
 
 
@@ -238,15 +238,19 @@ WaveTableOsc::~WaveTableOsc(void) {
 //
 int WaveTableOsc::addWaveTable(int len, std::vector<float> waveTableIn, double topFreq) {
     if (numWaveTables < numWaveTableSlots) {
-        float *waveTable = waveTables[numWaveTables].waveTable = new float[len];
+        
+		//float *waveTable = waveTables[numWaveTables].waveTable = new float[len];
+		
+		waveTables[numWaveTables].waveTable = vector<float>(len);
         waveTables[numWaveTables].waveTableLen = len;
         waveTables[numWaveTables].topFreq = topFreq;
-        ++numWaveTables;
+        
         
         // fill in wave
         for (long idx = 0; idx < len; idx++)
-            waveTable[idx] = waveTableIn[idx];
+            waveTables[numWaveTables].waveTable[idx] = waveTableIn[idx];
         
+		++numWaveTables;
         return 0;
     }
     return numWaveTables;

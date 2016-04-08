@@ -26,7 +26,7 @@
 typedef struct {
     double topFreq;
     int waveTableLen;
-    float *waveTable;
+    std::vector<float> waveTable;
 } waveTable;
 
 const int numWaveTableSlots = 32;
