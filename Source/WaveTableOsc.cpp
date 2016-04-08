@@ -31,24 +31,8 @@
 using namespace std;
 
 
-//
-// fft
-//
-// I grabbed (and slightly modified) this Rabiner & Gold translation...
-//
-// (could modify for real data, could use a template version, blah blah--just keeping it short)
-//
-void fft(int N, vector<double> &ar, vector<double> &ai)
-/*
- in-place complex fft
- 
- After Cooley, Lewis, and Welch; from Rabiner & Gold (1975)
- 
- program adapted from FORTRAN 
- by K. Steiglitz  (ken@princeton.edu)
- Computer Science Dept. 
- Princeton University 08544          */
-{    
+// I grabbed (and slightly modified) this code from Rabiner & Gold (1975), After Cooley, Lewis, and Welch; 
+void fft(int N, vector<double> &ar, vector<double> &ai) {    
     int i, j, k, L;            /* indexes */
     int M, TEMP, LE, LE1, ip;  /* M = log N */
     int NV2, NM1;
@@ -57,7 +41,6 @@ void fft(int N, vector<double> &ar, vector<double> &ai)
     double Ur_old;
     
     // if ((N > 1) && !(N & (N - 1)))   // make sure we have a power of 2
-    
     NV2 = N >> 1;
     NM1 = N - 1;
     TEMP = N; /* get M = log N */
@@ -108,9 +91,7 @@ void fft(int N, vector<double> &ar, vector<double> &ai)
     }
 }
 
-
 WaveTableOsc::WaveTableOsc(void) {
-	
     phasor = 0.0;		// phase accumulator
     phaseInc = 0.0;		// phase increment
     phaseOfs = 0.5;		// phase offset for PWM
@@ -124,8 +105,8 @@ WaveTableOsc::WaveTableOsc(void) {
     }
 }
 
-
-WaveTableOsc::WaveTableOsc(float baseFreq, int sampleRate){
+WaveTableOsc::WaveTableOsc(float baseFreq, int sampleRate) 
+	: WaveTableOsc() {
 	//TODO: understand this
     // calc number of harmonics where the highest harmonic baseFreq and lowest alias an octave higher would meet
     int maxHarms = sampleRate / (3.0 * baseFreq) + 0.5;	//maxHarms = 735
@@ -156,7 +137,8 @@ WaveTableOsc::WaveTableOsc(float baseFreq, int sampleRate){
 		//fill ar with partial amplitudes for a sawtooth. This will be ifft'ed to get a wave
         defineSawtooth(tableLen, maxHarms, ar, ai);	
 		//from the ar partials, make a wave in ai, then store it in osc. keep scale so that we can reuse it for the next maxHarm, so that we have a normalized volume accross wavetables
-        scale = makeWaveTable(tableLen, ar, ai, scale, topFreq);
+        JUCE_COMPILER_WARNING("makeWaveTable should use ar and ai members instead of passing by argument like this")
+		scale = makeWaveTable(tableLen, ar, ai, scale, topFreq);
         topFreq *= 2;
 		//not sure, doesn't matter, not hit with default values
         if (tableLen > constantRatioLimit){ // variable table size (constant oversampling but with minimum table size)
