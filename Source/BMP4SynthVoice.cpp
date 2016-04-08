@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ==============================================================================
 */
 #include "BMP4SynthVoice.h"
-#include "WaveTableOsc.h"
+
 #define _USE_MATH_DEFINES
 #include <math.h>
 
@@ -66,7 +66,7 @@ Bmp4SynthVoice::Bmp4SynthVoice()
 		//	dCurAngle += dOmega;
 		//}
 
-		WaveTableOsc osc(k_iBaseFrequency, getSampleRate());
+		m_oWaveTableOsc = WaveTableOsc(k_iBaseFrequency, getSampleRate());
 	}
 }
 

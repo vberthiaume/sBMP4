@@ -30,7 +30,6 @@
 
 using namespace std;
 
-
 // I grabbed (and slightly modified) this code from Rabiner & Gold (1975), After Cooley, Lewis, and Welch; 
 void fft(int N, vector<double> &ar, vector<double> &ai) {    
     int i, j, k, L;            /* indexes */
@@ -222,7 +221,7 @@ void WaveTableOsc::defineSawtooth(int len, int numHarmonics, vector<double> &ar,
 WaveTableOsc::~WaveTableOsc(void) {
     for (int idx = 0; idx < numWaveTableSlots; idx++) {
         float *temp = waveTables[idx].waveTable;
-        if (temp != 0)
+        if (temp != NULL)
             delete [] temp;
     }
 }

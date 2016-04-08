@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "constants.h"
 #include "PluginProcessor.h"
+#include "WaveTableOsc.h"
 
 //==============================================================================
 //Synth sounds
@@ -113,6 +114,7 @@ protected:
     //double m_dSquareTbl    [k_iTotalWaveFrames];
     //double m_dTriangleTbl  [k_iTotalWaveFrames];
     //double m_dSawtoothTbl  [k_iTotalWaveFrames];
+	WaveTableOsc m_oWaveTableOsc;
 	sBMP4AudioProcessor* m_processor;
 };
 
