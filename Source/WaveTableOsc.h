@@ -43,7 +43,7 @@ protected:
     
 public:
     WaveTableOsc(void);
-	WaveTableOsc(float, int);
+	WaveTableOsc(const float, const int);
     ~WaveTableOsc(void);
 	void defineSawtooth(int len, int numHarmonics, std::vector<double> &ar, std::vector<double> &ai);
 	float makeWaveTable(int len, std::vector<double> &ar, std::vector<double> &ai, double scale, double topFreq);

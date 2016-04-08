@@ -105,7 +105,7 @@ WaveTableOsc::WaveTableOsc(void) {
     }
 }
 
-WaveTableOsc::WaveTableOsc(float baseFreq, int sampleRate) 
+WaveTableOsc::WaveTableOsc(const float baseFreq, const int sampleRate) 
 	: WaveTableOsc() {
 	//TODO: understand this
     // calc number of harmonics where the highest harmonic baseFreq and lowest alias an octave higher would meet

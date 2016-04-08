@@ -86,15 +86,19 @@ const bool  k_bUseSimplestLp = true;
 //-------stuff related to wavetables
 const bool  k_bUseWaveTables = true;
 
-JUCE_COMPILER_WARNING("Reasoning for finding k_iTotalWaveFrames. THIS CANNOT BE HARDCODED");
-float k_fWavTableFr = 100.f;	//frequency of wave stored in wave table
+//JUCE_COMPILER_WARNING("Reasoning for finding k_iTotalWaveFrames. THIS CANNOT BE HARDCODED");
+//float k_fWavTableFr = 100.f;	//frequency of wave stored in wave table
+//
+////float fT = 1/fFr;	//period
+//float k_fSampleRate = 44100;	
+////k_iTotalWaveFrames = k_fSampleRate * fT = 441;
+//const int   k_iTotalWaveFrames = 441;
 
-//float fT = 1/fFr;	//period
-float k_fSampleRate = 44100;	
-//k_iTotalWaveFrames = k_fSampleRate * fT = 441;
-const int   k_iTotalWaveFrames = 441;
+const int   k_iOverSampleFactor	= 2;        /* oversampling factor (positive integer) */
+const float k_iBaseFrequency	= 20.f;  /* starting frequency of first table */
 
-//-------stuff related to size of things
+
+//-------stuff related to size of GUI things
 const int k_iXMargin		= 20;
 const int k_iYMargin		= 25;
 const int k_iKeyboardHeight	= 70;

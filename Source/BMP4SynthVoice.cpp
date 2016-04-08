@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ==============================================================================
 */
 #include "BMP4SynthVoice.h"
+#include "WaveTableOsc.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
 
@@ -30,40 +31,42 @@ Bmp4SynthVoice::Bmp4SynthVoice()
     , m_iCurSound(soundSine)
 {
 	if(k_bUseWaveTables){
-		double dCurAngle = 0.;
-		JUCE_COMPILER_WARNING("SAMPLERATE CANNOT BE HARDCODED");
-		double dOmega = 2. * M_PI * k_fWavTableFr / k_fSampleRate;
-		for(size_t iCurFrame = 0; iCurFrame < k_iTotalWaveFrames; ++iCurFrame){
+		//double dCurAngle = 0.;
+		//JUCE_COMPILER_WARNING("SAMPLERATE CANNOT BE HARDCODED");
+		//double dOmega = 2. * M_PI * k_fWavTableFr / k_fSampleRate;
+		//for(size_t iCurFrame = 0; iCurFrame < k_iTotalWaveFrames; ++iCurFrame){
 
-			//formula for sine is sin(2 * PI * f/fs * t)
-			m_dSineTbl[iCurFrame] = sin(dCurAngle);
-			//square
-			{
-				double dCurSample = 0.0;
-				for(int iCurK = 0; iCurK < 100; ++iCurK){
-					dCurSample += sin(dCurAngle * (2 * iCurK + 1)) / (2 * iCurK + 1);
-				}
-				m_dSquareTbl[iCurFrame] = dCurSample * .75;  //this .75 factor is to make this wave appear as loud at the other ones
-			}
-			//triangle
-			{
-				double dCurSample = 0.0;
-				for(int iCurK = 0; iCurK < 100; ++iCurK){
-					dCurSample += sin(M_PI*(2 * iCurK + 1) / 2) * (sin(dCurAngle * (2 * iCurK + 1)) / pow((2 * iCurK + 1), 2));
-				}
-				m_dTriangleTbl[iCurFrame] = (8 / pow(M_PI, 2)) * dCurSample;
-			}
-			//sawtooth
-			{
-				double dCurSample = 0.0;
-				for(int iCurK = 1; iCurK < 100; ++iCurK){
-					dCurSample += sin(dCurAngle * iCurK) / iCurK;
-				}
-				m_dSawtoothTbl[iCurFrame] = 1 / 2 - (1 / M_PI) * dCurSample;
-				DBG(m_dSawtoothTbl[iCurFrame]);
-			}
-			dCurAngle += dOmega;
-		}
+		//	//formula for sine is sin(2 * PI * f/fs * t)
+		//	m_dSineTbl[iCurFrame] = sin(dCurAngle);
+		//	//square
+		//	{
+		//		double dCurSample = 0.0;
+		//		for(int iCurK = 0; iCurK < 100; ++iCurK){
+		//			dCurSample += sin(dCurAngle * (2 * iCurK + 1)) / (2 * iCurK + 1);
+		//		}
+		//		m_dSquareTbl[iCurFrame] = dCurSample * .75;  //this .75 factor is to make this wave appear as loud at the other ones
+		//	}
+		//	//triangle
+		//	{
+		//		double dCurSample = 0.0;
+		//		for(int iCurK = 0; iCurK < 100; ++iCurK){
+		//			dCurSample += sin(M_PI*(2 * iCurK + 1) / 2) * (sin(dCurAngle * (2 * iCurK + 1)) / pow((2 * iCurK + 1), 2));
+		//		}
+		//		m_dTriangleTbl[iCurFrame] = (8 / pow(M_PI, 2)) * dCurSample;
+		//	}
+		//	//sawtooth
+		//	{
+		//		double dCurSample = 0.0;
+		//		for(int iCurK = 1; iCurK < 100; ++iCurK){
+		//			dCurSample += sin(dCurAngle * iCurK) / iCurK;
+		//		}
+		//		m_dSawtoothTbl[iCurFrame] = 1 / 2 - (1 / M_PI) * dCurSample;
+		//		DBG(m_dSawtoothTbl[iCurFrame]);
+		//	}
+		//	dCurAngle += dOmega;
+		//}
+
+		WaveTableOsc osc(k_iBaseFrequency, getSampleRate());
 	}
 }
 

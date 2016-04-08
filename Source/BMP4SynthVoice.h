@@ -109,10 +109,10 @@ public:
 protected:
 	double m_dCurrentAngle, m_dOmega, m_dLevel, m_dTailOff;
     int m_iCurSound;
-    double m_dSineTbl      [k_iTotalWaveFrames];
-    double m_dSquareTbl    [k_iTotalWaveFrames];
-    double m_dTriangleTbl  [k_iTotalWaveFrames];
-    double m_dSawtoothTbl  [k_iTotalWaveFrames];
+    //double m_dSineTbl      [k_iTotalWaveFrames];
+    //double m_dSquareTbl    [k_iTotalWaveFrames];
+    //double m_dTriangleTbl  [k_iTotalWaveFrames];
+    //double m_dSawtoothTbl  [k_iTotalWaveFrames];
 	sBMP4AudioProcessor* m_processor;
 };
 
