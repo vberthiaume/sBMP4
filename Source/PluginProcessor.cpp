@@ -43,7 +43,7 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 , m_fLfoOmega(0.)
 , m_bLfoIsOn(true)
 , m_bSubOscIsOn(true)
-, m_bUseSampledSound(true)
+, m_bUseSampledSound(false)
 {
 	//add our own audio input, because otherwise there is just a ghost input channel that is always on...
 	busArrangement.inputBuses.clear();

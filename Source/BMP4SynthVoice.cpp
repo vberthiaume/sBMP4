@@ -80,7 +80,13 @@ void Bmp4SynthVoice::startNote(int midiNoteNumber, float velocity, SynthesiserSo
     m_dTailOff = 0.0;
     double dFrequency = MidiMessage::getMidiNoteInHertz(midiNoteNumber);
     double dNormalizedFreq = dFrequency / getSampleRate();
-    m_dOmega = dNormalizedFreq * 2.0 * double_Pi;
+    
+	m_dOmega = dNormalizedFreq * 2.0 * double_Pi;
+
+	if (k_bUseWaveTables){
+		m_oWaveTableOsc.setFrequency(dNormalizedFreq);
+	}
+
 
     if(dynamic_cast <SineWaveSound*> (getCurrentlyPlayingSound().get())){
         m_iCurSound = soundSine;
@@ -108,6 +114,11 @@ void Bmp4SynthVoice::renderNextBlock(AudioSampleBuffer& p_oOutputBuffer, int p_i
 			p_oOutputBuffer.addSample(i, p_iStartSample, fCurrentSample);
 		}
 		m_dCurrentAngle += m_dOmega;	//m_dOmega here is in radian (as it always is!)
+
+		if (k_bUseWaveTables){
+			//increase the phase by phaseInc
+			m_oWaveTableOsc.updatePhase();
+		}
 		++p_iStartSample;
 		if (m_dTailOff > 0) {
 			m_dTailOff *= 0.99;
@@ -128,39 +139,42 @@ float Bmp4SynthVoice::getSample(double dTail) {
     }
 }
 
-float Bmp4SynthVoice::getSampleWaveTable(double dTail) {
-    switch(m_iCurSound) {
-    case soundSine:
-    default:
-        JUCE_COMPILER_WARNING("FOR NOW, THIS FUNCTION IS EXACTLY LIKE ADDITIVE SYNTHESIS. ok, so the problem here is converting this m_dCurrentAngle into some kind of index for m_dSineTbl")
-            return (float)(sin(m_dCurrentAngle) * m_dLevel * dTail);
-        break;
-    case soundSquare:{
-        double dCurrentSample = 0.0;
-        for(int iCurK = 0; iCurK < 25; ++iCurK){
-            dCurrentSample += sin(m_dCurrentAngle * (2 * iCurK + 1)) / (2 * iCurK + 1);
-        }
-        double dReducingFactor = .75; //this is to make this wave appear as loud at the other ones
-        return static_cast<float> (dCurrentSample * m_dLevel * dTail * dReducingFactor);
-        break;
-    }
-    case soundTriangle:{
-        float fCurrentSample = 0.0;
-        for(int iCurK = 0; iCurK < 5; ++iCurK){
-            fCurrentSample += static_cast<float> (sin(M_PI*(2 * iCurK + 1) / 2) * (sin(m_dCurrentAngle * (2 * iCurK + 1)) / pow((2 * iCurK + 1), 2)));
-        }
-        return (8 / pow(M_PI, 2)) * fCurrentSample * m_dLevel * dTail;
-        break;
-    }
-    case soundSawtooth:{
-        float fCurrentSample = 0.0;
-        for(int iCurK = 1; iCurK < 20; ++iCurK){
-            fCurrentSample += static_cast<float> (sin(m_dCurrentAngle * iCurK) / iCurK);
-        }
-        return 1/2 - (1 / M_PI) * fCurrentSample * m_dLevel * dTail;
-        break;
-    }
-    }
+float Bmp4SynthVoice::getSampleWaveTable(double dTail){
+	//switch(m_iCurSound){
+	//	case soundSine:
+	//	default:
+	//		JUCE_COMPILER_WARNING("FOR NOW, THIS FUNCTION IS EXACTLY LIKE ADDITIVE SYNTHESIS. ok, so the problem here is converting this m_dCurrentAngle into some kind of index for m_dSineTbl")
+	//			return (float)(sin(m_dCurrentAngle) * m_dLevel * dTail);
+	//		break;
+	//	case soundSquare:{
+	//		double dCurrentSample = 0.0;
+	//		for(int iCurK = 0; iCurK < 25; ++iCurK){
+	//			dCurrentSample += sin(m_dCurrentAngle * (2 * iCurK + 1)) / (2 * iCurK + 1);
+	//		}
+	//		double dReducingFactor = .75; //this is to make this wave appear as loud at the other ones
+	//		return static_cast<float> (dCurrentSample * m_dLevel * dTail * dReducingFactor);
+	//		break;
+	//	}
+	//	case soundTriangle:{
+	//		float fCurrentSample = 0.0;
+	//		for(int iCurK = 0; iCurK < 5; ++iCurK){
+	//			fCurrentSample += static_cast<float> (sin(M_PI*(2 * iCurK + 1) / 2) * (sin(m_dCurrentAngle * (2 * iCurK + 1)) / pow((2 * iCurK + 1), 2)));
+	//		}
+	//		return (8 / pow(M_PI, 2)) * fCurrentSample * m_dLevel * dTail;
+	//		break;
+	//	}
+	//	case soundSawtooth:{
+	//		float fCurrentSample = 0.0;
+	//		for(int iCurK = 1; iCurK < 20; ++iCurK){
+	//			fCurrentSample += static_cast<float> (sin(m_dCurrentAngle * iCurK) / iCurK);
+	//		}
+	//		return 1 / 2 - (1 / M_PI) * fCurrentSample * m_dLevel * dTail;
+	//		break;
+	//	}
+	//}
+
+	   
+        return m_oWaveTableOsc.getOutput();
 }
 
 float Bmp4SynthVoice::getSampleAdditiveSynthesis(double dTail){

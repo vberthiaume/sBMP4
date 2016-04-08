@@ -238,18 +238,16 @@ WaveTableOsc::~WaveTableOsc(void) {
 //
 int WaveTableOsc::addWaveTable(int len, std::vector<float> waveTableIn, double topFreq) {
     if (numWaveTables < numWaveTableSlots) {
-        
-		//float *waveTable = waveTables[numWaveTables].waveTable = new float[len];
-		
+       
 		waveTables[numWaveTables].waveTable = vector<float>(len);
         waveTables[numWaveTables].waveTableLen = len;
         waveTables[numWaveTables].topFreq = topFreq;
         
-        
         // fill in wave
-        for (long idx = 0; idx < len; idx++)
+        for (long idx = 0; idx < len; idx++){
             waveTables[numWaveTables].waveTable[idx] = waveTableIn[idx];
-        
+		}
+
 		++numWaveTables;
         return 0;
     }
