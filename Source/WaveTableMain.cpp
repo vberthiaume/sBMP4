@@ -60,8 +60,6 @@ const int testType = c_testSawSweep;    // set this to select the test to run
 
 // end tweak section
 
-
-
 // tests
 void testPWM(void);
 void testThreeOsc(void);
@@ -257,7 +255,7 @@ void setSawtoothOsc(WaveTableOsc *osc, float baseFreq) {
     int tableLen = v * 2 * overSamp;  // double for the sample rate, then oversampling, tablelen = 4096
 
     // for ifft
-	vector<myFloat> ar(tableLen);	//is this real amplitude and ai imaginary amplitude?
+	vector<myFloat> ar(tableLen);	
 	vector<myFloat> ai(tableLen);   
 
 	//calculate topFrequency based on Nyquist and base frequency... 
