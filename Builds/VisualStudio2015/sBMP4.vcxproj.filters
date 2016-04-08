@@ -340,6 +340,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\WaveTableMain.cpp">
+      <Filter>sBMP4\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\WaveTableOsc.cpp">
+      <Filter>sBMP4\Source</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\BMP4SynthVoice.cpp">
       <Filter>sBMP4\Source</Filter>
     </ClCompile>
@@ -1733,6 +1739,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\DspFilters\Utilities.h">
       <Filter>sBMP4\Source\DspFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\WaveTableOsc.h">
+      <Filter>sBMP4\Source</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\sBmp4LookAndFeel.h">
       <Filter>sBMP4\Source</Filter>

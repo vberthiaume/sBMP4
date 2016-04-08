@@ -63,6 +63,11 @@
         <FILE id="m8YT29" name="Types.h" compile="0" resource="0" file="Source/DspFilters/Types.h"/>
         <FILE id="eITljP" name="Utilities.h" compile="0" resource="0" file="Source/DspFilters/Utilities.h"/>
       </GROUP>
+      <FILE id="FLSXAi" name="WaveTableMain.cpp" compile="1" resource="0"
+            file="Source/WaveTableMain.cpp"/>
+      <FILE id="sTdAQ6" name="WaveTableOsc.cpp" compile="1" resource="0"
+            file="Source/WaveTableOsc.cpp"/>
+      <FILE id="Y0QN82" name="WaveTableOsc.h" compile="0" resource="0" file="Source/WaveTableOsc.h"/>
       <FILE id="xOWnKL" name="sBmp4LookAndFeel.h" compile="0" resource="0"
             file="Source/sBmp4LookAndFeel.h"/>
       <FILE id="xEkEE0" name="BMP4SynthVoice.cpp" compile="1" resource="0"

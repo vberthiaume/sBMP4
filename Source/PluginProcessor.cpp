@@ -313,7 +313,7 @@ void sBMP4AudioProcessor::setWaveType(float p_fWave){
 						   74,   // root midi note
 						   0.1,  // attack time
 						   0.1,  // release time
-						   10.0  // maximum sample length
+						   20.0  // maximum sample length
 						   ));
 		} else if(areSame(m_fWave, 2.f / 3)){
 			WavAudioFormat wavFormat;
@@ -326,7 +326,7 @@ void sBMP4AudioProcessor::setWaveType(float p_fWave){
 						   74,   // root midi note
 						   0.1,  // attack time
 						   0.1,  // release time
-						   10.0  // maximum sample length
+						   20.0  // maximum sample length
 						   ));
 		} else if(m_fWave == 1){
 			WavAudioFormat wavFormat;
@@ -339,7 +339,7 @@ void sBMP4AudioProcessor::setWaveType(float p_fWave){
 						   74,   // root midi note
 						   0.1,  // attack time
 						   0.1,  // release time
-						   10.0  // maximum sample length
+						   20.0  // maximum sample length
 						   ));
 		}
 	}

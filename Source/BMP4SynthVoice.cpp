@@ -20,11 +20,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ==============================================================================
 */
-
 #include "BMP4SynthVoice.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
-
 
 Bmp4SynthVoice::Bmp4SynthVoice()
 	: m_dOmega(0.0)
