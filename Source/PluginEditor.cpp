@@ -193,17 +193,17 @@ void sBMP4AudioProcessorEditor::timerCallback() {
 // This is our Slider::Listener callback, when the user drags a slider.
 void sBMP4AudioProcessorEditor::sliderValueChanged (Slider* slider) {
     if (slider == &m_oGainSlider)    {
-        getProcessor().setParameterNotifyingHost (paramGain, (float) m_oGainSlider.getValue());
+        getProcessor().setParameterNotifyingHost (paramGain,	(float) m_oGainSlider.getValue());
     } else if (slider == &m_oDelaySlider) {
-        getProcessor().setParameterNotifyingHost (paramDelay, (float) m_oDelaySlider.getValue());
+        getProcessor().setParameterNotifyingHost (paramDelay,	(float) m_oDelaySlider.getValue());
     } else if (slider == &m_oWaveSlider) {
-        getProcessor().setParameterNotifyingHost (paramWave, (float) m_oWaveSlider.getValue());
+        getProcessor().setParameterNotifyingHost (paramWave,	(float) m_oWaveSlider.getValue());
 	} else if(slider == &m_oFilterSlider) {
 		getProcessor().setParameterNotifyingHost(paramFilterFr, (float)m_oFilterSlider.getValue());
 	} else if (slider == &m_oLfoSlider) {
-		getProcessor().setParameterNotifyingHost(paramLfoFr, (float)m_oLfoSlider.getValue());
+		getProcessor().setParameterNotifyingHost(paramLfoFr,	(float)m_oLfoSlider.getValue());
 	} else if (slider == &m_oQSlider) {
-		getProcessor().setParameterNotifyingHost(paramQ, (float)m_oQSlider.getValue());
+		getProcessor().setParameterNotifyingHost(paramQ,		(float)m_oQSlider.getValue());
 	}
 
 }

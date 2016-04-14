@@ -299,7 +299,7 @@ void sBMP4AudioProcessor::setWaveType(float p_fWave){
 		} else if(m_fWave == 1){
 			m_oSynth.addSound(new SawtoothWaveSound());
 		}
-	} else{
+	} else {
 		if(m_fWave == 0){
 			m_oSynth.addSound(new SineWaveSound());
 		} else if(areSame(m_fWave, 1.f / 3)){
