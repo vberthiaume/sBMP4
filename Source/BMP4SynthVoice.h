@@ -87,9 +87,7 @@ public:
 
     virtual float getSample(double dTail);
 	
-	void setProcessor(sBMP4AudioProcessor* p_processor);
-
-    float getSampleAdditiveSynthesis(double dTail);
+	float getSampleAdditiveSynthesis(double dTail);
 
 	void renderNextBlock(AudioSampleBuffer& p_oOutputBuffer, int p_iStartSample, int p_iTotalSamples) override;
 
@@ -109,7 +107,6 @@ protected:
 	double m_dCurrentAngle, m_dOmega, m_dLevel, m_dTailOff;
     int m_iCurSound;
 	WaveTableOsc m_oWaveTableOsc;
-	sBMP4AudioProcessor* m_processor;
 };
 
 #endif //sBMP4_Sounds_h

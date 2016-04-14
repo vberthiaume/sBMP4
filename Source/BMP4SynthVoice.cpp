@@ -35,10 +35,6 @@ Bmp4SynthVoice::Bmp4SynthVoice()
 	}
 }
 
-void Bmp4SynthVoice::setProcessor(sBMP4AudioProcessor* p_processor) {
-	m_processor = p_processor;
-}
-
 void Bmp4SynthVoice::startNote(int midiNoteNumber, float velocity, SynthesiserSound* sound, int /*currentPitchWheelPosition*/)  {
     m_dCurrentAngle = 0.0;
     m_dLevel = velocity * 0.15;

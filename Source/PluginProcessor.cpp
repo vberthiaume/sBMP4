@@ -54,9 +54,8 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 
     for(int iCurVox = 0; iCurVox < k_iNumberOfVoices; ++iCurVox){
 		Bmp4SynthVoice* voice = new Bmp4SynthVoice();
-		JUCE_COMPILER_WARNING("this is terrible")
-		voice->setProcessor(this);
         m_oSynth.addVoice(voice);
+		JUCE_COMPILER_WARNING("this adding samplerVoices interacting with the other voices in any way?")
 		m_oSynth.addVoice (new SamplerVoice());    // and these ones play the sampled sounds
     }
 
