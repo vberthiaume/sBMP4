@@ -98,9 +98,9 @@ WaveTableOsc::WaveTableOsc(void) {
 
 	//initialize the array of waveTable structures (which could be replaced by vectors...)
     for (int idx = 0; idx < numWaveTableSlots; idx++) {
-        waveTables[idx].topFreq = 0;
-        waveTables[idx].waveTableLen = 0;
-        //waveTables[idx].waveTable = 0;
+        m_oWaveTables[idx].topFreq = 0;
+        m_oWaveTables[idx].waveTableLen = 0;
+        //m_oWaveTables[idx].waveTable = 0;
     }
 }
 
@@ -177,10 +177,7 @@ float WaveTableOsc::makeWaveTable(int len, vector<double> &ar, vector<double> &a
 
 
 
-// defineSawtooth
-//
 // prepares sawtooth harmonics for ifft
-//
 void WaveTableOsc::defineSawtooth(int len, int numHarmonics, vector<double> &ar, vector<double> &ai) {
 	if (numHarmonics > (len /2 ))
         numHarmonics = (len /2);
@@ -220,7 +217,7 @@ void WaveTableOsc::defineSawtooth(int len, int numHarmonics, vector<double> &ar,
 
 WaveTableOsc::~WaveTableOsc(void) {
     //for (int idx = 0; idx < numWaveTableSlots; idx++) {
-    //    float *temp = waveTables[idx].waveTable;
+    //    float *temp = m_oWaveTables[idx].waveTable;
     //    if (temp != NULL)
     //        delete [] temp;
     //}
@@ -239,13 +236,13 @@ WaveTableOsc::~WaveTableOsc(void) {
 int WaveTableOsc::addWaveTable(int len, std::vector<float> waveTableIn, double topFreq) {
     if (numWaveTables < numWaveTableSlots) {
        
-		waveTables[numWaveTables].waveTable = vector<float>(len);
-        waveTables[numWaveTables].waveTableLen = len;
-        waveTables[numWaveTables].topFreq = topFreq;
+		m_oWaveTables[numWaveTables].waveTable = vector<float>(len);
+        m_oWaveTables[numWaveTables].waveTableLen = len;
+        m_oWaveTables[numWaveTables].topFreq = topFreq;
         
         // fill in wave
         for (long idx = 0; idx < len; idx++){
-            waveTables[numWaveTables].waveTable[idx] = waveTableIn[idx];
+            m_oWaveTables[numWaveTables].waveTable[idx] = waveTableIn[idx];
 		}
 
 		++numWaveTables;
@@ -253,7 +250,6 @@ int WaveTableOsc::addWaveTable(int len, std::vector<float> waveTableIn, double t
     }
     return numWaveTables;
 }
-
 
 //
 // getOutput
@@ -264,10 +260,10 @@ float WaveTableOsc::getOutput() {
     // grab the appropriate wavetable
     int waveTableIdx = 0;
 	//TODO: why is phaseInc compared to the topFreq?
-    while ((phaseInc >= waveTables[waveTableIdx].topFreq) && (waveTableIdx < (numWaveTables - 1))) {
+    while ((phaseInc >= m_oWaveTables[waveTableIdx].topFreq) && (waveTableIdx < (numWaveTables - 1))) {
         ++waveTableIdx;
     }
-    waveTable *waveTable = &waveTables[waveTableIdx];
+    waveTable *waveTable = &m_oWaveTables[waveTableIdx];
 
 #if !doLinearInterp
     // truncate
@@ -298,10 +294,10 @@ float WaveTableOsc::getOutput() {
 float WaveTableOsc::getOutputMinusOffset() {
     // grab the appropriate wavetable
     int waveTableIdx = 0;
-    while ((this->phaseInc >= this->waveTables[waveTableIdx].topFreq) && (waveTableIdx < (this->numWaveTables - 1))) {
+    while ((this->phaseInc >= this->m_oWaveTables[waveTableIdx].topFreq) && (waveTableIdx < (this->numWaveTables - 1))) {
         ++waveTableIdx;
     }
-    waveTable *waveTable = &this->waveTables[waveTableIdx];
+    waveTable *waveTable = &this->m_oWaveTables[waveTableIdx];
     
 #if !doLinearInterp
     // truncate

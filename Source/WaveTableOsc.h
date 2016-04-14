@@ -39,7 +39,7 @@ protected:
     
     // list of wavetables
     int numWaveTables;
-    waveTable waveTables[numWaveTableSlots];
+    waveTable m_oWaveTables[numWaveTableSlots];
     
 public:
     WaveTableOsc(void);
