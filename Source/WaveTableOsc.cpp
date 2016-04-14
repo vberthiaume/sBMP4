@@ -134,7 +134,9 @@ WaveTableOsc::WaveTableOsc(const float baseFreq, const int sampleRate)
     double scale = 0.0;
     for (; maxHarms >= 1; maxHarms /= 2) {
 		//fill ar with partial amplitudes for a sawtooth. This will be ifft'ed to get a wave
-        defineSawtooth(tableLen, maxHarms, ar, ai);	
+        //defineSawtooth(tableLen, maxHarms, ar, ai);	
+		//defineSquare(tableLen, maxHarms, ar, ai);	
+		defineTriangle(tableLen, maxHarms, ar, ai);	
 		//from the ar partials, make a wave in ai, then store it in osc. keep scale so that we can reuse it for the next maxHarm, so that we have a normalized volume accross wavetables
         JUCE_COMPILER_WARNING("makeWaveTable should use ar and ai members instead of passing by argument like this")
 		scale = makeWaveTable(tableLen, ar, ai, scale, topFreq);
@@ -178,41 +180,56 @@ float WaveTableOsc::makeWaveTable(int len, vector<double> &ar, vector<double> &a
 
 
 // prepares sawtooth harmonics for ifft
-void WaveTableOsc::defineSawtooth(int len, int numHarmonics, vector<double> &ar, vector<double> &ai) {
-	if (numHarmonics > (len /2 ))
-        numHarmonics = (len /2);
-    
-    // clear
-    for (int idx = 0; idx < len; idx++) {
-        ai[idx] = 0;
-        ar[idx] = 0;
-    }
+void WaveTableOsc::defineSawtooth(int len, int numHarmonics, vector<double> &ar, vector<double> &ai){
+	if(numHarmonics > (len / 2)){
+		numHarmonics = (len / 2);
+	}
+	for(int idx = 0; idx < len; idx++){
+		ai[idx] = 0;
+		ar[idx] = 0;
+	}
+	//fill the ar vector, which I presume is the amplitude of real harmonics
+	for(int idx = 1, jdx = len - 1; idx <= numHarmonics; idx++, jdx--){
+		double temp = -1.0 / idx;	//for sawtooh, harmonic amplitude decreases as their index increases.
+		ar[idx] = -temp;			//the firt half will be positive
+		ar[jdx] = temp;				//the second half negative... why?
+	}
+}
 
-    // sawtooth. fill the ar vector, which I presume is the amplitude of real harmonics
-    for (int idx = 1, jdx = len - 1; idx <= numHarmonics; idx++, jdx--) {
-        double temp = -1.0 / idx;	//for sawtooh, harmonic amplitude decreases as their index increases.
-        ar[idx] = -temp;			//the firt half will be positive
-        ar[jdx] = temp;				//the second half negative... why?
-    }
+// prepares sawtooth harmonics for ifft
+void WaveTableOsc::defineSquare(int len, int numHarmonics, vector<double> &ar, vector<double> &ai) {
+	if(numHarmonics > (len / 2)){
+		numHarmonics = (len / 2);
+	}
+	for(int idx = 0; idx < len; idx++){
+		ai[idx] = 0;
+		ar[idx] = 0;
+	}
+	//fill the ar vector, which I presume is the amplitude of real harmonics
+	for(int idx = 1, jdx = len - 1; idx <= numHarmonics; idx++, jdx--){
+		double temp = idx & 0x01 ? 1.0 / idx : 0.0;
+		ar[idx] = -temp;
+		ar[jdx] = temp;
+	}
+}
 
-    // examples of other waves
-    /*
-     // square
-     for (int idx = 1, jdx = len - 1; idx <= numHarmonics; idx++, jdx--) {
-     double temp = idx & 0x01 ? 1.0 / idx : 0.0;
-     ar[idx] = -temp;
-     ar[jdx] = temp;
-     }
-     */
-    /*
-     // triangle
-     float sign = 1;
-     for (int idx = 1, jdx = len - 1; idx <= numHarmonics; idx++, jdx--) {
-     double temp = idx & 0x01 ? 1.0 / (idx * idx) * (sign = -sign) : 0.0;
-     ar[idx] = -temp;
-     ar[jdx] = temp;
-     }
-     */
+// prepares sawtooth harmonics for ifft
+void WaveTableOsc::defineTriangle(int len, int numHarmonics, vector<double> &ar, vector<double> &ai){
+	if(numHarmonics > (len / 2)){
+		numHarmonics = (len / 2);
+	}
+	for(int idx = 0; idx < len; idx++){
+		ai[idx] = 0;
+		ar[idx] = 0;
+	}
+	//fill the ar vector, which I presume is the amplitude of real harmonics
+
+	float sign = 1;
+	for(int idx = 1, jdx = len - 1; idx <= numHarmonics; idx++, jdx--){
+		double temp = idx & 0x01 ? 1.0 / (idx * idx) * (sign = -sign) : 0.0;
+		ar[idx] = -temp;
+		ar[jdx] = temp;
+	}
 }
 
 WaveTableOsc::~WaveTableOsc(void) {
