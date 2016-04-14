@@ -97,48 +97,11 @@ void Bmp4SynthVoice::renderNextBlock(AudioSampleBuffer& p_oOutputBuffer, int p_i
 
 float Bmp4SynthVoice::getSample(double dTail) {
     if(k_bUseWaveTables){
-        return getSampleWaveTable(dTail);
+		JUCE_COMPILER_WARNING("this is not using the tail")
+        return m_oWaveTableOsc.getOutput();
     } else {
 		return getSampleAdditiveSynthesis(dTail);
     }
-}
-
-float Bmp4SynthVoice::getSampleWaveTable(double dTail){
-	//switch(m_iCurSound){
-	//	case soundSine:
-	//	default:
-	//		JUCE_COMPILER_WARNING("FOR NOW, THIS FUNCTION IS EXACTLY LIKE ADDITIVE SYNTHESIS. ok, so the problem here is converting this m_dCurrentAngle into some kind of index for m_dSineTbl")
-	//			return (float)(sin(m_dCurrentAngle) * m_dLevel * dTail);
-	//		break;
-	//	case soundSquare:{
-	//		double dCurrentSample = 0.0;
-	//		for(int iCurK = 0; iCurK < 25; ++iCurK){
-	//			dCurrentSample += sin(m_dCurrentAngle * (2 * iCurK + 1)) / (2 * iCurK + 1);
-	//		}
-	//		double dReducingFactor = .75; //this is to make this wave appear as loud at the other ones
-	//		return static_cast<float> (dCurrentSample * m_dLevel * dTail * dReducingFactor);
-	//		break;
-	//	}
-	//	case soundTriangle:{
-	//		float fCurrentSample = 0.0;
-	//		for(int iCurK = 0; iCurK < 5; ++iCurK){
-	//			fCurrentSample += static_cast<float> (sin(M_PI*(2 * iCurK + 1) / 2) * (sin(m_dCurrentAngle * (2 * iCurK + 1)) / pow((2 * iCurK + 1), 2)));
-	//		}
-	//		return (8 / pow(M_PI, 2)) * fCurrentSample * m_dLevel * dTail;
-	//		break;
-	//	}
-	//	case soundSawtooth:{
-	//		float fCurrentSample = 0.0;
-	//		for(int iCurK = 1; iCurK < 20; ++iCurK){
-	//			fCurrentSample += static_cast<float> (sin(m_dCurrentAngle * iCurK) / iCurK);
-	//		}
-	//		return 1 / 2 - (1 / M_PI) * fCurrentSample * m_dLevel * dTail;
-	//		break;
-	//	}
-	//}
-
-	   
-        return m_oWaveTableOsc.getOutput();
 }
 
 float Bmp4SynthVoice::getSampleAdditiveSynthesis(double dTail){

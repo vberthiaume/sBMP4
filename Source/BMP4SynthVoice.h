@@ -86,8 +86,6 @@ public:
     bool canPlaySound(SynthesiserSound* sound);
 
     virtual float getSample(double dTail);
-
-    float getSampleWaveTable(double dTail);
 	
 	void setProcessor(sBMP4AudioProcessor* p_processor);
 
