@@ -104,7 +104,7 @@ WaveTableOsc::WaveTableOsc(void) {
     }
 }
 
-WaveTableOsc::WaveTableOsc(const float baseFreq, const int sampleRate) 
+WaveTableOsc::WaveTableOsc(const float baseFreq, const int sampleRate, const WaveTypes waveType) 
 	: WaveTableOsc() {
 	//TODO: understand this
     // calc number of harmonics where the highest harmonic baseFreq and lowest alias an octave higher would meet
@@ -133,11 +133,22 @@ WaveTableOsc::WaveTableOsc(const float baseFreq, const int sampleRate)
     double scale = 0.0;
     for (; maxHarms >= 1; maxHarms /= 2) {
 		//fill ar with partial amplitudes for a sawtooth. This will be ifft'ed to get a wave
-        //defineSawtooth(tableLen, maxHarms, ar, ai);	
-		//defineSquare(tableLen, maxHarms, ar, ai);	
-		defineTriangle(tableLen, maxHarms, ar, ai);	
+		switch (waveType){
+			case triangleWave:
+				defineTriangle(tableLen, maxHarms, ar, ai);
+				break;
+			case sawtoothWave:
+				defineSawtooth(tableLen, maxHarms, ar, ai);	
+				break;
+			case squareWave:
+				defineSquare(tableLen, maxHarms, ar, ai);	
+				break;
+			default:
+				jassertfalse;
+				break;
+		}
+
 		//from the ar partials, make a wave in ai, then store it in osc. keep scale so that we can reuse it for the next maxHarm, so that we have a normalized volume accross wavetables
-        JUCE_COMPILER_WARNING("makeWaveTable should use ar and ai members instead of passing by argument like this")
 		scale = makeWaveTable(tableLen, ar, ai, scale, topFreq);
         topFreq *= 2;
 		//not sure, doesn't matter, not hit with default values
@@ -147,10 +158,8 @@ WaveTableOsc::WaveTableOsc(const float baseFreq, const int sampleRate)
     }
 }
 
-//
 // if scale is 0, auto-scales
 // returns scaling factor (0.0 if failure), and wavetable in ai array
-//
 float WaveTableOsc::makeWaveTable(int len, vector<double> &ar, vector<double> &ai, double scale, double topFreq) {
     fft(len, ar, ai);	//after this, ai contains the wave form, produced by an ifft I assume, and ar contains... noise? see waveTableOscFFtOutput.xlsx in dropbox/sBMP4
     //if no scale was supplied, find maximum sample amplitude, then derive scale
@@ -251,7 +260,6 @@ WaveTableOsc::~WaveTableOsc(void) {
 //
 int WaveTableOsc::addWaveTable(int len, std::vector<float> waveTableIn, double topFreq) {
     if (numWaveTables < numWaveTableSlots) {
-       
 		m_oWaveTables[numWaveTables].waveTable = vector<float>(len);
         m_oWaveTables[numWaveTables].waveTableLen = len;
         m_oWaveTables[numWaveTables].topFreq = topFreq;

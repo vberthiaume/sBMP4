@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 //Synth sounds
 
+JUCE_COMPILER_WARNING("this should be the same as the wavetypes enum")
 enum sounds{
      soundSine
     ,soundSquare
@@ -106,7 +107,9 @@ public:
 protected:
 	double m_dCurrentAngle, m_dOmega, m_dLevel, m_dTailOff;
     int m_iCurSound;
-	WaveTableOsc m_oWaveTableOsc;
+	WaveTableOsc m_oWaveTableTriangle;
+	WaveTableOsc m_oWaveTableSawtooth;
+	WaveTableOsc m_oWaveTableSquare;
 };
 
 #endif //sBMP4_Sounds_h

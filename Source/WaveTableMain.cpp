@@ -232,11 +232,7 @@ void testThreeOsc(void) {
     return;
 }
 
-//
-// setSawtoothOsc
-//
 // make set of wavetables for sawtooth oscillator
-//
 void setSawtoothOsc(WaveTableOsc *osc, float baseFreq) { 
 	//TODO: understand this
     // calc number of harmonics where the highest harmonic baseFreq and lowest alias an octave higher would meet

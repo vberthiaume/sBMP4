@@ -52,6 +52,13 @@ enum Parameters{
     ,paramTotalNum
 };
 
+enum WaveTypes{
+	triangleWave
+	, sawtoothWave
+	, squareWave
+	, totalWaveTypes
+};
+
 const float k_fDefaultGain		= 1.0f;
 const float k_fDefaultDelay		= 0.0f;
 const float k_fDefaultWave		= 0.0f;

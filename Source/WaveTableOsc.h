@@ -21,6 +21,7 @@
 
 #define doLinearInterp 1
 #include <vector>
+#include "constants.h"
 
 //TODO: use vectors instead of an array
 typedef struct {
@@ -43,7 +44,7 @@ protected:
     
 public:
     WaveTableOsc(void);
-	WaveTableOsc(const float, const int);
+	WaveTableOsc(const float, const int, const WaveTypes);
     ~WaveTableOsc(void);
 	void defineSawtooth(int len, int numHarmonics, std::vector<double> &ar, std::vector<double> &ai);
 	void defineSquare(int len, int numHarmonics, std::vector<double> &ar, std::vector<double> &ai);

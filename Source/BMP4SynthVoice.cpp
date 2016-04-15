@@ -31,7 +31,9 @@ Bmp4SynthVoice::Bmp4SynthVoice()
     , m_iCurSound(soundSine)
 {
 	if(k_bUseWaveTables){
-		m_oWaveTableOsc = WaveTableOsc(k_iBaseFrequency, getSampleRate());
+		m_oWaveTableTriangle = WaveTableOsc(k_iBaseFrequency, getSampleRate(), triangleWave);
+		m_oWaveTableSawtooth = WaveTableOsc(k_iBaseFrequency, getSampleRate(), sawtoothWave);
+		m_oWaveTableSquare   = WaveTableOsc(k_iBaseFrequency, getSampleRate(), squareWave);
 	}
 }
 
@@ -44,18 +46,27 @@ void Bmp4SynthVoice::startNote(int midiNoteNumber, float velocity, SynthesiserSo
     
 	m_dOmega = dNormalizedFreq * 2.0 * double_Pi;
 
-	if (k_bUseWaveTables){
-		m_oWaveTableOsc.setFrequency(dNormalizedFreq);
-	}
-
     if(dynamic_cast <SineWaveSound*> (getCurrentlyPlayingSound().get())){
         m_iCurSound = soundSine;
+		JUCE_COMPILER_WARNING("using triangle since no sine yet")
+		if(k_bUseWaveTables){
+			m_oWaveTableTriangle.setFrequency(dNormalizedFreq);
+		}
     } else if(dynamic_cast <SquareWaveSound*> (getCurrentlyPlayingSound().get())){
         m_iCurSound = soundSquare;
+		if(k_bUseWaveTables){
+			m_oWaveTableSquare.setFrequency(dNormalizedFreq);
+		}
     } else if(dynamic_cast <TriangleWaveSound*> (getCurrentlyPlayingSound().get())){
         m_iCurSound = soundTriangle;
+		if(k_bUseWaveTables){
+			m_oWaveTableTriangle.setFrequency(dNormalizedFreq);
+		}
     } else if(dynamic_cast <SawtoothWaveSound*> (getCurrentlyPlayingSound().get())){
         m_iCurSound = soundSawtooth;
+		if(k_bUseWaveTables){
+			m_oWaveTableSawtooth.setFrequency(dNormalizedFreq);
+		}
     }
 }
 void Bmp4SynthVoice::renderNextBlock(AudioSampleBuffer& p_oOutputBuffer, int p_iStartSample, int p_iTotalSamples)  {
@@ -77,7 +88,21 @@ void Bmp4SynthVoice::renderNextBlock(AudioSampleBuffer& p_oOutputBuffer, int p_i
 
 		if (k_bUseWaveTables){
 			//increase the phase by phaseInc
-			m_oWaveTableOsc.updatePhase();
+			switch(m_iCurSound){
+				case soundSine:
+				case soundTriangle:
+					m_oWaveTableTriangle.updatePhase();
+					break;
+				case soundSawtooth:
+					m_oWaveTableSawtooth.updatePhase();
+					break;
+				case soundSquare:
+					m_oWaveTableSquare.updatePhase();
+					break;
+				default:
+					jassertfalse;
+					break;
+			}
 		}
 		++p_iStartSample;
 		if (m_dTailOff > 0) {
@@ -94,7 +119,19 @@ void Bmp4SynthVoice::renderNextBlock(AudioSampleBuffer& p_oOutputBuffer, int p_i
 float Bmp4SynthVoice::getSample(double dTail) {
     if(k_bUseWaveTables){
 		JUCE_COMPILER_WARNING("this is not using the tail")
-        return m_oWaveTableOsc.getOutput();
+		switch(m_iCurSound){
+			case soundSine:
+			case soundTriangle:
+				return m_oWaveTableTriangle.getOutput();
+			case soundSawtooth:
+				return m_oWaveTableSawtooth.getOutput();
+			case soundSquare:
+				return m_oWaveTableSquare.getOutput();
+			default:
+				jassertfalse;
+				break;
+		}
+        
     } else {
 		return getSampleAdditiveSynthesis(dTail);
     }
