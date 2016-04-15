@@ -124,7 +124,6 @@ WaveTableOsc::WaveTableOsc(const float baseFreq, const int sampleRate)
     int tableLen = v * 2 * overSamp;  // double for the sample rate, then oversampling, tablelen = 4096
 
     // for ifft
-	JUCE_COMPILER_WARNING("these should be members")
 	vector<double> ar(tableLen);	//is this real amplitude and ai imaginary amplitude?
 	vector<double> ai(tableLen);   
 
