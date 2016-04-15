@@ -57,9 +57,9 @@ const int numWaveTableSlots = 32;
 
 class WaveTableOsc {
 	void fft(int N);
-	void defineSawtooth(int len, int numHarmonics);
-	void defineSquare(  int len, int numHarmonics);
-	void defineTriangle(int len, int numHarmonics);
+	void defineSawtoothPartials(int len, int numHarmonics);
+	void defineSquarePartials(  int len, int numHarmonics);
+	void defineTrianglePartials(int len, int numHarmonics);
 	float makeWaveTable(int len, double scale, double topFreq);
 	int addWaveTable(	int len, std::vector<float> waveTableIn, double topFreq);
 

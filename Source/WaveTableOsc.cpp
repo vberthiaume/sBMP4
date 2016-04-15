@@ -158,13 +158,13 @@ WaveTableOsc::WaveTableOsc(const float baseFreq, const int sampleRate, const Wav
 		switch (waveType){
 			case triangleWave:
 				JUCE_COMPILER_WARNING("these should be called something like getPartials")
-				defineTriangle(tableLen, maxHarms);
+				defineTrianglePartials(tableLen, maxHarms);
 				break;
 			case sawtoothWave:
-				defineSawtooth(tableLen, maxHarms);	
+				defineSawtoothPartials(tableLen, maxHarms);	
 				break;
 			case squareWave:
-				defineSquare(tableLen, maxHarms);	
+				defineSquarePartials(tableLen, maxHarms);	
 				break;
 			default:
 				jassertfalse;
@@ -208,10 +208,8 @@ float WaveTableOsc::makeWaveTable(int len, double scale, double topFreq) {
     return scale;
 }
 
-
-
 // prepares sawtooth harmonics for ifft
-void WaveTableOsc::defineSawtooth(int len, int numHarmonics){
+void WaveTableOsc::defineSawtoothPartials(int len, int numHarmonics){
 	if(numHarmonics > (len / 2)){
 		numHarmonics = (len / 2);
 	}
@@ -228,7 +226,7 @@ void WaveTableOsc::defineSawtooth(int len, int numHarmonics){
 }
 
 // prepares sawtooth harmonics for ifft
-void WaveTableOsc::defineSquare(int len, int numHarmonics) {
+void WaveTableOsc::defineSquarePartials(int len, int numHarmonics) {
 	if(numHarmonics > (len / 2)){
 		numHarmonics = (len / 2);
 	}
@@ -245,7 +243,7 @@ void WaveTableOsc::defineSquare(int len, int numHarmonics) {
 }
 
 // prepares sawtooth harmonics for ifft
-void WaveTableOsc::defineTriangle(int len, int numHarmonics){
+void WaveTableOsc::defineTrianglePartials(int len, int numHarmonics){
 	if(numHarmonics > (len / 2)){
 		numHarmonics = (len / 2);
 	}
