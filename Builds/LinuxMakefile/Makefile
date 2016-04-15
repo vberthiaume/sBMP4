@@ -49,7 +49,6 @@ ifeq ($(CONFIG),Release)
 endif
 
 OBJECTS := \
-  $(OBJDIR)/WaveTableMain_95d4cc0f.o \
   $(OBJDIR)/WaveTableOsc_c6b699f3.o \
   $(OBJDIR)/BMP4SynthVoice_3883d90e.o \
   $(OBJDIR)/PluginProcessor_a059e380.o \
@@ -89,11 +88,6 @@ clean:
 strip:
 	@echo Stripping sBMP4
 	-@strip --strip-unneeded $(OUTDIR)/$(TARGET)
-
-$(OBJDIR)/WaveTableMain_95d4cc0f.o: ../../Source/WaveTableMain.cpp
-	-@mkdir -p $(OBJDIR)
-	@echo "Compiling WaveTableMain.cpp"
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/WaveTableOsc_c6b699f3.o: ../../Source/WaveTableOsc.cpp
 	-@mkdir -p $(OBJDIR)

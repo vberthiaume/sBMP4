@@ -195,7 +195,6 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Source\WaveTableMain.cpp"/>
     <ClCompile Include="..\..\Source\WaveTableOsc.cpp"/>
     <ClCompile Include="..\..\Source\BMP4SynthVoice.cpp"/>
     <ClCompile Include="..\..\Source\PluginProcessor.cpp"/>

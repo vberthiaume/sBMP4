@@ -340,9 +340,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Source\WaveTableMain.cpp">
-      <Filter>sBMP4\Source</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\WaveTableOsc.cpp">
       <Filter>sBMP4\Source</Filter>
     </ClCompile>

@@ -113,22 +113,18 @@ void fft(int N, vector<double> &ar, vector<double> &ai) {
     }
 }
 
-WaveTableOsc::WaveTableOsc(void) {
-    phasor = 0.0;		// phase accumulator
-    phaseInc = 0.0;		// phase increment
-    phaseOfs = 0.5;		// phase offset for PWM
-    numWaveTables = 0;	//why is this 0?
-
+WaveTableOsc::WaveTableOsc(const float baseFreq, const int sampleRate, const WaveTypes waveType):
+	phasor(0.0)			// phase accumulator
+    , phaseInc(0.0)		// phase increment
+    , phaseOfs(0.5)		// phase offset for PWM
+    , numWaveTables(0)	//why is this 0?
+	{
 	//initialize the array of waveTable structures (which could be replaced by vectors...)
     for (int idx = 0; idx < numWaveTableSlots; idx++) {
         m_oWaveTables[idx].topFreq = 0;
         m_oWaveTables[idx].waveTableLen = 0;
-        //m_oWaveTables[idx].waveTable = 0;
     }
-}
 
-WaveTableOsc::WaveTableOsc(const float baseFreq, const int sampleRate, const WaveTypes waveType) 
-	: WaveTableOsc() {
 	//TODO: understand this
     // calc number of harmonics where the highest harmonic baseFreq and lowest alias an octave higher would meet
     int maxHarms = sampleRate / (3.0 * baseFreq) + 0.5;	//maxHarms = 735

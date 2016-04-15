@@ -66,7 +66,6 @@ protected:
     waveTable m_oWaveTables[numWaveTableSlots];
     
 public:
-    WaveTableOsc(void);
 	WaveTableOsc(const float, const int, const WaveTypes);
     ~WaveTableOsc(void);
 	void defineSawtooth(int len, int numHarmonics, std::vector<double> &ar, std::vector<double> &ai);
