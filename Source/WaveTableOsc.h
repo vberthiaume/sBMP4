@@ -56,7 +56,13 @@ typedef struct {
 const int numWaveTableSlots = 32;
 
 class WaveTableOsc {
-protected:
+	void fft(int N);
+	void defineSawtooth(int len, int numHarmonics);
+	void defineSquare(  int len, int numHarmonics);
+	void defineTriangle(int len, int numHarmonics);
+	float makeWaveTable(int len, double scale, double topFreq);
+	int addWaveTable(	int len, std::vector<float> waveTableIn, double topFreq);
+
     double phasor;      // phase accumulator
     double phaseInc;    // phase increment
     double phaseOfs;    // phase offset for PWM
@@ -64,20 +70,16 @@ protected:
     // list of wavetables
     int numWaveTables;
     waveTable m_oWaveTables[numWaveTableSlots];
+	std::vector<double> m_vPartials;	//is this real amplitude and ai imaginary amplitude?
+	std::vector<double> m_vWave; 
     
 public:
 	WaveTableOsc(const float, const int, const WaveTypes);
-    ~WaveTableOsc(void);
-	void defineSawtooth(int len, int numHarmonics, std::vector<double> &ar, std::vector<double> &ai);
-	void defineSquare(int len, int numHarmonics, std::vector<double> &ar, std::vector<double> &ai);
-	void defineTriangle(int len, int numHarmonics, std::vector<double> &ar, std::vector<double> &ai);
-	float makeWaveTable(int len, std::vector<double> &ar, std::vector<double> &ai, double scale, double topFreq);
-    void setFrequency(double inc);
-    void setPhaseOffset(double offset);
-    void updatePhase(void);
+    void  setFrequency(double inc);
+    void  setPhaseOffset(double offset);
+    void  updatePhase(void);
     float getOutput(void);
     float getOutputMinusOffset(void);
-    int addWaveTable(int len, std::vector<float> waveTableIn, double topFreq);
 };
 
 

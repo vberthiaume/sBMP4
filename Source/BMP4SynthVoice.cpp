@@ -31,14 +31,8 @@ Bmp4SynthVoice::Bmp4SynthVoice()
     , m_iCurSound(soundSine)
 	, m_oWaveTableTriangle(k_iBaseFrequency, getSampleRate(), triangleWave)
 	, m_oWaveTableSawtooth(k_iBaseFrequency, getSampleRate(), sawtoothWave)
-	, m_oWaveTableSquare(k_iBaseFrequency, getSampleRate(), squareWave)
-{
-	//if(k_bUseWaveTables){
-		//m_oWaveTableTriangle = WaveTableOsc(k_iBaseFrequency, getSampleRate(), triangleWave);
-		/*m_oWaveTableSawtooth = WaveTableOsc(k_iBaseFrequency, getSampleRate(), sawtoothWave);
-		m_oWaveTableSquare   = WaveTableOsc(k_iBaseFrequency, getSampleRate(), squareWave);*/
-	//}
-}
+	, m_oWaveTableSquare(  k_iBaseFrequency, getSampleRate(), squareWave)
+{ }
 
 void Bmp4SynthVoice::startNote(int midiNoteNumber, float velocity, SynthesiserSound* sound, int /*currentPitchWheelPosition*/)  {
     m_dCurrentAngle = 0.0;

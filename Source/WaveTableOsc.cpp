@@ -54,7 +54,7 @@
 using namespace std;
 
 // I grabbed (and slightly modified) this code from Rabiner & Gold (1975), After Cooley, Lewis, and Welch; 
-void fft(int N, vector<double> &ar, vector<double> &ai) {    
+void WaveTableOsc::fft(int N) {    
     int i, j, k, L;            /* indexes */
     int M, TEMP, LE, LE1, ip;  /* M = log N */
     int NV2, NM1;
@@ -74,12 +74,12 @@ void fft(int N, vector<double> &ar, vector<double> &ai) {
     j = 1;
     for (i = 1; i <= NM1; i++) {
         if(i<j) {             /* swap a[i] and a[j] */
-            t = ar[j-1];     
-            ar[j-1] = ar[i-1];
-            ar[i-1] = t;
-            t = ai[j-1];
-            ai[j-1] = ai[i-1];
-            ai[i-1] = t;
+            t = m_vPartials[j-1];     
+            m_vPartials[j-1] = m_vPartials[i-1];
+            m_vPartials[i-1] = t;
+            t = m_vWave[j-1];
+            m_vWave[j-1] = m_vWave[i-1];
+            m_vWave[i-1] = t;
         }
         k = NV2;             /* bit-reversed counter */
         while(k < j) {
@@ -99,12 +99,12 @@ void fft(int N, vector<double> &ar, vector<double> &ai) {
         for (j = 1; j <= LE1; j++) {
             for (i = j; i <= N; i += LE) { // butterfly
                 ip = i+LE1;
-                Tr = ar[ip-1] * Ur - ai[ip-1] * Ui;
-                Ti = ar[ip-1] * Ui + ai[ip-1] * Ur;
-                ar[ip-1] = ar[i-1] - Tr;
-                ai[ip-1] = ai[i-1] - Ti;
-                ar[i-1]  = ar[i-1] + Tr;
-                ai[i-1]  = ai[i-1] + Ti;
+                Tr = m_vPartials[ip-1] * Ur - m_vWave[ip-1] * Ui;
+                Ti = m_vPartials[ip-1] * Ui + m_vWave[ip-1] * Ur;
+                m_vPartials[ip-1] = m_vPartials[i-1] - Tr;
+                m_vWave[ip-1] = m_vWave[i-1] - Ti;
+                m_vPartials[i-1]  = m_vPartials[i-1] + Tr;
+                m_vWave[i-1]  = m_vWave[i-1] + Ti;
             }
             Ur_old = Ur;
             Ur = Ur_old * Wr - Ui * Wi;
@@ -143,32 +143,36 @@ WaveTableOsc::WaveTableOsc(const float baseFreq, const int sampleRate, const Wav
     int tableLen = v * 2 * overSamp;  // double for the sample rate, then oversampling, tablelen = 4096
 
     // for ifft
-	vector<double> ar(tableLen);	//is this real amplitude and ai imaginary amplitude?
-	vector<double> ai(tableLen);   
+	//vector<double> m_vPartials(tableLen);	//is this real amplitude and m_vWave imaginary amplitude?
+	//vector<double> m_vWave(tableLen); 
+	m_vPartials = vector<double>(tableLen, 0);
+	JUCE_COMPILER_WARNING("should check that this contains 0s")
+	m_vWave		= vector<double>(tableLen, 0);
 
 	//calculate topFrequency based on Nyquist and base frequency... 
 	//TODO: why is base frequency relevant here?
     double topFreq = baseFreq * 2.0 / sampleRate;	//topFreq = 0.00090702947845804993
     double scale = 0.0;
     for (; maxHarms >= 1; maxHarms /= 2) {
-		//fill ar with partial amplitudes for a sawtooth. This will be ifft'ed to get a wave
+		//fill m_vPartials with partial amplitudes for a sawtooth. This will be ifft'ed to get a wave
 		switch (waveType){
 			case triangleWave:
-				defineTriangle(tableLen, maxHarms, ar, ai);
+				JUCE_COMPILER_WARNING("these should be called something like getPartials")
+				defineTriangle(tableLen, maxHarms);
 				break;
 			case sawtoothWave:
-				defineSawtooth(tableLen, maxHarms, ar, ai);	
+				defineSawtooth(tableLen, maxHarms);	
 				break;
 			case squareWave:
-				defineSquare(tableLen, maxHarms, ar, ai);	
+				defineSquare(tableLen, maxHarms);	
 				break;
 			default:
 				jassertfalse;
 				break;
 		}
 
-		//from the ar partials, make a wave in ai, then store it in osc. keep scale so that we can reuse it for the next maxHarm, so that we have a normalized volume accross wavetables
-		scale = makeWaveTable(tableLen, ar, ai, scale, topFreq);
+		//from the m_vPartials partials, make a wave in m_vWave, then store it in osc. keep scale so that we can reuse it for the next maxHarm, so that we have a normalized volume accross wavetables
+		scale = makeWaveTable(tableLen, scale, topFreq);
         topFreq *= 2;
 		//not sure, doesn't matter, not hit with default values
         if (tableLen > constantRatioLimit){ // variable table size (constant oversampling but with minimum table size)
@@ -178,15 +182,15 @@ WaveTableOsc::WaveTableOsc(const float baseFreq, const int sampleRate, const Wav
 }
 
 // if scale is 0, auto-scales
-// returns scaling factor (0.0 if failure), and wavetable in ai array
-float WaveTableOsc::makeWaveTable(int len, vector<double> &ar, vector<double> &ai, double scale, double topFreq) {
-    fft(len, ar, ai);	//after this, ai contains the wave form, produced by an ifft I assume, and ar contains... noise? see waveTableOscFFtOutput.xlsx in dropbox/sBMP4
+// returns scaling factor (0.0 if failure), and wavetable in m_vWave array
+float WaveTableOsc::makeWaveTable(int len, double scale, double topFreq) {
+    fft(len);	//after this, m_vWave contains the wave form, produced by an ifft I assume, and m_vPartials contains... noise? see waveTableOscFFtOutput.xlsx in dropbox/sBMP4
     //if no scale was supplied, find maximum sample amplitude, then derive scale
     if (scale == 0.0) {
         // calc normal
         double max = 0;
         for (int idx = 0; idx < len; idx++) {
-            double temp = fabs(ai[idx]);
+            double temp = fabs(m_vWave[idx]);
             if (max < temp)
                 max = temp;
         }
@@ -196,7 +200,7 @@ float WaveTableOsc::makeWaveTable(int len, vector<double> &ar, vector<double> &a
     // normalize
     vector<float> wave(len);
     for (int idx = 0; idx < len; idx++)
-        wave[idx] = ai[idx] * scale;
+        wave[idx] = m_vWave[idx] * scale;
         
     if (addWaveTable(len, wave, topFreq))
         scale = 0.0;
@@ -207,64 +211,56 @@ float WaveTableOsc::makeWaveTable(int len, vector<double> &ar, vector<double> &a
 
 
 // prepares sawtooth harmonics for ifft
-void WaveTableOsc::defineSawtooth(int len, int numHarmonics, vector<double> &ar, vector<double> &ai){
+void WaveTableOsc::defineSawtooth(int len, int numHarmonics){
 	if(numHarmonics > (len / 2)){
 		numHarmonics = (len / 2);
 	}
 	for(int idx = 0; idx < len; idx++){
-		ai[idx] = 0;
-		ar[idx] = 0;
+		m_vWave[idx] = 0;
+		m_vPartials[idx] = 0;
 	}
-	//fill the ar vector, which I presume is the amplitude of real harmonics
+	//fill the m_vPartials vector, which I presume is the amplitude of real harmonics
 	for(int idx = 1, jdx = len - 1; idx <= numHarmonics; idx++, jdx--){
 		double temp = -1.0 / idx;	//for sawtooh, harmonic amplitude decreases as their index increases.
-		ar[idx] = -temp;			//the firt half will be positive
-		ar[jdx] = temp;				//the second half negative... why?
+		m_vPartials[idx] = -temp;			//the firt half will be positive
+		m_vPartials[jdx] = temp;				//the second half negative... why?
 	}
 }
 
 // prepares sawtooth harmonics for ifft
-void WaveTableOsc::defineSquare(int len, int numHarmonics, vector<double> &ar, vector<double> &ai) {
+void WaveTableOsc::defineSquare(int len, int numHarmonics) {
 	if(numHarmonics > (len / 2)){
 		numHarmonics = (len / 2);
 	}
 	for(int idx = 0; idx < len; idx++){
-		ai[idx] = 0;
-		ar[idx] = 0;
+		m_vWave[idx] = 0;
+		m_vPartials[idx] = 0;
 	}
-	//fill the ar vector, which I presume is the amplitude of real harmonics
+	//fill the m_vPartials vector, which I presume is the amplitude of real harmonics
 	for(int idx = 1, jdx = len - 1; idx <= numHarmonics; idx++, jdx--){
 		double temp = idx & 0x01 ? 1.0 / idx : 0.0;
-		ar[idx] = -temp;
-		ar[jdx] = temp;
+		m_vPartials[idx] = -temp;
+		m_vPartials[jdx] = temp;
 	}
 }
 
 // prepares sawtooth harmonics for ifft
-void WaveTableOsc::defineTriangle(int len, int numHarmonics, vector<double> &ar, vector<double> &ai){
+void WaveTableOsc::defineTriangle(int len, int numHarmonics){
 	if(numHarmonics > (len / 2)){
 		numHarmonics = (len / 2);
 	}
 	for(int idx = 0; idx < len; idx++){
-		ai[idx] = 0;
-		ar[idx] = 0;
+		m_vWave[idx] = 0;
+		m_vPartials[idx] = 0;
 	}
-	//fill the ar vector, which I presume is the amplitude of real harmonics
+	//fill the m_vPartials vector, which I presume is the amplitude of real harmonics
 
 	float sign = 1;
 	for(int idx = 1, jdx = len - 1; idx <= numHarmonics; idx++, jdx--){
 		double temp = idx & 0x01 ? 1.0 / (idx * idx) * (sign = -sign) : 0.0;
-		ar[idx] = -temp;
-		ar[jdx] = temp;
+		m_vPartials[idx] = -temp;
+		m_vPartials[jdx] = temp;
 	}
-}
-
-WaveTableOsc::~WaveTableOsc(void) {
-    //for (int idx = 0; idx < numWaveTableSlots; idx++) {
-    //    float *temp = m_oWaveTables[idx].waveTable;
-    //    if (temp != NULL)
-    //        delete [] temp;
-    //}
 }
 
 
