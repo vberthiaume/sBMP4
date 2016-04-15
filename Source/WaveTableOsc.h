@@ -74,7 +74,7 @@ class WaveTableOsc {
 	std::vector<double> m_vWave; 
     
 public:
-	WaveTableOsc(const float, const int, const WaveTypes);
+	WaveTableOsc(const int, const WaveTypes);
     void  setFrequency(double inc);
     void  setPhaseOffset(double offset);
     void  updatePhase(void);

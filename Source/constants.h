@@ -24,6 +24,7 @@
 #ifndef sBMP4_Header_h
 #define sBMP4_Header_h
 
+//--------useful functions
 //convert p_tValue01 from range [0,1] to human-readable range [p_tMinHr, p_tMaxHr]
 template <typename T>
 static T const& convert01ToHr (T const& p_tValue01, T const& p_tMinHr, T const& p_tMaxHr) { 
@@ -40,6 +41,7 @@ static bool areSame(double a, double b){
     return fabs(a - b) < .0001;//std::numeric_limits<double>::epsilon();
 }
 
+//-------enums
 enum Parameters{
      paramGain = 0
     ,paramDelay
@@ -92,16 +94,7 @@ const bool  k_bUseSimplestLp = true;
 
 //-------stuff related to wavetables
 const bool  k_bUseWaveTables = true;
-
-//JUCE_COMPILER_WARNING("Reasoning for finding k_iTotalWaveFrames. THIS CANNOT BE HARDCODED");
-//float k_fWavTableFr = 100.f;	//frequency of wave stored in wave table
-//
-////float fT = 1/fFr;	//period
-//float k_fSampleRate = 44100;	
-////k_iTotalWaveFrames = k_fSampleRate * fT = 441;
-//const int   k_iTotalWaveFrames = 441;
-
-const int   k_iOverSampleFactor	= 2;        /* oversampling factor (positive integer) */
+const int   k_iOverSampleFactor	= 2;     /* oversampling factor (positive integer) */
 const float k_iBaseFrequency	= 20.f;  /* starting frequency of first table */
 
 

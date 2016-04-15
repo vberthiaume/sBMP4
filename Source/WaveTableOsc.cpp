@@ -113,7 +113,7 @@ void WaveTableOsc::fft(int N) {
     }
 }
 
-WaveTableOsc::WaveTableOsc(const float baseFreq, const int sampleRate, const WaveTypes waveType):
+WaveTableOsc::WaveTableOsc(const int sampleRate, const WaveTypes waveType):
 	phasor(0.0)			// phase accumulator
     , phaseInc(0.0)		// phase increment
     , phaseOfs(0.5)		// phase offset for PWM
@@ -127,7 +127,7 @@ WaveTableOsc::WaveTableOsc(const float baseFreq, const int sampleRate, const Wav
 
 	//TODO: understand this
     // calc number of harmonics where the highest harmonic baseFreq and lowest alias an octave higher would meet
-    int maxHarms = sampleRate / (3.0 * baseFreq) + 0.5;	//maxHarms = 735
+    int maxHarms = sampleRate / (3.0 * k_iBaseFrequency) + 0.5;	//maxHarms = 735
 
 	//TODO: find less opaque way of doing this, check aspma notes
     // round up to nearest power of two
@@ -139,8 +139,8 @@ WaveTableOsc::WaveTableOsc(const float baseFreq, const int sampleRate, const Wav
     v |= v >> 8;
     v |= v >> 16;
     v++;            // and increment to power of 2
-	int overSamp = 2;
-    int tableLen = v * 2 * overSamp;  // double for the sample rate, then oversampling, tablelen = 4096
+
+    int tableLen = v * 2 * k_iOverSampleFactor;  // double for the sample rate, then oversampling, tablelen = 4096
 
     // for ifft
 	//vector<double> m_vPartials(tableLen);	//is this real amplitude and m_vWave imaginary amplitude?
@@ -151,7 +151,7 @@ WaveTableOsc::WaveTableOsc(const float baseFreq, const int sampleRate, const Wav
 
 	//calculate topFrequency based on Nyquist and base frequency... 
 	//TODO: why is base frequency relevant here?
-    double topFreq = baseFreq * 2.0 / sampleRate;	//topFreq = 0.00090702947845804993
+    double topFreq = k_iBaseFrequency * 2.0 / sampleRate;	//topFreq = 0.00090702947845804993
     double scale = 0.0;
     for (; maxHarms >= 1; maxHarms /= 2) {
 		//fill m_vPartials with partial amplitudes for a sawtooth. This will be ifft'ed to get a wave

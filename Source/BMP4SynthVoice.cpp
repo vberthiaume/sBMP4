@@ -29,9 +29,9 @@ Bmp4SynthVoice::Bmp4SynthVoice()
 	: m_dOmega(0.0)
 	, m_dTailOff(0.0)
     , m_iCurSound(soundSine)
-	, m_oWaveTableTriangle(k_iBaseFrequency, getSampleRate(), triangleWave)
-	, m_oWaveTableSawtooth(k_iBaseFrequency, getSampleRate(), sawtoothWave)
-	, m_oWaveTableSquare(  k_iBaseFrequency, getSampleRate(), squareWave)
+	, m_oWaveTableTriangle(getSampleRate(), triangleWave)
+	, m_oWaveTableSawtooth(getSampleRate(), sawtoothWave)
+	, m_oWaveTableSquare(  getSampleRate(), squareWave)
 { }
 
 void Bmp4SynthVoice::startNote(int midiNoteNumber, float velocity, SynthesiserSound* sound, int /*currentPitchWheelPosition*/)  {
