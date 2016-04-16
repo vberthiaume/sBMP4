@@ -130,7 +130,7 @@ WaveTableOsc::WaveTableOsc(const int sampleRate, const WaveTypes waveType):
     int maxHarms = sampleRate / (3.0 * k_iBaseFrequency) + 0.5;	//maxHarms = 735
 
 	//TODO: find less opaque way of doing this, check aspma notes
-    // round up to nearest power of two
+    // round up to nearest power of two, for fft size
     unsigned int v = maxHarms;
     v--;            // so we don't go up if already a power of 2
     v |= v >> 1;    // roll the highest bit into all lower bits...
@@ -139,15 +139,10 @@ WaveTableOsc::WaveTableOsc(const int sampleRate, const WaveTypes waveType):
     v |= v >> 8;
     v |= v >> 16;
     v++;            // and increment to power of 2
-
     int tableLen = v * 2 * k_iOverSampleFactor;  // double for the sample rate, then oversampling, tablelen = 4096
-
     // for ifft
-	//vector<double> m_vPartials(tableLen);	//is this real amplitude and m_vWave imaginary amplitude?
-	//vector<double> m_vWave(tableLen); 
-	m_vPartials = vector<double>(tableLen, 0);
-	JUCE_COMPILER_WARNING("should check that this contains 0s")
-	m_vWave		= vector<double>(tableLen, 0);
+	m_vPartials = vector<double>(tableLen, 0.);
+	m_vWave		= vector<double>(tableLen, 0.);
 
 	//calculate topFrequency based on Nyquist and base frequency... 
 	//TODO: why is base frequency relevant here?
