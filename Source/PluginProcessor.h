@@ -37,7 +37,6 @@ class sBMP4AudioProcessor  : public AudioProcessor
 public:
     //==============================================================================
     sBMP4AudioProcessor();
-    ~sBMP4AudioProcessor();
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -124,7 +123,6 @@ private:
     std::vector<float> m_oLookBackVec[2];
 
     Dsp::SimpleFilter <Dsp::RBJ::LowPass, 1>  m_simpleFilter;	//2 here is the number of channels, and is mandatory!
-	bool m_bUseSampledSound;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(sBMP4AudioProcessor)
 };

@@ -43,7 +43,6 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 , m_fLfoOmega(0.)
 , m_bLfoIsOn(true)
 , m_bSubOscIsOn(true)
-, m_bUseSampledSound(false)
 {
 	//add our own audio input, because otherwise there is just a ghost input channel that is always on...
 	busArrangement.inputBuses.clear();
@@ -73,9 +72,6 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 	m_oLastDimensions = std::make_pair(2*k_iXMargin + k_iNumberOfHorizontalSliders*k_iSliderWidth, 
 									   k_iYMargin   + k_iNumberOfVerticaltalSliders * (k_iSliderHeight + k_iLabelHeight) + k_iKeyboardHeight);
     m_iDelayPosition = 0;
-}
-
-sBMP4AudioProcessor::~sBMP4AudioProcessor() {
 }
 
 void sBMP4AudioProcessor::prepareToPlay(double sampleRate, int /*samplesPerBlock*/) {
@@ -162,7 +158,6 @@ void sBMP4AudioProcessor::setLfoFr01(float p_fLfoFr01){
 	m_fLfoFrHr = convert01ToHr(p_fLfoFr01, k_fMinLfoFr, k_fMaxLfoFr);
 	m_fLfoOmega = 2 * M_PI*m_fLfoFrHr / getSampleRate();		//dividing the frequency by the sample rate essentially gives us the frequency in samples
 }
-
 
 //m_fLfoFrHr is stored internally as [kmin, kmax], and we need here to return something [0, 1]
 float sBMP4AudioProcessor::getLfoFr01() {
@@ -288,7 +283,7 @@ void sBMP4AudioProcessor::setWaveType(float p_fWave){
 	JUCE_COMPILER_WARNING("probably the sounds should be loaded by the voices...")
 	m_oSynth.clearSounds();
 	//m_oSynth.clearVoices();
-	if(!m_bUseSampledSound){
+	if(!k_bUseSampledSound){
 		if(m_fWave == 0){
 			m_oSynth.addSound(new SineWaveSound());
 		} else if(areSame(m_fWave, 1.f / 3)){

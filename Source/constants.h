@@ -84,7 +84,7 @@ const float k_fDefaultLfoOn		= 0.;
 
 const int   k_iSimpleFilterLF = 600;
 const int   k_iSimpleFilterHF = 20000;// 12000;
-const int   k_iNumberOfVoices = 5;
+const int   k_iNumberOfVoices = 10;
 
 #if	WIN32
 const bool  k_bUseSimplestLp = false;
@@ -92,11 +92,12 @@ const bool  k_bUseSimplestLp = false;
 const bool  k_bUseSimplestLp = true;
 #endif
 
+const bool k_bUseSampledSound = false;
+
 //-------stuff related to wavetables
 const bool  k_bUseWaveTables = true;
 const int   k_iOverSampleFactor	= 2;     /* oversampling factor (positive integer) */
 const float k_iBaseFrequency	= 20.f;  /* starting frequency of first table */
-
 
 //-------stuff related to size of GUI things
 const int k_iXMargin		= 20;
