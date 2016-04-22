@@ -24,6 +24,8 @@
 #ifndef sBMP4_Header_h
 #define sBMP4_Header_h
 
+#include <math.h>
+
 //--------useful functions
 //convert p_tValue01 from range [0,1] to human-readable range [p_tMinHr, p_tMaxHr]
 template <typename T>

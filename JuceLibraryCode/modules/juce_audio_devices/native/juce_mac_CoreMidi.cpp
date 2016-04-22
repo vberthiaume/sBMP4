@@ -37,7 +37,7 @@ namespace CoreMidiHelpers
         Logger::writeToLog ("CoreMIDI error: " + String (lineNum) + " - " + String::toHexString ((int) err));
        #endif
 
-        ignoreUnused (lineNum);
+        (void) lineNum;
         return false;
     }
 

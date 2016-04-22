@@ -67,7 +67,7 @@ namespace ASIODebugging
    #else
     static void dummyLog() {}
     #define JUCE_ASIO_LOG(msg)               ASIODebugging::dummyLog()
-    #define JUCE_ASIO_LOG_ERROR(msg, errNum) ignoreUnused (errNum); ASIODebugging::dummyLog()
+    #define JUCE_ASIO_LOG_ERROR(msg, errNum) (void) errNum; ASIODebugging::dummyLog()
    #endif
 }
 
@@ -690,24 +690,31 @@ public:
         JUCE_ASIO_LOG ("showing control panel");
 
         bool done = false;
-        insideControlPanelModalLoop = true;
 
-        const uint32 started = Time::getMillisecondCounter();
-
-        if (asioObject != nullptr)
+        JUCE_TRY
         {
-            asioObject->controlPanel();
+            // are there are devices that need to be closed before showing their control panel?
+            // close();
+            insideControlPanelModalLoop = true;
 
-            const int spent = (int) Time::getMillisecondCounter() - (int) started;
+            const uint32 started = Time::getMillisecondCounter();
 
-            JUCE_ASIO_LOG ("spent: " + String (spent));
-
-            if (spent > 300)
+            if (asioObject != nullptr)
             {
-                shouldUsePreferredSize = true;
-                done = true;
+                asioObject->controlPanel();
+
+                const int spent = (int) Time::getMillisecondCounter() - (int) started;
+
+                JUCE_ASIO_LOG ("spent: " + String (spent));
+
+                if (spent > 300)
+                {
+                    shouldUsePreferredSize = true;
+                    done = true;
+                }
             }
         }
+        JUCE_CATCH_ALL
 
         insideControlPanelModalLoop = false;
         return done;
