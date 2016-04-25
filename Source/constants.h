@@ -92,7 +92,7 @@ const int   k_iNumberOfVoices = 10;
 #if	WIN32
 const bool  k_bUseSimplestLp = false;
 #elif __APPLE__
-const bool  k_bUseSimplestLp = true;
+const bool  k_bUseSimplestLp = false;
 #else
 const bool  k_bUseSimplestLp = true;
 #endif
