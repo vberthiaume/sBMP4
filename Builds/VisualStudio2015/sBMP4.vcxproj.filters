@@ -3203,13 +3203,13 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\..\..\Dropbox\Projects\sBMP4\Microbrute reaper\Microbrute raw waves_stems_sBMP4  pulse.wav">
+    <None Include="..\..\..\..\..\Downloads\Microbrute reaper\Microbrute raw waves_stems_sBMP4  pulse.wav">
       <Filter>sBMP4\sounds</Filter>
     </None>
-    <None Include="..\..\..\..\..\Dropbox\Projects\sBMP4\Microbrute reaper\Microbrute raw waves_stems_sBMP4  sawtooth.wav">
+    <None Include="..\..\..\..\..\Downloads\Microbrute reaper\Microbrute raw waves_stems_sBMP4  sawtooth.wav">
       <Filter>sBMP4\sounds</Filter>
     </None>
-    <None Include="..\..\..\..\..\Dropbox\Projects\sBMP4\Microbrute reaper\Microbrute raw waves_stems_sBMP4  triangle.wav">
+    <None Include="..\..\..\..\..\Downloads\Microbrute reaper\Microbrute raw waves_stems_sBMP4  triangle.wav">
       <Filter>sBMP4\sounds</Filter>
     </None>
     <None Include="..\..\fonts\After_Shok.ttf">

@@ -56,6 +56,7 @@
 		004DAB52F8E2BE50A6FA4F3E = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_AudioIODeviceType.h"; path = "../../JuceLibraryCode/modules/juce_audio_devices/audio_io/juce_AudioIODeviceType.h"; sourceTree = "SOURCE_ROOT"; };
 		0050AFF33125812A40B47013 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_ToolbarItemPalette.h"; path = "../../JuceLibraryCode/modules/juce_gui_basics/widgets/juce_ToolbarItemPalette.h"; sourceTree = "SOURCE_ROOT"; };
 		006BC246AE962B5B42757503 = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = "juce_ValueTree.cpp"; path = "../../JuceLibraryCode/modules/juce_data_structures/values/juce_ValueTree.cpp"; sourceTree = "SOURCE_ROOT"; };
+		009A681EA1353DB715B91A6B = {isa = PBXFileReference; lastKnownFileType = file.wav; name = "Microbrute raw waves_stems_sBMP4  pulse.wav"; path = "../../../../../Downloads/Microbrute reaper/Microbrute raw waves_stems_sBMP4  pulse.wav"; sourceTree = "SOURCE_ROOT"; };
 		00A98B867562E2E5A9B57CA2 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_MultiDocumentPanel.h"; path = "../../JuceLibraryCode/modules/juce_gui_basics/layout/juce_MultiDocumentPanel.h"; sourceTree = "SOURCE_ROOT"; };
 		0101C2A8DE254BB1759C6892 = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = "juce_Timer.cpp"; path = "../../JuceLibraryCode/modules/juce_events/timers/juce_Timer.cpp"; sourceTree = "SOURCE_ROOT"; };
 		01052A134D3E972C4CFF291C = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_BufferedInputStream.h"; path = "../../JuceLibraryCode/modules/juce_core/streams/juce_BufferedInputStream.h"; sourceTree = "SOURCE_ROOT"; };
@@ -68,7 +69,6 @@
 		02B6EA960BED8151A757AEB9 = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = "juce_FilenameComponent.cpp"; path = "../../JuceLibraryCode/modules/juce_gui_basics/filebrowser/juce_FilenameComponent.cpp"; sourceTree = "SOURCE_ROOT"; };
 		03164F684E0B0DEA29BB224E = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_MPEZoneLayout.h"; path = "../../JuceLibraryCode/modules/juce_audio_basics/mpe/juce_MPEZoneLayout.h"; sourceTree = "SOURCE_ROOT"; };
 		0342E2909993E3C51DEE91B3 = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = "juce_ImageConvolutionKernel.cpp"; path = "../../JuceLibraryCode/modules/juce_graphics/images/juce_ImageConvolutionKernel.cpp"; sourceTree = "SOURCE_ROOT"; };
-		039CDB0DF6BFFB4E7F962991 = {isa = PBXFileReference; lastKnownFileType = file.wav; name = "Microbrute raw waves_stems_sBMP4  triangle.wav"; path = "../../../../../Dropbox/Projects/sBMP4/Microbrute reaper/Microbrute raw waves_stems_sBMP4  triangle.wav"; sourceTree = "SOURCE_ROOT"; };
 		03E3C003BB894DC9811B732A = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_AudioUnitPluginFormat.h"; path = "../../JuceLibraryCode/modules/juce_audio_processors/format_types/juce_AudioUnitPluginFormat.h"; sourceTree = "SOURCE_ROOT"; };
 		03F184EF143F16E48CA4215A = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = "juce_Base64.cpp"; path = "../../JuceLibraryCode/modules/juce_core/text/juce_Base64.cpp"; sourceTree = "SOURCE_ROOT"; };
 		0419CB63766871619604DB6D = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_PopupMenu.h"; path = "../../JuceLibraryCode/modules/juce_gui_basics/menus/juce_PopupMenu.h"; sourceTree = "SOURCE_ROOT"; };
@@ -130,7 +130,6 @@
 		135178AF064C657C0A36C0A5 = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = "juce_TabbedButtonBar.cpp"; path = "../../JuceLibraryCode/modules/juce_gui_basics/layout/juce_TabbedButtonBar.cpp"; sourceTree = "SOURCE_ROOT"; };
 		14A6E4B85998657637C0F499 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_ComponentBoundsConstrainer.h"; path = "../../JuceLibraryCode/modules/juce_gui_basics/layout/juce_ComponentBoundsConstrainer.h"; sourceTree = "SOURCE_ROOT"; };
 		154A0BCEBC885C5E6A4FE357 = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = "juce_audio_processors.mm"; path = "../../JuceLibraryCode/modules/juce_audio_processors/juce_audio_processors.mm"; sourceTree = "SOURCE_ROOT"; };
-		155500F6DCBE2B706E9622DA = {isa = PBXFileReference; lastKnownFileType = file.wav; name = "Microbrute raw waves_stems_sBMP4  pulse.wav"; path = "../../../../../Dropbox/Projects/sBMP4/Microbrute reaper/Microbrute raw waves_stems_sBMP4  pulse.wav"; sourceTree = "SOURCE_ROOT"; };
 		157F8B9D78AE981A1FB029DE = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = "juce_MessageListener.cpp"; path = "../../JuceLibraryCode/modules/juce_events/messages/juce_MessageListener.cpp"; sourceTree = "SOURCE_ROOT"; };
 		15BFC70C7D0B76E857DC5389 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_MouseCursor.h"; path = "../../JuceLibraryCode/modules/juce_gui_basics/mouse/juce_MouseCursor.h"; sourceTree = "SOURCE_ROOT"; };
 		16003F5C8A32062BEED32FB5 = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = "juce_FileLogger.cpp"; path = "../../JuceLibraryCode/modules/juce_core/logging/juce_FileLogger.cpp"; sourceTree = "SOURCE_ROOT"; };
@@ -402,7 +401,6 @@
 		52C7BF5AAB4E9B0B4DC43FFC = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		53235200B1410CB4D64A6CA4 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_AudioPluginInstance.h"; path = "../../JuceLibraryCode/modules/juce_audio_processors/processors/juce_AudioPluginInstance.h"; sourceTree = "SOURCE_ROOT"; };
 		53737581997EC6B4999FE312 = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = "juce_ios_Windowing.mm"; path = "../../JuceLibraryCode/modules/juce_gui_basics/native/juce_ios_Windowing.mm"; sourceTree = "SOURCE_ROOT"; };
-		53771BF92A0E4E1EE582E3D8 = {isa = PBXFileReference; lastKnownFileType = file.wav; name = "Microbrute raw waves_stems_sBMP4  sawtooth.wav"; path = "../../../../../Dropbox/Projects/sBMP4/Microbrute reaper/Microbrute raw waves_stems_sBMP4  sawtooth.wav"; sourceTree = "SOURCE_ROOT"; };
 		54470D1239111D2F75E9B8D8 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_BubbleMessageComponent.h"; path = "../../JuceLibraryCode/modules/juce_gui_extra/misc/juce_BubbleMessageComponent.h"; sourceTree = "SOURCE_ROOT"; };
 		546289D30FB737AEA0A119E2 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_ResamplingAudioSource.h"; path = "../../JuceLibraryCode/modules/juce_audio_basics/sources/juce_ResamplingAudioSource.h"; sourceTree = "SOURCE_ROOT"; };
 		547F5FC0DD85A5D8E41C64F0 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_WavAudioFormat.h"; path = "../../JuceLibraryCode/modules/juce_audio_formats/codecs/juce_WavAudioFormat.h"; sourceTree = "SOURCE_ROOT"; };
@@ -699,6 +697,7 @@
 		A1079B5A5173790FFC459DF9 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MathSupplement.h; path = ../../Source/DspFilters/MathSupplement.h; sourceTree = "SOURCE_ROOT"; };
 		A12A6C5089C00AAB939B7CB4 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_Viewport.h"; path = "../../JuceLibraryCode/modules/juce_gui_basics/layout/juce_Viewport.h"; sourceTree = "SOURCE_ROOT"; };
 		A13F6B98E447298138FAA6A3 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_MidiRPN.h"; path = "../../JuceLibraryCode/modules/juce_audio_basics/midi/juce_MidiRPN.h"; sourceTree = "SOURCE_ROOT"; };
+		A219F8A1CFC8D74E6EDACBF7 = {isa = PBXFileReference; lastKnownFileType = file.wav; name = "Microbrute raw waves_stems_sBMP4  triangle.wav"; path = "../../../../../Downloads/Microbrute reaper/Microbrute raw waves_stems_sBMP4  triangle.wav"; sourceTree = "SOURCE_ROOT"; };
 		A24D4DBB4208D82BC5582A66 = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = "juce_ToneGeneratorAudioSource.cpp"; path = "../../JuceLibraryCode/modules/juce_audio_basics/sources/juce_ToneGeneratorAudioSource.cpp"; sourceTree = "SOURCE_ROOT"; };
 		A25EA4DFC091AD31FEDBAAB8 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_FlacAudioFormat.h"; path = "../../JuceLibraryCode/modules/juce_audio_formats/codecs/juce_FlacAudioFormat.h"; sourceTree = "SOURCE_ROOT"; };
 		A2974CBE526BD3F8262217B1 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_ZipFile.h"; path = "../../JuceLibraryCode/modules/juce_core/zip/juce_ZipFile.h"; sourceTree = "SOURCE_ROOT"; };
@@ -1012,6 +1011,7 @@
 		F51D8629E33BA2CE3BD799D6 = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = "juce_QuickTimeAudioFormat.cpp"; path = "../../JuceLibraryCode/modules/juce_audio_formats/codecs/juce_QuickTimeAudioFormat.cpp"; sourceTree = "SOURCE_ROOT"; };
 		F56C4EFE4E071D3F374013C1 = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = "juce_TableHeaderComponent.cpp"; path = "../../JuceLibraryCode/modules/juce_gui_basics/widgets/juce_TableHeaderComponent.cpp"; sourceTree = "SOURCE_ROOT"; };
 		F57428B726C43E8519EC448C = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = "juce_Identifier.cpp"; path = "../../JuceLibraryCode/modules/juce_core/text/juce_Identifier.cpp"; sourceTree = "SOURCE_ROOT"; };
+		F637D133B83CF4FF02E7239F = {isa = PBXFileReference; lastKnownFileType = file.wav; name = "Microbrute raw waves_stems_sBMP4  sawtooth.wav"; path = "../../../../../Downloads/Microbrute reaper/Microbrute raw waves_stems_sBMP4  sawtooth.wav"; sourceTree = "SOURCE_ROOT"; };
 		F6493B9985AFE9E2B01C302D = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_FileDragAndDropTarget.h"; path = "../../JuceLibraryCode/modules/juce_gui_basics/mouse/juce_FileDragAndDropTarget.h"; sourceTree = "SOURCE_ROOT"; };
 		F6AFF60AF2CB5E50814F73F4 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_Font.h"; path = "../../JuceLibraryCode/modules/juce_graphics/fonts/juce_Font.h"; sourceTree = "SOURCE_ROOT"; };
 		F6B70F14852F3B302CD4D109 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_OpenGL_ios.h"; path = "../../JuceLibraryCode/modules/juce_opengl/native/juce_OpenGL_ios.h"; sourceTree = "SOURCE_ROOT"; };
@@ -1048,9 +1048,9 @@
 		FF9884D99B82FE48D6E5E9CF = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_TableListBox.h"; path = "../../JuceLibraryCode/modules/juce_gui_basics/widgets/juce_TableListBox.h"; sourceTree = "SOURCE_ROOT"; };
 		FFE33DE905FED89A7F6D6622 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_JSON.h"; path = "../../JuceLibraryCode/modules/juce_core/javascript/juce_JSON.h"; sourceTree = "SOURCE_ROOT"; };
 		BD48B0369055D3E8F3581975 = {isa = PBXGroup; children = (
-					155500F6DCBE2B706E9622DA,
-					53771BF92A0E4E1EE582E3D8,
-					039CDB0DF6BFFB4E7F962991, ); name = sounds; sourceTree = "<group>"; };
+					009A681EA1353DB715B91A6B,
+					F637D133B83CF4FF02E7239F,
+					A219F8A1CFC8D74E6EDACBF7, ); name = sounds; sourceTree = "<group>"; };
 		25FD24A64DDA9A7B756ECD54 = {isa = PBXGroup; children = (
 					CACFDB06C236CEF02604072F,
 					4956B464E6A97254436CF67A,
@@ -2305,7 +2305,7 @@
 					"JUCE_APP_VERSION_HEX=0x10000", );
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GENERATE_PKGINFO_FILE = YES;
-				HEADER_SEARCH_PATHS = ("~/Documents/sdks/steinberg/vstsdk2.4", "../../JuceLibraryCode", "../../JuceLibraryCode/modules", "/Users/nicolai/Documents/git/DSPFilters/shared/DSPFilters/include/DspFilters", "$(inherited)");
+				HEADER_SEARCH_PATHS = ("\"~/Documents/sdks/steinberg/VST3 SDK\"", "../../JuceLibraryCode", "../../JuceLibraryCode/modules", "/Users/nicolai/Documents/git/DSPFilters/shared/DSPFilters/include/DspFilters", "$(inherited)");
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Audio/Plug-Ins/Components/";
 				LIBRARY_SEARCH_PATHS = ("$(inherited)", "\"/Users/nicolai/Documents/git/sBMP4/lib/Mac64\"");
@@ -2332,10 +2332,10 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GENERATE_PKGINFO_FILE = YES;
-				HEADER_SEARCH_PATHS = ("~/Documents/sdks/steinberg/vstsdk2.4", "../../JuceLibraryCode", "../../JuceLibraryCode/modules", "/Users/nicolai/Documents/git/DSPFilters/shared/DSPFilters/include/DspFilters", "$(inherited)");
+				HEADER_SEARCH_PATHS = ("\"~/Documents/sdks/steinberg/VST3 SDK\"", "../../JuceLibraryCode", "../../JuceLibraryCode/modules", "~/Documents/git/DSPFilters/shared/DSPFilters/include/DspFilters", "$(inherited)");
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Audio/Plug-Ins/Components/";
-				LIBRARY_SEARCH_PATHS = ("$(inherited)", "\"/Users/nicolai/Documents/git/sBMP4/lib/Mac64\"");
+				LIBRARY_SEARCH_PATHS = ("$(inherited)", "\"~/Documents/git/sBMP4/lib/Mac64\"");
 				LIBRARY_STYLE = Bundle;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
 				OTHER_LDFLAGS = "-bundle -llibDSPFiltersMacOS";
