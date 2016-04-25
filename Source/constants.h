@@ -88,10 +88,11 @@ const int   k_iSimpleFilterLF = 600;
 const int   k_iSimpleFilterHF = 20000;// 12000;
 const int   k_iNumberOfVoices = 10;
 
+//this should probably be a macro, to prevent use of #includes in some places
 #if	WIN32
 const bool  k_bUseSimplestLp = false;
 #elif __APPLE__
-const bool  k_bUseSimplestLp = false;
+const bool  k_bUseSimplestLp = true;
 #else
 const bool  k_bUseSimplestLp = true;
 #endif
