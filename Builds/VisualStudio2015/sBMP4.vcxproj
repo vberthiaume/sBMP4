@@ -1906,9 +1906,9 @@
     <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h"/>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\..\..\Downloads\Microbrute reaper\Microbrute raw waves_stems_sBMP4  pulse.wav"/>
-    <None Include="..\..\..\..\..\Downloads\Microbrute reaper\Microbrute raw waves_stems_sBMP4  sawtooth.wav"/>
-    <None Include="..\..\..\..\..\Downloads\Microbrute reaper\Microbrute raw waves_stems_sBMP4  triangle.wav"/>
+    <None Include="..\..\..\..\..\Dropbox\Projects\sBMP4\Microbrute reaper\Microbrute raw waves_stems_sBMP4  pulse.wav"/>
+    <None Include="..\..\..\..\..\Dropbox\Projects\sBMP4\Microbrute reaper\Microbrute raw waves_stems_sBMP4  sawtooth.wav"/>
+    <None Include="..\..\..\..\..\Dropbox\Projects\sBMP4\Microbrute reaper\Microbrute raw waves_stems_sBMP4  triangle.wav"/>
     <None Include="..\..\fonts\After_Shok.ttf"/>
     <None Include="..\..\fonts\2Dumb.ttf"/>
     <None Include="..\..\fonts\3Dumb.ttf"/>
