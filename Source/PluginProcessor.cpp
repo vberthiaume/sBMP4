@@ -85,6 +85,11 @@ void sBMP4AudioProcessor::prepareToPlay(double sampleRate, int /*samplesPerBlock
     m_oDelayBuffer.clear();
 }
 
+
+
+
+
+
 void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages) {
    const int numSamples = buffer.getNumSamples();
     
@@ -94,6 +99,7 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 		setFilterFr(m_fFilterFr);	//just to update the lookback vector
 	}
 #endif
+    
     //Pass any incoming midi messages to our keyboard, which will add messages to the buffer keys are pressed
     m_oKeyboardState.processNextMidiBuffer (midiMessages, 0, numSamples, true);
 	if (m_bSubOscIsOn) {
@@ -110,24 +116,20 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 		}
 		midiMessages.addEvents(allSubOscMessages,0,-1,0);
 	}
-    //Process these midi events and generate the output audio
+    //generate audio from midi events
     m_oSynth.renderNextBlock (buffer, midiMessages, 0, numSamples);
 	//this loop is useless since we only have 1 output, but leave it for future expansion
 	int iDelayPosition = 0;
 	for (int iCurChannel = 0; iCurChannel < getMainBusNumOutputChannels(); ++iCurChannel){
-
 		//-----GAIN
 		buffer.applyGain(iCurChannel, 0, buffer.getNumSamples(), m_fGain);
-
 		float* channelData = buffer.getWritePointer (iCurChannel);
         
         //-----FILTER
 #if USE_SIMPLEST_LP
         simplestLP(channelData, numSamples, m_oLookBackVec[iCurChannel]);
 #else
-        float** ptr_channelData;
-        *ptr_channelData = buffer.getWritePointer(iCurChannel);
-        m_simpleFilter.process(numSamples, ptr_channelData);
+        m_simpleFilter.process(numSamples, &channelData);
 #endif
 
 		//-----DELAY AND LFO
@@ -155,6 +157,18 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
     }
     m_iDelayPosition = iDelayPosition;
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 //the argument to this will be [0, 1], which we need to convert to [kmin, kmax]
 void sBMP4AudioProcessor::setLfoFr01(float p_fLfoFr01){
