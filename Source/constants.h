@@ -26,6 +26,17 @@
 
 #include <math.h>
 
+//these should probably be a macro, to prevent use of #includes in some places
+#if	__linux__
+const bool  k_bUseSimplestLp = true;
+#else
+const bool  k_bUseSimplestLp = false;
+#endif
+
+const bool k_bUseSampledSound = false;
+const bool  k_bUseWaveTables = true;
+
+
 //--------useful functions
 //convert p_tValue01 from range [0,1] to human-readable range [p_tMinHr, p_tMaxHr]
 template <typename T>
@@ -88,19 +99,7 @@ const int   k_iSimpleFilterLF = 600;
 const int   k_iSimpleFilterHF = 20000;// 12000;
 const int   k_iNumberOfVoices = 10;
 
-//this should probably be a macro, to prevent use of #includes in some places
-#if	WIN32
-const bool  k_bUseSimplestLp = false;
-#elif __APPLE__
-const bool  k_bUseSimplestLp = false;
-#else
-const bool  k_bUseSimplestLp = true;
-#endif
-
-const bool k_bUseSampledSound = false;
-
 //-------stuff related to wavetables
-const bool  k_bUseWaveTables = true;
 const int   k_iOverSampleFactor	= 2;     /* oversampling factor (positive integer) */
 const float k_iBaseFrequency	= 20.f;  /* starting frequency of first table */
 
