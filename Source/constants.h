@@ -26,13 +26,11 @@
 
 #include <math.h>
 
-//these should probably be a macro, to prevent use of #includes in some places
-#if	__linux__
-const bool  k_bUseSimplestLp = true;
-#else
-const bool  k_bUseSimplestLp = false;
-#endif
+//#ifndef USE_SIMPLEST_LP
+//#define USE_SIMPLEST_LP 1
+//#endif
 
+//these should probably be a macro, to prevent use of #includes in some places
 const bool k_bUseSampledSound = false;
 const bool  k_bUseWaveTables = true;
 

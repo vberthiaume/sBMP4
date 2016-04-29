@@ -61,11 +61,11 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
     setWaveType(k_fDefaultWave);
 	setFilterFr(k_fDefaultFilterFr);
 	setLfoFr01(k_fDefaultLfoFr01);
-    if(k_bUseSimplestLp){
+#if USE_SIMPLEST_LP
         for(int iCurChannel = 0; iCurChannel < 2; ++iCurChannel){
             m_oLookBackVec[iCurChannel] = std::vector<float>(100, 0.f);
         }
-    }
+#endif
 
 	//width of 265 is 20 (x buffer on left) + 3*75 (3 sliders) + 20 (buffer on right)
     /*m_oLastDimensions = std::make_pair(20+5*70+25, k_iKeyboardHeight + 80 + 60);*/
@@ -76,9 +76,9 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 
 void sBMP4AudioProcessor::prepareToPlay(double sampleRate, int /*samplesPerBlock*/) {
     m_oSynth.setCurrentPlaybackSampleRate(sampleRate);
-    if(!k_bUseSimplestLp){
+#if USE_SIMPLEST_LP
         updateSimpleFilter(sampleRate);
-    }
+#endif
 	setLfoFr01(getLfoFr01());
 	setFilterFr(m_fFilterFr);
     m_oKeyboardState.reset();
@@ -87,10 +87,13 @@ void sBMP4AudioProcessor::prepareToPlay(double sampleRate, int /*samplesPerBlock
 
 void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages) {
    const int numSamples = buffer.getNumSamples();
-   if(k_bUseSimplestLp && m_iBufferSize != numSamples){
+    
+#if USE_SIMPLEST_LP
+   if(m_iBufferSize != numSamples){
 		m_iBufferSize = numSamples;
 		setFilterFr(m_fFilterFr);	//just to update the lookback vector
 	}
+#endif
     //Pass any incoming midi messages to our keyboard, which will add messages to the buffer keys are pressed
     m_oKeyboardState.processNextMidiBuffer (midiMessages, 0, numSamples, true);
 	if (m_bSubOscIsOn) {
@@ -119,13 +122,13 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 		float* channelData = buffer.getWritePointer (iCurChannel);
         
         //-----FILTER
-        if(k_bUseSimplestLp){
-			simplestLP(channelData, numSamples, m_oLookBackVec[iCurChannel]);
-		} else {
-			float* channelData[1];
-			channelData[0] = buffer.getWritePointer(iCurChannel);
-			m_simpleFilter.process(numSamples, channelData);
-		}
+#if USE_SIMPLEST_LP
+        simplestLP(channelData, numSamples, m_oLookBackVec[iCurChannel]);
+#else
+        float** ptr_channelData;
+        *ptr_channelData = buffer.getWritePointer(iCurChannel);
+        m_simpleFilter.process(numSamples, ptr_channelData);
+#endif
 
 		//-----DELAY AND LFO
 		float* delayData = m_oDelayBuffer.getWritePointer(jmin(iCurChannel, m_oDelayBuffer.getNumChannels() - 1));
@@ -166,15 +169,17 @@ float sBMP4AudioProcessor::getLfoFr01() {
 
 void sBMP4AudioProcessor::setFilterFr(float p_fFilterFr){
     m_fFilterFr = p_fFilterFr;
-    if(k_bUseSimplestLp){
+#if USE_SIMPLEST_LP
         suspendProcessing(true);
         int i = static_cast<int>(m_fFilterFr*m_iBufferSize/10);
         m_oLookBackVec[0].resize(i);
         m_oLookBackVec[1].resize(i);
         suspendProcessing(false);
-    } else if(m_oSynth.getSampleRate() > 0){
+#else
+    if(m_oSynth.getSampleRate() > 0){
         updateSimpleFilter(m_oSynth.getSampleRate());
     }
+#endif
 }
 
 float sBMP4AudioProcessor::getFilterQ01(){
