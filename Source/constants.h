@@ -34,6 +34,12 @@
 const bool k_bUseSampledSound = false;
 const bool  k_bUseWaveTables = true;
 
+#ifndef USE_LOGO_LBL
+#define USE_LOGO_LBL 1
+#endif
+
+
+
 
 //--------useful functions
 //convert p_tValue01 from range [0,1] to human-readable range [p_tMinHr, p_tMaxHr]

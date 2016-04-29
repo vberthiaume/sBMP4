@@ -44,6 +44,7 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor(sBMP4AudioProcessor& proces
     , m_oSineImage("sine")
     , m_oSawImage("saw")
     , m_oTriangleImage("triangle")
+    , m_oLogoLabel("", "sBMP4")
     , m_oLogoImage("sBMP4")
 {
     addSlider(&m_oWaveSlider,	1.f/3);
@@ -69,7 +70,21 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor(sBMP4AudioProcessor& proces
 	addAndMakeVisible(m_oSawImage);
 	addAndMakeVisible(m_oSquareImage);
 	addAndMakeVisible(m_oTriangleImage);
+    
+#if USE_LOGO_LBL
+//    addLabel(&m_oLogoLabel);
+    
+    
+    Font logoFont = mLookAndFeel.getFont();
+    logoFont.setHeight(20.f);
+    m_oLogoLabel.setFont(logoFont);
+    m_oLogoLabel.setColour(Label::textColourId, mLookAndFeel.getFontColour());
+    m_oLogoLabel.setJustificationType(Justification::centred);
+    addAndMakeVisible(m_oLogoLabel);
+    
+#else
 	addAndMakeVisible(m_oLogoImage);
+#endif
 
     // add some labels for the sliders
 	addLabel(&m_oWaveLabel);
@@ -169,7 +184,12 @@ void sBMP4AudioProcessorEditor::resized() {
 	m_oQSlider.setBounds		(x + iCurCol * k_iSliderWidth, y + iCurRow * (k_iSliderHeight + k_iLabelHeight), k_iSliderWidth, k_iSliderHeight);
 	m_oQLabel.setBounds			(x + iCurCol * k_iSliderWidth, y + iCurRow * (k_iSliderHeight + 2.5*k_iLabelHeight), k_iSliderWidth, k_iLabelHeight);
 	
+#if USE_LOGO_LBL
+    m_oLogoLabel.setBounds(getWidth() - k_iLogoW, 5, k_iLogoW, k_iLogoH);
+#else
 	m_oLogoImage.setBounds(getWidth() - k_iLogoW, 5, k_iLogoW, k_iLogoH);
+#endif
+    
     m_oMidiKeyboard.setBounds (4, getHeight() - k_iKeyboardHeight - 4, getWidth() - 8, k_iKeyboardHeight);
     m_pResizer->setBounds (getWidth() - 16, getHeight() - 16, 16, 16);
     getProcessor().setDimensions(std::make_pair(getWidth(), getHeight()));
