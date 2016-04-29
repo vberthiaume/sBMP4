@@ -362,3 +362,6 @@ FakesAssemblies/
 #vim swap files
 *.swo
 *.ods#
+
+#other stuff vb added
+*.xcscmblueprint
