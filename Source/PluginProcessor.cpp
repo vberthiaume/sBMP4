@@ -231,10 +231,8 @@ void sBMP4AudioProcessor::updateSimpleFilter(double sampleRate) {
              "to get because as far as I know, we can only access that from the voice, which is buried in m_oSynth")
     float fExpCutoffFr = fMultiple * exp(log(k_iSimpleFilterHF * m_fFilterFr/fMultiple)) + k_iSimpleFilterLF;
     
-#if	WIN32
 	//this is called setup, but really it's just setting some values. 
 	m_simpleFilter.setup(sampleRate, fExpCutoffFr, m_fQHr);
-#endif
 }
 
 JUCE_COMPILER_WARNING("need to put this in my audio library")
