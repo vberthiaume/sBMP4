@@ -83,9 +83,8 @@ public:
   {
 //    while (--numSamples >= 0)
 //      *dest++ = state.process (*dest, *this);
-      
-      for (int iCurSample = numSamples-1; iCurSample >= 0; --iCurSample) {
-          state.process (dest[iCurSample], *this);
+      for (int iCurSample = 0; iCurSample < numSamples; ++iCurSample) {
+          dest[iCurSample] = state.process (dest[iCurSample], *this);
       }
   }
 
