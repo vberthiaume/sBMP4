@@ -100,7 +100,9 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 	}
 #endif
     
-    //Pass any incoming midi messages to our keyboard, which will add messages to the buffer keys are pressed
+   
+    
+    //put messages in midiMessages if keys are (were?) pressed
     m_oKeyboardState.processNextMidiBuffer (midiMessages, 0, numSamples, true);
 	if (m_bSubOscIsOn) {
 		MidiBuffer::Iterator it(midiMessages);
@@ -129,7 +131,22 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 #if USE_SIMPLEST_LP
         simplestLP(channelData, numSamples, m_oLookBackVec[iCurChannel]);
 #else
+        
+//        if (midiMessages.getNumEvents() != 0){
+//            std::cout << "==========================BEFORE================================\n";
+//            for (int iCurSample = 0; iCurSample < numSamples; ++iCurSample) {
+//                std::cout << channelData[iCurSample] << newLine;
+//            }
+//        }
+        
         m_simpleFilter.process(numSamples, &channelData);
+        
+//        if (midiMessages.getNumEvents() != 0){
+//            std::cout << "==========================AFTER================================\n";
+//            for (int iCurSample = 0; iCurSample < numSamples; ++iCurSample) {
+//                std::cout << channelData[iCurSample] << newLine;
+//            }
+//        }
 #endif
 
 		//-----DELAY AND LFO
