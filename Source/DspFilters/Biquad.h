@@ -81,8 +81,12 @@ public:
   template <class StateType, typename Sample>
   void process (int numSamples, Sample* dest, StateType& state) const
   {
-    while (--numSamples >= 0)
-      *dest++ = state.process (*dest, *this);
+//    while (--numSamples >= 0)
+//      *dest++ = state.process (*dest, *this);
+      
+      for (int iCurSample = numSamples-1; iCurSample >= 0; --iCurSample) {
+          state.process (dest[iCurSample], *this);
+      }
   }
 
 protected:
