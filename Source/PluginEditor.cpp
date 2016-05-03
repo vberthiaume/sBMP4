@@ -73,7 +73,7 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor(sBMP4AudioProcessor& proces
     
 #if USE_LOGO_LBL
     Font logoFont = mLookAndFeel.getFont();
-    logoFont.setHeight(21.f);
+    logoFont.setHeight(20.f);
     m_oLogoLabel.setFont(logoFont);
     m_oLogoLabel.setColour(Label::textColourId, mLookAndFeel.getFontColour());
     m_oLogoLabel.setJustificationType(Justification::centred);
