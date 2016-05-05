@@ -248,7 +248,6 @@ void WaveTableOsc::defineTrianglePartials(int len, int numHarmonics){
 		m_vPartials[idx] = 0;
 	}
 	//fill the m_vPartials vector, which I presume is the amplitude of real harmonics
-
 	float sign = 1;
 	for(int idx = 1, jdx = len - 1; idx <= numHarmonics; idx++, jdx--){
 		double temp = idx & 0x01 ? 1.0 / (idx * idx) * (sign = -sign) : 0.0;

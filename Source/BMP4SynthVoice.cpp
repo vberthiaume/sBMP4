@@ -118,6 +118,7 @@ float Bmp4SynthVoice::getSample(double dTail) {
 		JUCE_COMPILER_WARNING("this is not using the tail")
 		switch(m_iCurSound){
 			case soundSine:
+				return getSampleAdditiveSynthesis(dTail) * .9;
 			case soundTriangle:
 				return m_oWaveTableTriangle.getOutput();
 			case soundSawtooth:
