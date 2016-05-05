@@ -32,7 +32,7 @@
 
 //these should probably be a macro, to prevent use of #includes in some places
 const bool k_bUseSampledSound = false;
-const bool  k_bUseWaveTables = true;
+const bool k_bUseWaveTables = true;
 
 #ifndef USE_LOGO_LBL
 #define USE_LOGO_LBL 1
