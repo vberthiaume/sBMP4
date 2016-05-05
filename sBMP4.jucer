@@ -137,7 +137,7 @@
       </MODULEPATHS>
     </LINUX_MAKE>
     <VS2015 targetFolder="Builds/VisualStudio2015" vstFolder="C:\Users\barth\Documents\sdks\steinberg\3.6.5\VST3 SDK"
-            externalLibraries="DSPFilters.lib" vst3Folder="">
+            externalLibraries="DSPFilters.lib" vst3Folder="C:\Users\barth\Documents\sdks\steinberg\3.6.5\VST3 SDK">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
                        isDebug="1" optimisation="1" targetName="sBMP4" libraryPath="C:\Users\barth\Documents\git\sBMP4\lib\Win32Debug"/>
