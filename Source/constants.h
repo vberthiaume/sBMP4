@@ -78,7 +78,7 @@ enum WaveTypes{
 	, totalWaveTypes
 };
 
-const float k_fDefaultGain		= 1.0f;
+const float k_fDefaultGain		= 0.5f;
 const float k_fDefaultDelay		= 0.0f;
 const float k_fDefaultWave		= 0.0f;
 
@@ -106,6 +106,7 @@ const int   k_iNumberOfVoices = 10;
 //-------stuff related to wavetables
 const int   k_iOverSampleFactor	= 2;     /* oversampling factor (positive integer) */
 const float k_iBaseFrequency	= 20.f;  /* starting frequency of first table */
+const float k_fWaveTableGain	= .07f;
 
 //-------stuff related to size of GUI things
 const int k_iXMargin		= 20;
