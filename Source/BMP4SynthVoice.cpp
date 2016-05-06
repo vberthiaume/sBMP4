@@ -129,7 +129,6 @@ float Bmp4SynthVoice::getSample(double dTail) {
 				jassertfalse;
 				break;
 		}
-        
     } else {
 		return getSampleAdditiveSynthesis(dTail);
     }
