@@ -61,6 +61,7 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
     setWaveType(k_fDefaultWave);
 	setFilterFr(k_fDefaultFilterFr);
 	setLfoFr01(k_fDefaultLfoFr01);
+
 #if USE_SIMPLEST_LP
         for(int iCurChannel = 0; iCurChannel < 2; ++iCurChannel){
             m_oLookBackVec[iCurChannel] = std::vector<float>(100, 0.f);
@@ -68,7 +69,6 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 #endif
 
 	//width of 265 is 20 (x buffer on left) + 3*75 (3 sliders) + 20 (buffer on right)
-    /*m_oLastDimensions = std::make_pair(20+5*70+25, k_iKeyboardHeight + 80 + 60);*/
 	m_oLastDimensions = std::make_pair(2*k_iXMargin + k_iNumberOfHorizontalSliders*k_iSliderWidth, 
 									   k_iYMargin   + k_iNumberOfVerticaltalSliders * (k_iSliderHeight + k_iLabelHeight) + k_iKeyboardHeight);
     m_iDelayPosition = 0;
@@ -99,8 +99,6 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 		setFilterFr(m_fFilterFr);	//just to update the lookback vector
 	}
 #endif
-    
-   
     
     //put messages in midiMessages if keys are (were?) pressed
     m_oKeyboardState.processNextMidiBuffer (midiMessages, 0, numSamples, true);
