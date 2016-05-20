@@ -38,9 +38,6 @@ const bool k_bUseWaveTables = true;
 #define USE_LOGO_LBL 1
 #endif
 
-
-
-
 //--------useful functions
 //convert p_tValue01 from range [0,1] to human-readable range [p_tMinHr, p_tMaxHr]
 template <typename T>
@@ -72,10 +69,10 @@ enum Parameters{
 };
 
 enum WaveTypes{
-	triangleWave
-	, sawtoothWave
-	, squareWave
-	, totalWaveTypes
+	 triangleWave
+	,sawtoothWave
+	,squareWave
+	,totalWaveTypes
 };
 
 const float k_fDefaultGain		= 0.5f;
