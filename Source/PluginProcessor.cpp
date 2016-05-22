@@ -129,22 +129,7 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 #if USE_SIMPLEST_LP
         simplestLP(channelData, numSamples, m_oLookBackVec[iCurChannel]);
 #else
-        
-//        if (midiMessages.getNumEvents() != 0){
-//            std::cout << "==========================BEFORE================================\n";
-//            for (int iCurSample = 0; iCurSample < numSamples; ++iCurSample) {
-//                std::cout << channelData[iCurSample] << newLine;
-//            }
-//        }
-        
         m_simpleFilter.process(numSamples, &channelData);
-        
-//        if (midiMessages.getNumEvents() != 0){
-//            std::cout << "==========================AFTER================================\n";
-//            for (int iCurSample = 0; iCurSample < numSamples; ++iCurSample) {
-//                std::cout << channelData[iCurSample] << newLine;
-//            }
-//        }
 #endif
 
 		//-----DELAY AND LFO
