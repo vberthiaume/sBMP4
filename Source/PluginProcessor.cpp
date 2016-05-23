@@ -158,18 +158,6 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
     m_iDelayPosition = iDelayPosition;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
 //the argument to this will be [0, 1], which we need to convert to [kmin, kmax]
 void sBMP4AudioProcessor::setLfoFr01(float p_fLfoFr01){
 	m_fLfoFrHr = convert01ToHr(p_fLfoFr01, k_fMinLfoFr, k_fMaxLfoFr);
@@ -258,8 +246,7 @@ int sBMP4AudioProcessor::getNumParameters(){
 	return paramTotalNum;
 }
 
-float sBMP4AudioProcessor::getParameter(int index)
-{
+float sBMP4AudioProcessor::getParameter(int index) {
 	// This method will be called by the host, probably on the audio thread, so
 	// it's absolutely time-critical. Don't use critical sections or anything
 	// UI-related, or anything at all that may block in any way!
@@ -276,8 +263,7 @@ float sBMP4AudioProcessor::getParameter(int index)
 	}
 }
 
-void sBMP4AudioProcessor::setParameter(int index, float newValue)
-{
+void sBMP4AudioProcessor::setParameter(int index, float newValue) {
 	// This method will be called by the host, probably on the audio thread, so
 	// it's absolutely time-critical. Don't use critical sections or anything
 	// UI-related, or anything at all that may block in any way!
