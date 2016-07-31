@@ -26,9 +26,9 @@
 
 #include <math.h>
 
-//#ifndef USE_SIMPLEST_LP
-//#define USE_SIMPLEST_LP 1
-//#endif
+#ifndef USE_SIMPLEST_LP
+#define USE_SIMPLEST_LP 1
+#endif
 
 //these should probably be a macro, to prevent use of #includes in some places
 const bool k_bUseSampledSound = false;
@@ -41,13 +41,13 @@ const bool k_bUseWaveTables = true;
 //--------useful functions
 //convert p_tValue01 from range [0,1] to human-readable range [p_tMinHr, p_tMaxHr]
 template <typename T>
-static T const& convert01ToHr (T const& p_tValue01, T const& p_tMinHr, T const& p_tMaxHr) { 
+static T const convert01ToHr (T const& p_tValue01, T const& p_tMinHr, T const& p_tMaxHr) {
     return p_tValue01*(p_tMaxHr-p_tMinHr) + p_tMinHr; 
 } 
 
 //convert p_tValue01 from human-readable range [p_tMinHr, p_tMaxHr] to range [0,1] 
 template <typename T>
-static T const& convertHrTo01 (T const& p_tValueHr, T const& p_tMinHr, T const& p_tMaxHr) { 
+static T const convertHrTo01 (T const& p_tValueHr, T const& p_tMinHr, T const& p_tMaxHr) {
     return (p_tValueHr - p_tMinHr) / (p_tMaxHr-p_tMinHr); 
 } 
 

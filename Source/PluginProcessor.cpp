@@ -77,6 +77,7 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 void sBMP4AudioProcessor::prepareToPlay(double sampleRate, int /*samplesPerBlock*/) {
     m_oSynth.setCurrentPlaybackSampleRate(sampleRate);
 #if USE_SIMPLEST_LP
+#else
         updateSimpleFilter(sampleRate);
 #endif
 	setLfoFr01(getLfoFr01());
@@ -168,11 +169,11 @@ float sBMP4AudioProcessor::getLfoFr01() {
 void sBMP4AudioProcessor::setFilterFr(float p_fFilterFr){
     m_fFilterFr = p_fFilterFr;
 #if USE_SIMPLEST_LP
-        suspendProcessing(true);
-        int i = static_cast<int>(m_fFilterFr*m_iBufferSize/10);
-        m_oLookBackVec[0].resize(i);
-        m_oLookBackVec[1].resize(i);
-        suspendProcessing(false);
+    suspendProcessing(true);
+    int i = static_cast<int>((1-m_fFilterFr)*m_iBufferSize/10);
+    m_oLookBackVec[0].resize(i);
+    m_oLookBackVec[1].resize(i);
+    suspendProcessing(false);
 #else
     if(m_oSynth.getSampleRate() > 0){
         updateSimpleFilter(m_oSynth.getSampleRate());
@@ -186,9 +187,14 @@ float sBMP4AudioProcessor::getFilterQ01(){
 
 void sBMP4AudioProcessor::setFilterQ01(float p_fQ01){
 	m_fQHr = convert01ToHr(p_fQ01, k_fMinQHr, k_fMaxQHr);
-	updateSimpleFilter(m_oSynth.getSampleRate());
+#if USE_SIMPLEST_LP
+#else
+    updateSimpleFilter(m_oSynth.getSampleRate());
+#endif
 }
 
+#if USE_SIMPLEST_LP
+#else
 void sBMP4AudioProcessor::updateSimpleFilter(double sampleRate) {
 	if (sampleRate == 0){
 		return;
@@ -201,6 +207,7 @@ void sBMP4AudioProcessor::updateSimpleFilter(double sampleRate) {
 	//this is called setup, but really it's just setting some values. 
 	m_simpleFilter.setup(sampleRate, fExpCutoffFr, m_fQHr);
 }
+#endif
 
 JUCE_COMPILER_WARNING("need to put this in my audio library")
 //from here: https://ccrma.stanford.edu/~jos/filters/Definition_Simplest_Low_Pass.html
