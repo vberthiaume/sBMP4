@@ -25,12 +25,11 @@
   <FILTER uid="9" x="0.44678055190538762398" y="0.45246478873239437402"
           uiLastX_Normal="883" uiLastY_Normal="264" uiopen_Normal="1">
     <PLUGIN name="sBMP4" format="VST" category="Synth" manufacturer="BMP4"
-            version="V1.0.0" file="C:\Users\barth\Documents\git\sBMP4\Builds\VisualStudio2015\Debug\sBMP4.dll"
-            uid="73424d50" isInstrument="1" fileTime="154163651ae" infoUpdateTime="1541636b273"
+            version="V1.1.0" file="C:\Users\barth\Documents\git\sBMP4\Builds\VisualStudio2015\Debug\sBMP4.dll"
+            uid="73424d50" isInstrument="1" fileTime="15641b827a5" infoUpdateTime="15641bdf8c4"
             numInputs="1" numOutputs="1" isShell="0"/>
-    <STATE>354.CMlaKA....fQBMDZ....ALmPMAE....Y....A...............................................................................................................................................................................Ba0PxDRt....7LkPMAEMSUDUTkjSGMEH0k1UoQFcn0iHyPCLh.RcogTYocFZz0iHxDSMh.xYgkla8HRLh.BYkwVX40iHvHBH2Elck0iHv3hM1XiM1XiM3XSMyPCN3DSM4DCNh.hYowFckIWOhDiHfz1WlwjYuYjbHIWOh.iHfz1WlEERx0iHv3BLxjSN4jSN4jyLxjCMzbyMzXiL2biHfz1WhwjYukzbO4VOh.iHfz1WhMUch8zbikzbO4VOh.iHu3C.</STATE>
+    <STATE>354.CMlaKA....fQBMDZ....ALmPMAE...fa....A...............................................................................................................................................................................Ba0PxDRt....7LkPMAEMSUDUTkjSGMEH0k1UoQFcn0iHyPCLh.RcogTYocFZz0iHxDSMh.xYgkla8HRLh.BYkwVX40iHvHBH2Elck0iHv3hM1XiM1XiM3XSMyPCN3DSM4DCNh.hYowFckIWOhDiHfz1WlwjYuYjbHIWOh.iHfz1WlEERx0iHv3BLxjSN4jSN4jyLxjCMzbyMzXiL2biHfz1WhwjYukzbO4VOh.iHfz1WhMUch8zbikzbO4VOh.iHu3C.</STATE>
   </FILTER>
-  <CONNECTION srcFilter="1" srcChannel="0" dstFilter="9" dstChannel="0"/>
   <CONNECTION srcFilter="9" srcChannel="0" dstFilter="3" dstChannel="0"/>
   <CONNECTION srcFilter="9" srcChannel="0" dstFilter="3" dstChannel="1"/>
 </FILTERGRAPH>
