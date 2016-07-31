@@ -112,7 +112,8 @@ const int k_iKeyboardHeight	= 70;
 const int k_iSliderWidth	= 75;
 const int k_iSliderHeight	= 40;
 const int k_iLabelHeight	= 20;
-const int k_iLogoW			= 75;
+const int k_iSLogoW			= 20;
+const int k_iLogoW			= 85 - k_iSLogoW;
 const int k_iLogoH			= 30;
 
 const int k_iNumberOfHorizontalSliders	= 4;

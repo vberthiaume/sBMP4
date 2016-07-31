@@ -44,7 +44,8 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor(sBMP4AudioProcessor& proces
     , m_oSineImage("sine")
     , m_oSawImage("saw")
     , m_oTriangleImage("triangle")
-    , m_oLogoLabel("", "sBMP4")
+	, m_oSLogoLabel("", "s")
+    , m_oLogoLabel("", "BMP4")
     , m_oLogoImage("sBMP4")
 {
     addSlider(&m_oWaveSlider,	1.f/3);
@@ -72,6 +73,8 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor(sBMP4AudioProcessor& proces
 	addAndMakeVisible(m_oTriangleImage);
     
 #if USE_LOGO_LBL
+	addLabel(&m_oSLogoLabel);
+
     Font logoFont = mLookAndFeel.getFont();
     logoFont.setHeight(20.f);
     m_oLogoLabel.setFont(logoFont);
@@ -182,7 +185,8 @@ void sBMP4AudioProcessorEditor::resized() {
 	m_oQLabel.setBounds			(x + iCurCol * k_iSliderWidth, y + iCurRow * (k_iSliderHeight + 2.5*k_iLabelHeight), k_iSliderWidth, k_iLabelHeight);
 	
 #if USE_LOGO_LBL
-    m_oLogoLabel.setBounds(getWidth() - k_iLogoW, 0, k_iLogoW, k_iLogoH);
+    m_oSLogoLabel.setBounds(getWidth() - (k_iLogoW + k_iSLogoW/2), 3, k_iSLogoW, k_iLogoH);
+	m_oLogoLabel.setBounds(getWidth() - k_iLogoW, 0, k_iLogoW, k_iLogoH);
 #else
 	m_oLogoImage.setBounds(getWidth() - k_iLogoW, 5, k_iLogoW, k_iLogoH);
 #endif
