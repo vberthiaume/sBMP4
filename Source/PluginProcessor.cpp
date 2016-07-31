@@ -86,10 +86,6 @@ void sBMP4AudioProcessor::prepareToPlay(double sampleRate, int /*samplesPerBlock
 }
 
 
-
-
-
-
 void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages) {
    const int numSamples = buffer.getNumSamples();
     
@@ -110,7 +106,7 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 		while(it.getNextEvent(msg, iPosition)){
 			if (msg.isNoteOn() || msg.isNoteOff()){
 				MidiMessage curSubOscMsg(msg);
-				curSubOscMsg.setNoteNumber(curSubOscMsg.getNoteNumber()-8);
+				curSubOscMsg.setNoteNumber(curSubOscMsg.getNoteNumber()-12);
 				allSubOscMessages.addEvent(curSubOscMsg, iPosition);
 			}
 		}
