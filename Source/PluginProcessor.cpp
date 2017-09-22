@@ -45,11 +45,11 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 , m_bSubOscIsOn(true)
 {
 	//add our own audio input, because otherwise there is just a ghost input channel that is always on...
-	busArrangement.inputBuses.clear();
-	busArrangement.inputBuses.add(AudioProcessorBus("Mono input", AudioChannelSet::mono()));
-	//and make sure we only have 1 audio output, otherwise really weird
-	busArrangement.outputBuses.clear();
-	busArrangement.outputBuses.add(AudioProcessorBus("Mono output", AudioChannelSet::mono()));
+	//busArrangement.inputBuses.clear();
+	//busArrangement.inputBuses.add(AudioProcessorBus("Mono input", AudioChannelSet::mono()));
+	////and make sure we only have 1 audio output, otherwise really weird
+	//busArrangement.outputBuses.clear();
+	//busArrangement.outputBuses.add(AudioProcessorBus("Mono output", AudioChannelSet::mono()));
 
     for(int iCurVox = 0; iCurVox < k_iNumberOfVoices; ++iCurVox){
 		Bmp4SynthVoice* voice = new Bmp4SynthVoice();
