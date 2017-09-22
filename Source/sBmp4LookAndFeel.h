@@ -1,6 +1,6 @@
 /*
  ==============================================================================
- sBMP4: kilker subtractive synth!
+ sBMP4: killer subtractive synth!
  
  Copyright (C) 2014  BMP4
  
