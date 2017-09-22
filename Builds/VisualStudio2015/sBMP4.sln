@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sBMP4", "sBMP4.vcxproj", "{104DF58D-3C23-FE69-F5B5-604180890FF5}"
 EndProject
@@ -17,6 +17,7 @@ Global
 		{104DF58D-3C23-FE69-F5B5-604180890FF5}.Debug|Win32.ActiveCfg = Debug|Win32
 		{104DF58D-3C23-FE69-F5B5-604180890FF5}.Debug|Win32.Build.0 = Debug|Win32
 		{104DF58D-3C23-FE69-F5B5-604180890FF5}.Debug|x64.ActiveCfg = Debug|Win32
+		{104DF58D-3C23-FE69-F5B5-604180890FF5}.Debug|x64.Build.0 = Debug|Win32
 		{104DF58D-3C23-FE69-F5B5-604180890FF5}.Release_x64|Win32.ActiveCfg = Release_x64|x64
 		{104DF58D-3C23-FE69-F5B5-604180890FF5}.Release_x64|x64.ActiveCfg = Release_x64|x64
 		{104DF58D-3C23-FE69-F5B5-604180890FF5}.Release_x64|x64.Build.0 = Release_x64|x64
