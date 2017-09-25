@@ -109,7 +109,7 @@ bool sBMP4AudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) co
         return false;
 
     // only allow stereo and mono
-    if (mainOutput.size() > 1)
+    if (mainOutput.size() > 2)
         return false;
 
     return true;
@@ -117,8 +117,8 @@ bool sBMP4AudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) co
 
 AudioProcessor::BusesProperties sBMP4AudioProcessor::getBusesProperties()
 {
-    return BusesProperties().withInput  ("Input",  AudioChannelSet::mono(), true)
-                            .withOutput ("Output", AudioChannelSet::mono(), true);
+    return BusesProperties().withInput  ("Input",  AudioChannelSet::stereo(), true)
+                            .withOutput ("Output", AudioChannelSet::stereo(), true);
 }
 
 void sBMP4AudioProcessor::addSubOscMidiNotes(MidiBuffer& midiMessages){
@@ -151,7 +151,14 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 
     //generate audio from midi events
     m_oSynth.renderNextBlock (buffer, midiMessages, 0, numSamples);
-	//this loop is useless since we only have 1 output, but leave it for future expansion
+	
+#if !USE_SIMPLEST_LP
+        m_simpleFilter.process(numSamples, buffer.getArrayOfWritePointers());
+#endif
+
+    
+    
+    //this loop is useless since we only have 1 output, but leave it for future expansion
 	int iDelayPosition = 0;
     
 	//for (int iCurChannel = 0; iCurChannel < getMainBusNumOutputChannels(); ++iCurChannel){
@@ -163,8 +170,6 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
         //-----FILTER
 #if USE_SIMPLEST_LP
         simplestLP(channelData, numSamples, m_oLookBackVec[iCurChannel]);
-#else
-        m_simpleFilter.process(numSamples, &channelData);
 #endif
 
 		//-----DELAY AND LFO

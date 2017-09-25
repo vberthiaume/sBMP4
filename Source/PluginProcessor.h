@@ -126,7 +126,7 @@ private:
     int m_iBufferSize;
     std::vector<float> m_oLookBackVec[2];
 #else
-    Dsp::SimpleFilter <Dsp::RBJ::LowPass, 1>  m_simpleFilter;	//2 here is the number of channels, and is mandatory!
+    Dsp::SimpleFilter <Dsp::RBJ::LowPass, 2>  m_simpleFilter;	//2 here is the number of channels, and is mandatory!
 #endif
 
     static BusesProperties getBusesProperties();
