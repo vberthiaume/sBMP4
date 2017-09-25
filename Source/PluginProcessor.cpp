@@ -38,7 +38,9 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 , m_fGain(k_fDefaultGain)
 , m_fDelay(k_fDefaultDelay)
 , m_fQHr(k_fDefaultQHr)
+#if USE_SIMPLEST_LP
 , m_iBufferSize(100)	//totally arbitrary value
+#endif
 , m_fLfoAngle(0.)
 , m_fLfoOmega(0.)
 , m_bLfoIsOn(true)
@@ -56,12 +58,10 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 		Bmp4SynthVoice* voice = new Bmp4SynthVoice();
         m_oSynth.addVoice(voice);
 		JUCE_COMPILER_WARNING("this adding samplerVoices interacting with the other voices in any way?")
-		//m_oSynth.addVoice (new SamplerVoice());    // and these ones play the sampled sounds
+		m_oSynth.addVoice (new SamplerVoice());    // and these ones play the sampled sounds
     }
 
     setWaveType(k_fDefaultWave);
-	setFilterFr(k_fDefaultFilterFr);
-	setLfoFr01(k_fDefaultLfoFr01);
 
 #if USE_SIMPLEST_LP
         for(int iCurChannel = 0; iCurChannel < 2; ++iCurChannel){
@@ -75,14 +75,21 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
     m_iDelayPosition = 0;
 }
 
-void sBMP4AudioProcessor::prepareToPlay(double sampleRate, int /*samplesPerBlock*/) {
+void sBMP4AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock) {
+    m_fSampleRate = sampleRate;
     m_oSynth.setCurrentPlaybackSampleRate(sampleRate);
+
 #if USE_SIMPLEST_LP
+   if(m_iBufferSize != samplesPerBlock){
+		m_iBufferSize = samplesPerBlock;
+	}
 #else
-        updateSimpleFilter(sampleRate);
+    updateSimpleFilter();
 #endif
+
 	setLfoFr01(getLfoFr01());
 	setFilterFr(m_fFilterFr);
+    
     m_oKeyboardState.reset();
     m_oDelayBuffer.clear();
 }
@@ -115,15 +122,9 @@ AudioProcessor::BusesProperties sBMP4AudioProcessor::getBusesProperties()
 }
 
 void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages) {
-   const int numSamples = buffer.getNumSamples();
-    
-#if USE_SIMPLEST_LP
-   if(m_iBufferSize != numSamples){
-		m_iBufferSize = numSamples;
-		setFilterFr(m_fFilterFr);	//just to update the lookback vector
-	}
-#endif
-    
+   
+    int numSamples = buffer.getNumSamples();
+
     //put messages in midiMessages if keys are (were?) pressed
     m_oKeyboardState.processNextMidiBuffer (midiMessages, 0, numSamples, true);
 	if (m_bSubOscIsOn) {
@@ -183,9 +184,9 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 }
 
 //the argument to this will be [0, 1], which we need to convert to [kmin, kmax]
-void sBMP4AudioProcessor::setLfoFr01(float p_fLfoFr01){
-	m_fLfoFrHr = convert01ToHr(p_fLfoFr01, k_fMinLfoFr, k_fMaxLfoFr);
-	m_fLfoOmega = 2 * M_PI*m_fLfoFrHr / getSampleRate();		//dividing the frequency by the sample rate essentially gives us the frequency in samples
+void sBMP4AudioProcessor::setLfoFr01(float fr01){
+    m_fLfoFrHr = convert01ToHr(fr01, k_fMinLfoFr, k_fMaxLfoFr);
+	m_fLfoOmega = 2 * M_PI*m_fLfoFrHr / m_fSampleRate;		//dividing the frequency by the sample rate essentially gives us the frequency in samples
 }
 
 //m_fLfoFrHr is stored internally as [kmin, kmax], and we need here to return something [0, 1]
@@ -193,8 +194,9 @@ float sBMP4AudioProcessor::getLfoFr01() {
 	return convertHrTo01(m_fLfoFrHr, k_fMinLfoFr, k_fMaxLfoFr);
 }
 
-void sBMP4AudioProcessor::setFilterFr(float p_fFilterFr){
-    m_fFilterFr = p_fFilterFr;
+void sBMP4AudioProcessor::setFilterFr(float filterFr){
+    m_fFilterFr = filterFr;
+
 #if USE_SIMPLEST_LP
     suspendProcessing(true);
     int i = static_cast<int>((1-m_fFilterFr)*m_iBufferSize/10);
@@ -203,7 +205,7 @@ void sBMP4AudioProcessor::setFilterFr(float p_fFilterFr){
     suspendProcessing(false);
 #else
     if(m_oSynth.getSampleRate() > 0){
-        updateSimpleFilter(m_oSynth.getSampleRate());
+        updateSimpleFilter();
     }
 #endif
 }
@@ -216,23 +218,24 @@ void sBMP4AudioProcessor::setFilterQ01(float p_fQ01){
 	m_fQHr = convert01ToHr(p_fQ01, k_fMinQHr, k_fMaxQHr);
 #if USE_SIMPLEST_LP
 #else
-    updateSimpleFilter(m_oSynth.getSampleRate());
+    updateSimpleFilter();
 #endif
 }
 
 #if USE_SIMPLEST_LP
 #else
-void sBMP4AudioProcessor::updateSimpleFilter(double sampleRate) {
-	if (sampleRate == 0){
+void sBMP4AudioProcessor::updateSimpleFilter() {
+	if (m_fSampleRate == 0){
 		return;
 	}
     float fMultiple = 1;   //the higher this is, the more linear and less curvy the exponential is
     JUCE_COMPILER_WARNING("k_iSimpleFilterLF should be the currently played note... but this is hard" + 
              "to get because as far as I know, we can only access that from the voice, which is buried in m_oSynth")
+
     float fExpCutoffFr = fMultiple * exp(log(k_iSimpleFilterHF * m_fFilterFr/fMultiple)) + k_iSimpleFilterLF;
     
 	//this is called setup, but really it's just setting some values. 
-	m_simpleFilter.setup(sampleRate, fExpCutoffFr, m_fQHr);
+	m_simpleFilter.setup(m_fSampleRate, fExpCutoffFr, m_fQHr);
 }
 #endif
 
@@ -301,7 +304,7 @@ void sBMP4AudioProcessor::setParameter(int index, float newValue) {
     case paramGain:		m_fGain = newValue;		break;
     case paramDelay:    m_fDelay = newValue;	break;
     case paramWave:     setWaveType(newValue);  break;
-    case paramFilterFr: setFilterFr(newValue);	break;
+    case paramFilterFr: setFilterFr(newValue); break;
 	case paramQ:		setFilterQ01(newValue);	break;
 	case paramLfoFr:	setLfoFr01(newValue);	break;
 	case paramLfoOn:	setLfoOn(newValue);		break;
@@ -453,8 +456,8 @@ void sBMP4AudioProcessor::setStateInformation (const void* data, int sizeInBytes
             m_fGain = (float)			xmlState->getDoubleAttribute(	"gain",			m_fGain);
             m_fDelay = (float)			xmlState->getDoubleAttribute(	"delay",		m_fDelay);
             setWaveType((float)			xmlState->getDoubleAttribute(	"wave",			m_fWave));
-            setFilterFr((float)			xmlState->getDoubleAttribute(	"filter",		m_fFilterFr));
-			setLfoFr01((float)			xmlState->getDoubleAttribute(	"m_fLfoFrHr",	getLfoFr01()));
+            m_fFilterFr = (float)       xmlState->getDoubleAttribute(	"filter",		m_fFilterFr);
+            m_fLfoFrHr = convert01ToHr((float)xmlState->getDoubleAttribute(	"m_fLfoFrHr",	getLfoFr01()), k_fMinLfoFr, k_fMaxLfoFr);
 			setFilterQ01((float)		xmlState->getDoubleAttribute(	"m_fQHr",		getFilterQ01()));
 			setLfoOn(					xmlState->getBoolAttribute(		"m_bLfoIsOn",	m_bLfoIsOn));
 			setSubOscOn(				xmlState->getBoolAttribute(		"m_bSubOscIsOn",m_bSubOscIsOn));

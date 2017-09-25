@@ -40,7 +40,7 @@ public:
     bool isBusesLayoutSupported (const BusesLayout& layouts) const override;
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
-    void updateSimpleFilter(double sampleRate);
+    void updateSimpleFilter();
 
     void releaseResources() override;
     void processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages) override;
@@ -111,6 +111,8 @@ private:
 	void setLfoFr01(float p_fLfoFr);
 	float getLfoFr01();
 
+    float m_fSampleRate;
+
     std::pair<int, int> m_oLastDimensions;
 
     //==============================================================================
@@ -119,10 +121,12 @@ private:
 
     Synthesiser m_oSynth;
 
+#if USE_SIMPLEST_LP
     int m_iBufferSize;
     std::vector<float> m_oLookBackVec[2];
-
+#else
     Dsp::SimpleFilter <Dsp::RBJ::LowPass, 1>  m_simpleFilter;	//2 here is the number of channels, and is mandatory!
+#endif
 
     static BusesProperties getBusesProperties();
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(sBMP4AudioProcessor)
