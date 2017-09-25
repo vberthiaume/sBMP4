@@ -140,6 +140,22 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
         m_simpleFilter.process(numSamples, buffer.getArrayOfWritePointers());
 #endif
 
+    //----LFO
+    if(m_bLfoIsOn){
+        float *in1 = buffer.getWritePointer(0);
+        float *in2 = buffer.getWritePointer(1);
+        for(int i = 0; i < numSamples; ++i){        
+            in1[numSamples] *= (sin(m_fLfoAngle) + 1) / 2;
+            in2[numSamples] *= (sin(m_fLfoAngle) + 1) / 2;
+            JUCE_COMPILER_WARNING("on the first note on after all notes are off, this angle should be reset to 0")
+                m_fLfoAngle += m_fLfoOmega;
+            if(m_fLfoAngle > 2 * M_PI){
+                m_fLfoAngle -= 2 * M_PI;
+            }
+        }
+    }
+
+
 	int iDelayPosition = 0;
     for (int iCurChannel = 0; iCurChannel < buffer.getNumChannels(); ++iCurChannel){
 		//-----GAIN
@@ -150,21 +166,20 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 #if USE_SIMPLEST_LP
         simplestLP(channelData, numSamples, m_oLookBackVec[iCurChannel]);
 #endif
-
 		//-----DELAY AND LFO
 		float* delayData = m_oDelayBuffer.getWritePointer(jmin(iCurChannel, m_oDelayBuffer.getNumChannels() - 1));
 		iDelayPosition = m_iDelayPosition;
 		for (int i = 0; i < numSamples; ++i) {
 			const float in = channelData[i];
-			//----LFO
-			if(m_bLfoIsOn){
-				channelData[i] *= (sin(m_fLfoAngle) + 1) / 2;
-				JUCE_COMPILER_WARNING("on the first note on after all notes are off, this angle should be reset to 0")
-					m_fLfoAngle += m_fLfoOmega;
-				if(m_fLfoAngle > 2 * M_PI){
-					m_fLfoAngle -= 2 * M_PI;
-				}
-			}
+			////----LFO
+			//if(m_bLfoIsOn){
+			//	channelData[i] *= (sin(m_fLfoAngle) + 1) / 2;
+			//	JUCE_COMPILER_WARNING("on the first note on after all notes are off, this angle should be reset to 0")
+			//		m_fLfoAngle += m_fLfoOmega;
+			//	if(m_fLfoAngle > 2 * M_PI){
+			//		m_fLfoAngle -= 2 * M_PI;
+			//	}
+			//}
 
 			//----DELAY
 			channelData[i] += delayData[iDelayPosition];
