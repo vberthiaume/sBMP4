@@ -58,14 +58,13 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor(sBMP4AudioProcessor& proces
 	addToggleButton(&m_oLfoTogBut); 
 	m_oLfoTogBut.setButtonText("LFO");
 	addToggleButton(&m_oSubOscTogBut); 
-	m_oSubOscTogBut.setButtonText("Sub OPP");
+	m_oSubOscTogBut.setButtonText("Sub Osc");
 
 	m_oSineImage.setImage(ImageFileFormat::loadFrom (BinaryData::sine_png, (size_t) BinaryData::sine_pngSize));
 	m_oSawImage.setImage(ImageFileFormat::loadFrom (BinaryData::saw_png, (size_t) BinaryData::saw_pngSize));
 	m_oSquareImage.setImage(ImageFileFormat::loadFrom (BinaryData::square_png, (size_t) BinaryData::square_pngSize));
 	m_oTriangleImage.setImage(ImageFileFormat::loadFrom (BinaryData::triangle_png, (size_t) BinaryData::triangle_pngSize));
 	m_oLogoImage.setImage(ImageFileFormat::loadFrom (BinaryData::main_png, (size_t) BinaryData::main_pngSize));
-	
 	
 	addAndMakeVisible(m_oSineImage);
 	addAndMakeVisible(m_oSawImage);

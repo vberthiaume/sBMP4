@@ -33,7 +33,7 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter();
 
 //==============================================================================
 sBMP4AudioProcessor::sBMP4AudioProcessor()
-: m_oLastDimensions()
+: AudioProcessor (getBusesProperties())//m_oLastDimensions()
 , m_oDelayBuffer(2, 12000)
 , m_fGain(k_fDefaultGain)
 , m_fDelay(k_fDefaultDelay)
@@ -51,11 +51,12 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 	//busArrangement.outputBuses.clear();
 	//busArrangement.outputBuses.add(AudioProcessorBus("Mono output", AudioChannelSet::mono()));
 
+
     for(int iCurVox = 0; iCurVox < k_iNumberOfVoices; ++iCurVox){
 		Bmp4SynthVoice* voice = new Bmp4SynthVoice();
         m_oSynth.addVoice(voice);
 		JUCE_COMPILER_WARNING("this adding samplerVoices interacting with the other voices in any way?")
-		m_oSynth.addVoice (new SamplerVoice());    // and these ones play the sampled sounds
+		//m_oSynth.addVoice (new SamplerVoice());    // and these ones play the sampled sounds
     }
 
     setWaveType(k_fDefaultWave);
@@ -86,6 +87,32 @@ void sBMP4AudioProcessor::prepareToPlay(double sampleRate, int /*samplesPerBlock
     m_oDelayBuffer.clear();
 }
 
+bool sBMP4AudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
+{
+    // Only mono/stereo and input/output must have same layout
+    const AudioChannelSet& mainOutput = layouts.getMainOutputChannelSet();
+    const AudioChannelSet& mainInput  = layouts.getMainInputChannelSet();
+
+    // input and output layout must either be the same or the input must be disabled altogether
+    if (! mainInput.isDisabled() && mainInput != mainOutput)
+        return false;
+
+    // do not allow disabling the main buses
+    if (mainOutput.isDisabled())
+        return false;
+
+    // only allow stereo and mono
+    if (mainOutput.size() > 2)
+        return false;
+
+    return true;
+}
+
+AudioProcessor::BusesProperties sBMP4AudioProcessor::getBusesProperties()
+{
+    return BusesProperties().withInput  ("Input",  AudioChannelSet::stereo(), true)
+                            .withOutput ("Output", AudioChannelSet::stereo(), true);
+}
 
 void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages) {
    const int numSamples = buffer.getNumSamples();
