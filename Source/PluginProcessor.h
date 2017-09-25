@@ -94,9 +94,9 @@ public:
     MidiKeyboardState m_oKeyboardState;
 
 private:
-
-    void simplestLP(float* p_pfSamples, int p_iTotalSamples, std::vector<float> &p_fLookBackVec);
-
+#if USE_SIMPLEST_LP
+    void simplestLP(float* p_pfSamples, const int p_iTotalSamples, float* p_fLookBackVec);
+#endif
     float m_fGain, m_fDelay, m_fWave, m_fFilterFr, m_fLfoFrHr, m_fQHr, m_fLfoAngle, m_fLfoOmega;
 
 	bool m_bLfoIsOn;
@@ -104,7 +104,7 @@ private:
 
     void setWaveType(float p_fWave);
 
-    void setFilterFr(float p_fFilterFr);
+    void setFilterFr01(float p_fFilterFr);
 
 	void setFilterQ01(float p_fQ);
 	float getFilterQ01();
@@ -123,8 +123,8 @@ private:
     Synthesiser m_oSynth;
 
 #if USE_SIMPLEST_LP
-    int m_iBufferSize;
-    std::vector<float> m_oLookBackVec[2];
+    int m_iCurBufferSize;
+    float m_oLookBackVec[2][k_iMaxSampleToAverageOver];
 #else
     Dsp::SimpleFilter <Dsp::RBJ::LowPass, 2>  m_simpleFilter;	//2 here is the number of channels, and is mandatory!
 #endif

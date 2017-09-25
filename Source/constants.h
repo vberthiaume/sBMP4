@@ -26,9 +26,9 @@
 
 #include <math.h>
 
-//#ifndef USE_SIMPLEST_LP
-//#define USE_SIMPLEST_LP 1
-//#endif
+#ifndef USE_SIMPLEST_LP
+#define USE_SIMPLEST_LP 1
+#endif
 
 //these should probably be a macro, to prevent use of #includes in some places
 const bool k_bUseSampledSound = false;
@@ -78,6 +78,11 @@ enum WaveTypes{
 const float k_fDefaultGain		= 0.5f;
 const float k_fDefaultDelay		= 0.0f;
 const float k_fDefaultWave		= 0.0f;
+
+#if USE_SIMPLEST_LP
+const int k_iMaxSampleCount     = 4096;
+const int k_iMaxSampleToAverageOver = 10; //max number of samples to average accross
+#endif
 
 //----FILTER FR
 const float k_fDefaultFilterFr	= 0.0f;
