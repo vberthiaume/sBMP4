@@ -101,7 +101,7 @@ bool sBMP4AudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) co
     const AudioChannelSet& mainInput  = layouts.getMainInputChannelSet();
 
     // input and output layout must either be the same or the input must be disabled altogether
-    if (! mainInput.isDisabled() && mainInput != mainOutput)
+    if (!mainInput.isDisabled() && mainInput != mainOutput)
         return false;
 
     // do not allow disabling the main buses
@@ -109,7 +109,7 @@ bool sBMP4AudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) co
         return false;
 
     // only allow stereo and mono
-    if (mainOutput.size() > 2)
+    if (mainOutput.size() > 1)
         return false;
 
     return true;
@@ -117,8 +117,8 @@ bool sBMP4AudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) co
 
 AudioProcessor::BusesProperties sBMP4AudioProcessor::getBusesProperties()
 {
-    return BusesProperties().withInput  ("Input",  AudioChannelSet::stereo(), true)
-                            .withOutput ("Output", AudioChannelSet::stereo(), true);
+    return BusesProperties().withInput  ("Input",  AudioChannelSet::mono(), true)
+                            .withOutput ("Output", AudioChannelSet::mono(), true);
 }
 
 void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages) {
