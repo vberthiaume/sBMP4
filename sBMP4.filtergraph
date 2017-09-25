@@ -22,14 +22,15 @@
             numOutputs="0" isShell="0"/>
     <STATE>0.</STATE>
   </FILTER>
-  <FILTER uid="6" x="0.23349834983498349295" y="0.35391566265060242502">
+  <FILTER uid="6" x="0.23349834983498349295" y="0.35391566265060242502"
+          uiLastX_Normal="43" uiLastY_Normal="82" uiopen_Normal="0">
     <PLUGIN name="sBMP4" format="VST" category="Synth" manufacturer="BMP4"
             version="V1.1.0" file="C:\Users\barth\Documents\git\sBMP4\Builds\VisualStudio2015\x64\Release_x64\VST\sBMP4.dll"
-            uid="73424d50" isInstrument="1" fileTime="15eb92158e8" infoUpdateTime="15eb921d66a"
-            numInputs="2" numOutputs="2" isShell="0"/>
-    <STATE>357.CMlaKA....fQBMDZ....ALmPMAE...fa....A...............................................................................................................................................................................Ea0PxDBu....7LkPMAEMSUDUTkjSGMEH0k1UoQFcn0iHyPCLh.RcogTYocFZz0iHxDSMh.xYgkla8HBLtTiHfPVYrEVd8HBLh.xcgYWY8HBLh.hYowFckIWOh.iHfz1WlwjYuYjbHIWOh.iKvLyM4bCM1fSL2.SMxLiMzLCM4LyMh.RaeYVTHIWOh.iKxPSN1HCM3.yL1XiLy.CLw.SN3XiHfz1WhwjYukzbO4VOhDiHfz1WhMUch8zbikzbO4VOhDiHu3C.</STATE>
+            uid="73424d50" isInstrument="1" fileTime="15eba52e53d" infoUpdateTime="15eba535cf2"
+            numInputs="1" numOutputs="1" isShell="0"/>
+    <STATE>397.CMlaKA....fQBMDZ....ALmPMAE...fa....A...............................................................................................................................................................................sa0PxDB4....7LkPMAEMSUDUTkjSGMEH0k1UoQFcn0iHyPCLh.RcogTYocFZz0iHxDSMh.xYgkla8HBLtfSN4jSN4jyM1DSM3DCMx.CN4fCMh.BYkwVX40iHvHBH2Elck0iHvHBHlkFazUlb8HBLtPCL4jSN4jSN1PiLybiLwLSLyPCNh.RaeYFSl8lQxgjb8HBLt.yL2jyMzXCNwbCL0HyL1PyLzjyL2HBHs8kYQgjb8HBLtTiM4jSN4jSNxfCM2PCMxXiL1jSMh.RaeIFSl8VRy8ja8HRLh.RaeI1T0I1SyMVRy8ja8HRLh7hO..</STATE>
   </FILTER>
   <CONNECTION srcFilter="2" srcChannel="4096" dstFilter="6" dstChannel="4096"/>
   <CONNECTION srcFilter="6" srcChannel="0" dstFilter="3" dstChannel="0"/>
-  <CONNECTION srcFilter="6" srcChannel="1" dstFilter="3" dstChannel="1"/>
+  <CONNECTION srcFilter="6" srcChannel="0" dstFilter="3" dstChannel="1"/>
 </FILTERGRAPH>

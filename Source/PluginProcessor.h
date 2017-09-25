@@ -44,6 +44,7 @@ public:
 
     void releaseResources() override;
     void processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages) override;
+    void addSubOscMidiNotes(MidiBuffer& midiMessages);
     void reset() override;
 
     //==============================================================================

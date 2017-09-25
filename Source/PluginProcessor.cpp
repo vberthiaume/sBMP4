@@ -121,31 +121,41 @@ AudioProcessor::BusesProperties sBMP4AudioProcessor::getBusesProperties()
                             .withOutput ("Output", AudioChannelSet::mono(), true);
 }
 
+void sBMP4AudioProcessor::addSubOscMidiNotes(MidiBuffer& midiMessages){
+
+    MidiBuffer::Iterator it(midiMessages);
+    MidiMessage msg;
+    MidiBuffer allSubOscMessages;
+    int iPosition;
+    while(it.getNextEvent(msg, iPosition)){
+        if(msg.isNoteOn() || msg.isNoteOff()){
+            MidiMessage curSubOscMsg(msg);
+            curSubOscMsg.setNoteNumber(curSubOscMsg.getNoteNumber() - 12);
+            allSubOscMessages.addEvent(curSubOscMsg, iPosition);
+        }
+    }
+    midiMessages.addEvents(allSubOscMessages, 0, -1, 0);
+}
+
 void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages) {
    
     int numSamples = buffer.getNumSamples();
 
-    //put messages in midiMessages if keys are (were?) pressed
+    //put messages in midiMessages if keys are pressed
     m_oKeyboardState.processNextMidiBuffer (midiMessages, 0, numSamples, true);
+    
 	if (m_bSubOscIsOn) {
-		MidiBuffer::Iterator it(midiMessages);
-		MidiMessage msg;
-		MidiBuffer allSubOscMessages;
-		int iPosition;
-		while(it.getNextEvent(msg, iPosition)){
-			if (msg.isNoteOn() || msg.isNoteOff()){
-				MidiMessage curSubOscMsg(msg);
-				curSubOscMsg.setNoteNumber(curSubOscMsg.getNoteNumber()-12);
-				allSubOscMessages.addEvent(curSubOscMsg, iPosition);
-			}
-		}
-		midiMessages.addEvents(allSubOscMessages,0,-1,0);
+        //copy notes to 1 octave lower
+        addSubOscMidiNotes(midiMessages);
 	}
+
     //generate audio from midi events
     m_oSynth.renderNextBlock (buffer, midiMessages, 0, numSamples);
 	//this loop is useless since we only have 1 output, but leave it for future expansion
 	int iDelayPosition = 0;
-	for (int iCurChannel = 0; iCurChannel < getMainBusNumOutputChannels(); ++iCurChannel){
+    
+	//for (int iCurChannel = 0; iCurChannel < getMainBusNumOutputChannels(); ++iCurChannel){
+    for (int iCurChannel = 0; iCurChannel < buffer.getNumChannels(); ++iCurChannel){
 		//-----GAIN
 		buffer.applyGain(iCurChannel, 0, buffer.getNumSamples(), m_fGain);
 		float* channelData = buffer.getWritePointer (iCurChannel);
