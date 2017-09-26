@@ -139,10 +139,13 @@
     <VS2015 targetFolder="Builds/VisualStudio2015" vstFolder="C:\Users\barth\Documents\sdks\steinberg\3.6.5\VST3 SDK"
             externalLibraries="DSPFilters.lib" vst3Folder="C:\Users\barth\Documents\sdks\steinberg\3.6.7\VST_SDK\VST3_SDK">
       <CONFIGURATIONS>
-        <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="Win32"
+        <CONFIGURATION name="Debug_x86" winWarningLevel="4" generateManifest="1" winArchitecture="Win32"
                        isDebug="1" optimisation="1" targetName="sBMP4" libraryPath="C:\Users\barth\Documents\git\sBMP4\lib\Win32Debug"
                        enableIncrementalLinking="1" useRuntimeLibDLL="1"/>
-        <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="Win32"
+        <CONFIGURATION name="Debug_x64" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
+                       isDebug="1" optimisation="1" targetName="sBMP4" libraryPath="C:\Users\barth\Documents\git\sBMP4\lib\Win32Debug"
+                       enableIncrementalLinking="1" useRuntimeLibDLL="1"/>
+        <CONFIGURATION name="Release_x86" winWarningLevel="4" generateManifest="1" winArchitecture="Win32"
                        isDebug="0" optimisation="3" targetName="sBMP4" libraryPath="C:\Users\barth\Documents\git\sBMP4\lib\Win32Release"
                        useRuntimeLibDLL="1"/>
         <CONFIGURATION name="Release_x64" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
