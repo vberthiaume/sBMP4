@@ -28,9 +28,9 @@
 #include <string>
 #include "../JuceLibraryCode/JuceHeader.h"
 
-#ifndef USE_SIMPLEST_LP
-#define USE_SIMPLEST_LP 1
-#endif
+//#ifndef USE_SIMPLEST_LP
+//#define USE_SIMPLEST_LP 1
+//#endif
 
 //these should probably be a macro, to prevent use of #includes in some places
 const bool k_bUseSampledSound = false;

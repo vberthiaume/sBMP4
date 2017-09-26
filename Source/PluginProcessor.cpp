@@ -45,7 +45,9 @@ sBMP4AudioProcessor::sBMP4AudioProcessor()
 , m_bLfoIsOn(true)
 , m_bSubOscIsOn(true)
 , m_iDelayPosition(0)
+#if USE_SIMPLEST_LP
 , m_iCurBufferSize(0)
+#endif
 {
     for(int iCurVox = 0; iCurVox < k_iNumberOfVoices; ++iCurVox){
 		Bmp4SynthVoice* voice = new Bmp4SynthVoice();
@@ -174,16 +176,6 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 		iDelayPosition = m_iDelayPosition;
 		for (int i = 0; i < numSamples; ++i) {
 			const float in = channelData[i];
-			////----LFO
-			//if(m_bLfoIsOn){
-			//	channelData[i] *= (sin(m_fLfoAngle) + 1) / 2;
-			//	JUCE_COMPILER_WARNING("on the first note on after all notes are off, this angle should be reset to 0")
-			//		m_fLfoAngle += m_fLfoOmega;
-			//	if(m_fLfoAngle > 2 * M_PI){
-			//		m_fLfoAngle -= 2 * M_PI;
-			//	}
-			//}
-
 			//----DELAY
 			channelData[i] += delayData[iDelayPosition];
 			delayData[iDelayPosition] = (delayData[iDelayPosition] + in) * m_fDelay;
@@ -265,7 +257,6 @@ void sBMP4AudioProcessor::simplestLP(float* p_pfSamples, const int p_iTotalSampl
 }
 
 #else
-
 void sBMP4AudioProcessor::updateSimpleFilter() {
 	if (m_fSampleRate == 0){
 		return;

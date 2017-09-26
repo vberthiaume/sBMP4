@@ -143,8 +143,8 @@
                        isDebug="1" optimisation="1" targetName="sBMP4" libraryPath="C:\Users\barth\Documents\git\sBMP4\lib\Win32Debug"
                        enableIncrementalLinking="1" useRuntimeLibDLL="1"/>
         <CONFIGURATION name="Debug_x64" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
-                       isDebug="1" optimisation="1" targetName="sBMP4" libraryPath="C:\Users\barth\Documents\git\sBMP4\lib\Win32Debug"
-                       enableIncrementalLinking="1" useRuntimeLibDLL="1"/>
+                       isDebug="1" optimisation="1" targetName="sBMP4" libraryPath="C:\Users\barth\Documents\git\sBMP4\lib\x64Debug"
+                       enableIncrementalLinking="1" useRuntimeLibDLL="0"/>
         <CONFIGURATION name="Release_x86" winWarningLevel="4" generateManifest="1" winArchitecture="Win32"
                        isDebug="0" optimisation="3" targetName="sBMP4" libraryPath="C:\Users\barth\Documents\git\sBMP4\lib\Win32Release"
                        useRuntimeLibDLL="1"/>

@@ -84,7 +84,7 @@
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug_x64|x64'">$(Platform)\$(Configuration)\VST\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug_x64|x64'">sBMP4</TargetName>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug_x64|x64'">true</GenerateManifest>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug_x64|x64'">$(LibraryPath);C:\Users\barth\Documents\git\sBMP4\lib\Win32Debug;$(SolutionDir)$(Platform)\$(Configuration)\Shared Code</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug_x64|x64'">$(LibraryPath);C:\Users\barth\Documents\git\sBMP4\lib\x64Debug;$(SolutionDir)$(Platform)\$(Configuration)\Shared Code</LibraryPath>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release_x86|Win32'">$(SolutionDir)$(Platform)\$(Configuration)\VST\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_x86|Win32'">$(Platform)\$(Configuration)\VST\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release_x86|Win32'">sBMP4</TargetName>
@@ -156,7 +156,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalIncludeDirectories>C:\Users\barth\Documents\sdks\steinberg\3.6.7\VST_SDK\VST3_SDK;..\..\JuceLibraryCode;..\..\JuceLibraryCode\modules;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;DEBUG;_DEBUG;JUCER_VS2015_78A5022=1;JUCE_APP_VERSION=1.1.0;JUCE_APP_VERSION_HEX=0x10100;JucePlugin_Build_VST=1;JucePlugin_Build_VST3=0;JucePlugin_Build_AU=0;JucePlugin_Build_AUv3=0;JucePlugin_Build_RTAS=0;JucePlugin_Build_AAX=0;JucePlugin_Build_Standalone=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader/>
       <AssemblerListingLocation>$(IntDir)\</AssemblerListingLocation>
@@ -177,7 +177,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(IntDir)\sBMP4.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>C:\Users\barth\Documents\git\sBMP4\lib\Win32Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\barth\Documents\git\sBMP4\lib\x64Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <LargeAddressAware>true</LargeAddressAware>
       <AdditionalDependencies>DSPFilters.lib;sBMP4.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
