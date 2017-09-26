@@ -25,6 +25,8 @@
 #define sBMP4_Header_h
 
 #include <math.h>
+#include <string>
+#include "../JuceLibraryCode/JuceHeader.h"
 
 #ifndef USE_SIMPLEST_LP
 #define USE_SIMPLEST_LP 1
@@ -54,6 +56,26 @@ static T const convertHrTo01 (T const& p_tValueHr, T const& p_tMinHr, T const& p
 static bool areSame(double a, double b){
     return fabs(a - b) < .0001;//std::numeric_limits<double>::epsilon();
 }
+
+
+static const int k_MaxSamplesToPrint = 10000;
+static float samplesToPrint[k_MaxSamplesToPrint][2];
+static int curSampleToPrint = 0;
+static void printSamples(float sample0, float sample1)
+{
+    if (curSampleToPrint < k_MaxSamplesToPrint) {
+        samplesToPrint[curSampleToPrint][0] = sample0;
+        samplesToPrint[curSampleToPrint++][1] = sample1;
+    } else {
+        for (int i = 0; i < k_MaxSamplesToPrint; ++i){
+            std::string str = std::to_string(samplesToPrint[curSampleToPrint][0]) + ", " 
+                + std::to_string(samplesToPrint[curSampleToPrint][1]);
+            DBG(str);
+        }
+        curSampleToPrint = 0;
+    }
+}
+
 
 //-------enums
 enum Parameters{

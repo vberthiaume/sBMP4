@@ -147,8 +147,9 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
         float *in1 = buffer.getWritePointer(0);
         float *in2 = buffer.getWritePointer(1);
         for(int i = 0; i < numSamples; ++i){        
-            in1[numSamples] *= (sin(m_fLfoAngle) + 1) / 2;
-            in2[numSamples] *= (sin(m_fLfoAngle) + 1) / 2;
+            in1[i] *= (sin(m_fLfoAngle) + 1) / 2;
+            in2[i] *= (sin(m_fLfoAngle) + 1) / 2;
+            //printSamples(
             JUCE_COMPILER_WARNING("on the first note on after all notes are off, this angle should be reset to 0")
                 m_fLfoAngle += m_fLfoOmega;
             if(m_fLfoAngle > 2 * M_PI){

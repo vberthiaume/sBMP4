@@ -24,9 +24,10 @@
 #ifndef __PLUGINPROCESSOR_H_526ED7A9__
 #define __PLUGINPROCESSOR_H_526ED7A9__
 
-#include "../JuceLibraryCode/JuceHeader.h"
-#include "DspFilters/Dsp.h"
+
 #include "constants.h"
+#include "DspFilters/Dsp.h"
+
 
 //==============================================================================
 /**
@@ -88,6 +89,8 @@ public:
     //==============================================================================
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
+
+    
 
     // this is kept up to date with the midi messages that arrive, and the UI component
     // registers with it so it can represent the incoming messages
