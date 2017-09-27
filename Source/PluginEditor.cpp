@@ -58,7 +58,7 @@ sBMP4AudioProcessorEditor::sBMP4AudioProcessorEditor(sBMP4AudioProcessor& proces
 	addToggleButton(&m_oLfoTogBut); 
 	m_oLfoTogBut.setButtonText("LFO");
 	addToggleButton(&m_oSubOscTogBut); 
-	m_oSubOscTogBut.setButtonText("Sub OXX");
+	m_oSubOscTogBut.setButtonText("Sub Osc");
 
 	m_oSineImage.setImage(ImageFileFormat::loadFrom (BinaryData::sine_png, (size_t) BinaryData::sine_pngSize));
 	m_oSawImage.setImage(ImageFileFormat::loadFrom (BinaryData::saw_png, (size_t) BinaryData::saw_pngSize));
