@@ -96,8 +96,8 @@ bool sBMP4AudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) co
     if (mainOutput.isDisabled())
         return false;
 
-    // only allow stereo and mono
-    if (mainOutput.size() > 2)
+    // only allow stereo
+    if (mainOutput.size() != 2)
         return false;
 
     return true;
@@ -141,7 +141,10 @@ void sBMP4AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
     m_oSynth.renderNextBlock (buffer, midiMessages, 0, numSamples);
 	
 #if !USE_SIMPLEST_LP
-        m_simpleFilter.process(numSamples, buffer.getArrayOfWritePointers());
+//    if (m_bIsMonoTEMP)
+//        m_simpleFilterMono.process(numSamples, buffer.getArrayOfWritePointers());
+//    else
+        m_simpleFilterStereo.process(numSamples, buffer.getArrayOfWritePointers());
 #endif
 
     //----LFO
@@ -268,7 +271,10 @@ void sBMP4AudioProcessor::updateSimpleFilter() {
     float fExpCutoffFr = fMultiple * exp(log(k_iSimpleFilterHF * m_fFilterFr/fMultiple)) + k_iSimpleFilterLF;
     
 	//this is called setup, but really it's just setting some values. 
-	m_simpleFilter.setup(m_fSampleRate, fExpCutoffFr, m_fQHr);
+//	if (m_bIsMonoTEMP)
+//        m_simpleFilterMono.setup(m_fSampleRate, fExpCutoffFr, m_fQHr);
+//    else
+        m_simpleFilterStereo.setup(m_fSampleRate, fExpCutoffFr, m_fQHr);
 }
 #endif
 

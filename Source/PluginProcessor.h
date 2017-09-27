@@ -129,7 +129,9 @@ private:
     int m_iCurBufferSize;
     float m_oLookBackVec[2][k_iMaxSampleToAverageOver];
 #else
-    Dsp::SimpleFilter <Dsp::RBJ::LowPass, 2>  m_simpleFilter;	//2 here is the number of channels, and is mandatory!
+//    Dsp::SimpleFilter <Dsp::RBJ::LowPass, 1>  m_simpleFilterMono;	//2 here is the number of channels, and is mandatory!
+    Dsp::SimpleFilter <Dsp::RBJ::LowPass, 2>  m_simpleFilterStereo;	//2 here is the number of channels, and is mandatory!
+//    bool m_bIsMonoTEMP;
 #endif
 
     static BusesProperties getBusesProperties();
