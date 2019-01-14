@@ -2757,5 +2757,4 @@ static const unsigned char temp_binary_data_14[] =
 135,195,225,56,46,126,0,185,86,79,53,215,167,253,174,0,0,0,0,73,69,78,68,174,66,96,130,0,0 };
 
 const char* main_png = (const char*) temp_binary_data_14;
-
 }

@@ -8,10 +8,11 @@
               pluginIsSynth="1" pluginWantsMidiIn="1" pluginProducesMidiOut="1"
               pluginSilenceInIsSilenceOut="0" pluginEditorRequiresKeys="0"
               pluginAUExportPrefix="sbmp4" pluginRTASCategory="" aaxIdentifier="com.yourcompany.NewProject"
-              pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="5.1.2"
-              companyName="BMP4" pluginIsMidiEffectPlugin="0" displaySplashScreen="0"
-              reportAppUsage="0" splashScreenColour="Dark" buildAUv3="0" buildStandalone="0"
-              enableIAA="0" cppLanguageStandard="11">
+              pluginAAXCategory="2" jucerVersion="5.4.1" companyName="BMP4"
+              pluginIsMidiEffectPlugin="0" displaySplashScreen="0" reportAppUsage="0"
+              splashScreenColour="Dark" buildAUv3="0" buildStandalone="0" enableIAA="0"
+              cppLanguageStandard="11" pluginFormats="buildAU,buildVST,buildVST3"
+              pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn,pluginProducesMidiOut">
   <MAINGROUP id="L2BB6f" name="sBMP4">
     <GROUP id="{48129460-6FB5-CA6A-9F4B-402BDB97EE6D}" name="sounds">
       <FILE id="jyfwTJ" name="Microbrute raw waves_stems_sBMP4  pulse.wav"
@@ -89,11 +90,11 @@
                postbuildCommand="" vst3Folder="/Users/nicolai/Documents/sdks/steinberg/VST3.6.7/VST3_SDK"
                externalLibraries="DSPFiltersMacOS">
       <CONFIGURATIONS>
-        <CONFIGURATION name="Debug" osxSDK="default" osxCompatibility="default" osxArchitecture="default"
-                       isDebug="1" optimisation="1" targetName="sBMP4" libraryPath="/Users/nicolai/Documents/git/sBMP4/lib/MacUniversal"
+        <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="sBMP4"
+                       libraryPath="/Users/nicolai/Documents/git/sBMP4/lib/MacUniversal"
                        headerPath=""/>
-        <CONFIGURATION name="Release" osxSDK="default" osxCompatibility="default" osxArchitecture="default"
-                       isDebug="0" optimisation="3" targetName="sBMP4" libraryPath="/Users/nicolai/Documents/git/sBMP4/lib/MacUniversal"
+        <CONFIGURATION name="Release" isDebug="0" optimisation="3" targetName="sBMP4"
+                       libraryPath="/Users/nicolai/Documents/git/sBMP4/lib/MacUniversal"
                        headerPath=""/>
       </CONFIGURATIONS>
       <MODULEPATHS>
@@ -136,53 +137,48 @@
         <MODULEPATH id="juce_audio_basics" path="../../juce"/>
       </MODULEPATHS>
     </LINUX_MAKE>
-    <VS2015 targetFolder="Builds/VisualStudio2015" vstFolder="C:\Users\barth\Documents\sdks\steinberg\3.6.5\VST3 SDK"
-            externalLibraries="DSPFilters.lib" vst3Folder="C:\Users\barth\Documents\sdks\steinberg\3.6.7\VST_SDK\VST3_SDK">
+    <VS2017 targetFolder="Builds/VisualStudio2017" externalLibraries="DSPFilters.lib">
       <CONFIGURATIONS>
-        <CONFIGURATION name="Debug_x86" winWarningLevel="4" generateManifest="1" winArchitecture="Win32"
-                       isDebug="1" optimisation="1" targetName="sBMP4" libraryPath="C:\Users\barth\Documents\git\sBMP4\lib\Win32Debug"
-                       enableIncrementalLinking="1" useRuntimeLibDLL="1"/>
-        <CONFIGURATION name="Debug_x64" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
-                       isDebug="1" optimisation="1" targetName="sBMP4" libraryPath="C:\Users\barth\Documents\git\sBMP4\lib\x64Debug"
-                       enableIncrementalLinking="1" useRuntimeLibDLL="0"/>
-        <CONFIGURATION name="Release_x86" winWarningLevel="4" generateManifest="1" winArchitecture="Win32"
-                       isDebug="0" optimisation="3" targetName="sBMP4" libraryPath="C:\Users\barth\Documents\git\sBMP4\lib\Win32Release"
-                       useRuntimeLibDLL="1"/>
-        <CONFIGURATION name="Release_x64" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
-                       targetName="sBMP4" optimisation="3" libraryPath="C:\Users\barth\Documents\git\sBMP4\lib\x64Release"
+        <CONFIGURATION isDebug="1" name="Debug" libraryPath="C:\Users\Haake\Documents\git\sBMP4\lib\x64Debug"
+                       useRuntimeLibDLL="0"/>
+        <CONFIGURATION isDebug="0" name="Release" libraryPath="C:\Users\Haake\Documents\git\sBMP4\lib\x64Release"
                        useRuntimeLibDLL="0"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
-        <MODULEPATH id="juce_opengl" path="C:\Users\barth\Documents\sdks\JUCE-5.1.2\modules"/>
-        <MODULEPATH id="juce_gui_extra" path="C:\Users\barth\Documents\sdks\JUCE-5.1.2\modules"/>
-        <MODULEPATH id="juce_gui_basics" path="C:\Users\barth\Documents\sdks\JUCE-5.1.2\modules"/>
-        <MODULEPATH id="juce_graphics" path="C:\Users\barth\Documents\sdks\JUCE-5.1.2\modules"/>
-        <MODULEPATH id="juce_events" path="C:\Users\barth\Documents\sdks\JUCE-5.1.2\modules"/>
-        <MODULEPATH id="juce_data_structures" path="C:\Users\barth\Documents\sdks\JUCE-5.1.2\modules"/>
-        <MODULEPATH id="juce_core" path="C:\Users\barth\Documents\sdks\JUCE-5.1.2\modules"/>
-        <MODULEPATH id="juce_audio_utils" path="C:\Users\barth\Documents\sdks\JUCE-5.1.2\modules"/>
-        <MODULEPATH id="juce_audio_processors" path="C:\Users\barth\Documents\sdks\JUCE-5.1.2\modules"/>
-        <MODULEPATH id="juce_audio_plugin_client" path="C:\Users\barth\Documents\sdks\JUCE-5.1.2\modules"/>
-        <MODULEPATH id="juce_audio_formats" path="C:\Users\barth\Documents\sdks\JUCE-5.1.2\modules"/>
-        <MODULEPATH id="juce_audio_devices" path="C:\Users\barth\Documents\sdks\JUCE-5.1.2\modules"/>
-        <MODULEPATH id="juce_audio_basics" path="C:\Users\barth\Documents\sdks\JUCE-5.1.2\modules"/>
+        <MODULEPATH id="juce_opengl" path="C:\Users\Haake\Documents\git\sBMP4\submodules\JUCE\modules"/>
+        <MODULEPATH id="juce_gui_extra" path="C:\Users\Haake\Documents\git\sBMP4\submodules\JUCE\modules"/>
+        <MODULEPATH id="juce_gui_basics" path="C:\Users\Haake\Documents\git\sBMP4\submodules\JUCE\modules"/>
+        <MODULEPATH id="juce_graphics" path="C:\Users\Haake\Documents\git\sBMP4\submodules\JUCE\modules"/>
+        <MODULEPATH id="juce_events" path="C:\Users\Haake\Documents\git\sBMP4\submodules\JUCE\modules"/>
+        <MODULEPATH id="juce_data_structures" path="C:\Users\Haake\Documents\git\sBMP4\submodules\JUCE\modules"/>
+        <MODULEPATH id="juce_core" path="C:\Users\Haake\Documents\git\sBMP4\submodules\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_utils" path="C:\Users\Haake\Documents\git\sBMP4\submodules\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_processors" path="C:\Users\Haake\Documents\git\sBMP4\submodules\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="C:\Users\Haake\Documents\git\sBMP4\submodules\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_formats" path="C:\Users\Haake\Documents\git\sBMP4\submodules\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_devices" path="C:\Users\Haake\Documents\git\sBMP4\submodules\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_basics" path="C:\Users\Haake\Documents\git\sBMP4\submodules\JUCE\modules"/>
       </MODULEPATHS>
-    </VS2015>
+    </VS2017>
   </EXPORTFORMATS>
   <MODULES>
-    <MODULES id="juce_audio_basics" showAllCode="1" useLocalCopy="1"/>
-    <MODULES id="juce_audio_devices" showAllCode="1" useLocalCopy="1"/>
-    <MODULES id="juce_audio_formats" showAllCode="1" useLocalCopy="1"/>
-    <MODULES id="juce_audio_plugin_client" showAllCode="1" useLocalCopy="1"/>
-    <MODULES id="juce_audio_processors" showAllCode="1" useLocalCopy="1"/>
-    <MODULES id="juce_audio_utils" showAllCode="1" useLocalCopy="1"/>
-    <MODULES id="juce_core" showAllCode="1" useLocalCopy="1"/>
-    <MODULES id="juce_data_structures" showAllCode="1" useLocalCopy="1"/>
-    <MODULES id="juce_events" showAllCode="1" useLocalCopy="1"/>
-    <MODULES id="juce_graphics" showAllCode="1" useLocalCopy="1"/>
-    <MODULES id="juce_gui_basics" showAllCode="1" useLocalCopy="1"/>
-    <MODULES id="juce_gui_extra" showAllCode="1" useLocalCopy="1"/>
-    <MODULES id="juce_opengl" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULES id="juce_audio_devices" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULES id="juce_audio_formats" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULES id="juce_audio_plugin_client" showAllCode="1" useLocalCopy="0"
+             useGlobalPath="0"/>
+    <MODULES id="juce_audio_processors" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULES id="juce_audio_utils" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULES id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULES id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULES id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULES id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULES id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULES id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULES id="juce_opengl" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
   </MODULES>
   <JUCEOPTIONS JUCE_QUICKTIME="disabled"/>
+  <LIVE_SETTINGS>
+    <WINDOWS/>
+  </LIVE_SETTINGS>
 </JUCERPROJECT>

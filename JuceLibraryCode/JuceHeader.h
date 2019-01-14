@@ -40,6 +40,7 @@
 namespace ProjectInfo
 {
     const char* const  projectName    = "sBMP4";
+    const char* const  companyName    = "BMP4";
     const char* const  versionString  = "1.1.1";
     const int          versionNumber  = 0x10101;
 }

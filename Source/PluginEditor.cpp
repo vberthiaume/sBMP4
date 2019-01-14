@@ -117,7 +117,7 @@ void sBMP4AudioProcessorEditor::addSlider(Slider* p_pSlider, const float &p_fInc
 	JUCE_COMPILER_WARNING("make look and feel methods")
 	p_pSlider->setColour(Slider::ColourIds::rotarySliderFillColourId, Colours::white);
 	p_pSlider->setColour(Slider::ColourIds::rotarySliderOutlineColourId, Colours::yellow);
-	p_pSlider->addListener(this);
+	//p_pSlider->addListener(this);
 	p_pSlider->setRange(0., 1., p_fIncrement);
 }
 
@@ -132,7 +132,7 @@ void sBMP4AudioProcessorEditor::addLabel(Label * p_pLabel){
 void sBMP4AudioProcessorEditor::addToggleButton(ToggleButton* p_pTogButton){
 	p_pTogButton->setColour(ToggleButton::textColourId,  mLookAndFeel.getFontColour());
 	p_pTogButton->setLookAndFeel(&mLookAndFeel);
-	p_pTogButton->addListener(this);
+	//p_pTogButton->addListener(this);
 	addAndMakeVisible(p_pTogButton);
 }
 
@@ -211,27 +211,27 @@ void sBMP4AudioProcessorEditor::timerCallback() {
 }
 
 // This is our Slider::Listener callback, when the user drags a slider.
-void sBMP4AudioProcessorEditor::sliderValueChanged (Slider* slider) {
-    if (slider == &m_oGainSlider)    {
-        getProcessor().setParameterNotifyingHost (paramGain,	(float) m_oGainSlider.getValue());
-    } else if (slider == &m_oDelaySlider) {
-        getProcessor().setParameterNotifyingHost (paramDelay,	(float) m_oDelaySlider.getValue());
-    } else if (slider == &m_oWaveSlider) {
-        getProcessor().setParameterNotifyingHost (paramWave,	(float) m_oWaveSlider.getValue());
-	} else if(slider == &m_oFilterSlider) {
-		getProcessor().setParameterNotifyingHost(paramFilterFr, (float)m_oFilterSlider.getValue());
-	} else if (slider == &m_oLfoSlider) {
-		getProcessor().setParameterNotifyingHost(paramLfoFr,	(float)m_oLfoSlider.getValue());
-	} else if (slider == &m_oQSlider) {
-		getProcessor().setParameterNotifyingHost(paramQ,		(float)m_oQSlider.getValue());
-	}
-
-}
-void sBMP4AudioProcessorEditor::buttonClicked(Button* p_pButtonClicked){
-	if (p_pButtonClicked == &m_oLfoTogBut){
-		getProcessor().setLfoOn(m_oLfoTogBut.getToggleState());
-	} else if (p_pButtonClicked == &m_oSubOscTogBut){
-		getProcessor().setSubOscOn(m_oSubOscTogBut.getToggleState());
-	}
-	m_oMidiKeyboard.grabKeyboardFocus();
-}
+//void sBMP4AudioProcessorEditor::sliderValueChanged (Slider* slider) {
+//    if (slider == &m_oGainSlider)    {
+//        getProcessor().setParameterNotifyingHost (paramGain,	(float) m_oGainSlider.getValue());
+//    } else if (slider == &m_oDelaySlider) {
+//        getProcessor().setParameterNotifyingHost (paramDelay,	(float) m_oDelaySlider.getValue());
+//    } else if (slider == &m_oWaveSlider) {
+//        getProcessor().setParameterNotifyingHost (paramWave,	(float) m_oWaveSlider.getValue());
+//	} else if(slider == &m_oFilterSlider) {
+//		getProcessor().setParameterNotifyingHost(paramFilterFr, (float)m_oFilterSlider.getValue());
+//	} else if (slider == &m_oLfoSlider) {
+//		getProcessor().setParameterNotifyingHost(paramLfoFr,	(float)m_oLfoSlider.getValue());
+//	} else if (slider == &m_oQSlider) {
+//		getProcessor().setParameterNotifyingHost(paramQ,		(float)m_oQSlider.getValue());
+//	}
+//
+//}
+//void sBMP4AudioProcessorEditor::buttonClicked(Button* p_pButtonClicked){
+//	if (p_pButtonClicked == &m_oLfoTogBut){
+//		getProcessor().setLfoOn(m_oLfoTogBut.getToggleState());
+//	} else if (p_pButtonClicked == &m_oSubOscTogBut){
+//		getProcessor().setSubOscOn(m_oSubOscTogBut.getToggleState());
+//	}
+//	m_oMidiKeyboard.grabKeyboardFocus();
+//}

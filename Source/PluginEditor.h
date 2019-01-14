@@ -33,8 +33,8 @@
 */
 class sBMP4AudioProcessorEditor
 	: public AudioProcessorEditor
-	, public SliderListener
-	, public ButtonListener
+	//, public SliderListener
+	//, public ButtonListener
 	, public Timer
 {
 public:
@@ -45,8 +45,8 @@ public:
     void timerCallback() override;
     void paint (Graphics&) override;
     void resized() override;
-    void sliderValueChanged (Slider*) override;
-	void buttonClicked(Button*) override;
+ //   void sliderValueChanged (Slider*) override;
+	//void buttonClicked(Button*) override;
 
 private:
     MidiKeyboardComponent m_oMidiKeyboard;
